@@ -1,0 +1,1 @@
+export type Permission = "create" | "read" | "none";
