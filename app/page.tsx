@@ -1,8 +1,11 @@
+"use client"
 
 
+import { useRouter } from "next/navigation";
+import { createProjectAction } from "./actions/project";
 
 export default function Home() {
-
+  const router = useRouter();
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
@@ -13,7 +16,7 @@ export default function Home() {
               <input className="bg-gray-800 text-white p-2 my-2 w-full rounded" type="email"/>
               <div className="flex justify-between gap-3">
               <button className="bg-blue-600 p-2 my-2 rounded hover:bg-blue-800 ">Login With Email</button>
-              <button className="bg-gray-800 text-white p-2 my-2 rounded hover:bg-gray-900">Continue as Guests</button>
+              <button type="button" onClick={ () => router.push("/dashboard")} className="bg-gray-800 text-white p-2 my-2 rounded hover:bg-gray-900">Continue as Guests</button>
               </div>
             </form>
             <div>

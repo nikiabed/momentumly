@@ -3,6 +3,7 @@ import { User } from "../data-access/user";
 
 
 export async function getUserPermission(user: User): Promise<Permission> {
+    if (!user) { return 'none';}
     switch (user.role) {
         case "admin":
             return "create";
