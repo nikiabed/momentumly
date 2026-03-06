@@ -4,7 +4,17 @@ export default function Home() {
   return (
     <div>
       <h1>Home Page</h1>
-      <Link href={'/products'}>Products</Link>
+      <ul>
+        <li>
+          <Link href={"/products"}>Products</Link>
+        </li>
+        <li>
+          <Link href={"/dashboard"}>Dashboard</Link>
+        </li>
+        <li>
+          <Link href={"/todo"}>To Do App</Link>
+        </li>
+      </ul>
     </div>
-  )
+  );
 }

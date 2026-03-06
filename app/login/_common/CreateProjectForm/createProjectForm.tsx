@@ -1,7 +1,7 @@
 "use client";
 
+import { createProjectAction } from "@/app/actions/project";
 import { useState } from "react";
-import { createProjectAction } from "../actions/project";
 
 export default function CreateProjectForm() {
     const [title, setTitle] = useState("");
