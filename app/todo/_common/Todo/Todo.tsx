@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Status } from "./Todo.const";
 import TodoList from "./TodoList";
 import TodoInput from "./TodoInput";
+import Header from "./Header/Header";
 
 export default function Todo() {
   const [todoList, setTodoList] = useState<
@@ -38,12 +39,10 @@ export default function Todo() {
   };
 
   return (
-    <div className=" flex flex-col items-center bg-linear-45 from-purple-300 to-rose-400 h-screen">
-      <h1>To Do List</h1>
+    <div className="flex-4 flex flex-col bg-linear-45 from-purple-300 to-rose-400 h-screen p-15">
+      <Header />
       <TodoInput handleChange={handleChange} handleSubmit={handleSubmit} inputValue={inputValue}/>
-      <div>
-        <TodoList todoList={todoList} />
-      </div>
+      <TodoList todoList={todoList} />
     </div>
   );
 }

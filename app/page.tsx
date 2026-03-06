@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ROUTES } from "./_utils/constants";
 
 export default function Home() {
   return (
@@ -6,13 +7,13 @@ export default function Home() {
       <h1>Home Page</h1>
       <ul>
         <li>
-          <Link href={"/products"}>Products</Link>
+          <Link href={`/${ROUTES.PRODUCTS}`}>محصولات</Link>
         </li>
         <li>
-          <Link href={"/dashboard"}>Dashboard</Link>
+          <Link href={`/${ROUTES.DASHBOARD}`}>داشبورد</Link>
         </li>
         <li>
-          <Link href={"/todo"}>To Do App</Link>
+          <Link href={`/${ROUTES.TODO}`}>اپلیکیشن TODO</Link>
         </li>
       </ul>
     </div>
