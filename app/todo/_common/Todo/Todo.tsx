@@ -1,16 +1,15 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Status } from "./Todo.const";
 import TodoList from "./TodoList";
 import TodoInput from "./TodoInput";
 import Header from "./Header/Header";
 
 export default function Todo() {
   const [todoList, setTodoList] = useState<
-    Array<{ id: number; title: string; status: Status }>
-  >([]);
+    Array<{ id: number; title: string; status: boolean }>
+  > ([]);
 
-  const [task, setTask] = useState({ id: 0, title: "hi", status: Status.done });
+  const [task, setTask] = useState<{ id: number; title: string; status: boolean } | undefined>();
   const [inputValue, setInputValue] = useState("");
 
   const handleChange = (e: any) => {
@@ -20,7 +19,7 @@ export default function Todo() {
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    addTodo(inputValue, Status.isPending);
+    addTodo(inputValue, false);
   };
 
   useEffect(() => {
@@ -28,13 +27,14 @@ export default function Todo() {
   }, [inputValue]);
 
   useEffect(() => {
-    setTodoList([task, ...todoList]);
+    if(task) {
+      setTodoList([task, ...todoList]);
+    }
   }, [task]);
 
-  const addTodo = (title: string, status: Status) => {
+  const addTodo = (title: string, status: boolean) => {
     setTask({ id: title.length + 1, title, status });
     setInputValue("");
-    
   };
 
   return (
@@ -45,7 +45,7 @@ export default function Todo() {
         handleSubmit={handleSubmit}
         inputValue={inputValue}
       />
-      <TodoList todoList={todoList} setTodoList={setTodoList} />
+      <TodoList todoList={todoList} setTodoList={setTodoList} task={task} setTask={setTask}/>
     </div>
   );
 }

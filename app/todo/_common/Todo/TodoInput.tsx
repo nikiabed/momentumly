@@ -5,7 +5,6 @@ export const TodoInput: FC<InputProps> = ({
   handleSubmit,
   handleChange,
   inputValue,
-  className
 }) => {
 
   return (

@@ -1,16 +1,22 @@
 "use client";
-import { useState } from "react";
-import { Status } from "./Todo.const";
-
 export default function TodoList({ todoList , setTodoList}: any) {
-  const [checked, setChecked] = useState(true);
-
+  
   const handleDelete = (index:number) => {
-    setTodoList((list:Array<{ id: number; title: string; status: Status }>)=>{
+    setTodoList((list:Array<{ id: number; title: string; status: boolean }>)=>{
       return list.filter((_:any,i:number) => i!==index)
     })
   };
 
+  const changeTaskState = (index:number) => {
+    const updatedList = todoList.map((list:any,idx:number)=>{
+      if (idx===index) {
+        list.state = !list.state
+        return list
+      }
+      return list
+    })
+    setTodoList(updatedList)
+  }
 
   return (
     <div className="w-full mt-5">
@@ -25,15 +31,15 @@ export default function TodoList({ todoList , setTodoList}: any) {
                 key={idx + 1}
                 type="button"
                 className="px-5 h-10 text-black"
-                aria-checked={checked}
-                onClick={() => setChecked(!checked)}
+                aria-checked={list.state}
+                onClick={()=>changeTaskState(idx)}
               >
                 +
               </button>
               <li
                 key={idx}
                 className=" aria-checked:line-through aria-checked:text-black/30 w-full bg-pink-100 rounded-lg group-hover:bg-pink-50 flex items-center"
-                aria-checked={checked}
+                aria-checked={list.state}
               >
                 {list.title} {list.status}
               </li>
