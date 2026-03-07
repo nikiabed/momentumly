@@ -9,14 +9,14 @@ export const TodoInput: FC<InputProps> = ({
 }) => {
 
   return (
-      <form onSubmit={handleSubmit} className="flex w-full bg-pink-100 rounded-lg group hover:bg-white">
-        <button type="submit" className={`m-5 px-5 bg-amber-50 text-black`} >
+      <form onSubmit={handleSubmit} className="py-2 items-center flex w-full bg-pink-100 rounded-lg group hover:bg-white">
+        <button type="submit" className={`px-5 h-10 text-black`} >
           +
         </button>
         <input
           onChange={handleChange}
           type="text"
-          className=" bg-pink-100 group-hover:bg-white w-full text-black rounded-lg focus:outline-none"
+          className=" bg-pink-100 group-hover:bg-white w-full text-black focus:outline-none"
           placeholder="کارهات چیا هستن قشنگ جون"
           value={inputValue}
           name="task"
