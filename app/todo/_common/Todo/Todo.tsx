@@ -35,7 +35,6 @@ export default function Todo() {
   }, [task]);
 
   const addTodo = (title: string, status: boolean) => {
-    console.log(task)
     setTask({ id: title.length + 1, title, status });
     setInputValue("");
   };
@@ -48,7 +47,7 @@ export default function Todo() {
         handleSubmit={handleSubmit}
         inputValue={inputValue}
       />
-      <TodoList todoList={todoList} setTodoList={setTodoList} task={task} setTask={setTask}/>
+      <TodoList todoList={todoList} setTodoList={setTodoList} inputValue={inputValue} handleChange={handleChange}/>
     </div>
   );
 }
