@@ -10,7 +10,7 @@ export default function Todo() {
   > ([]);
 
   const [task, setTask] = useState<{ id: number; title: string; status: boolean } | undefined>();
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState<string>("");
 
   const handleChange = (e: any) => {
     e.preventDefault();
@@ -19,7 +19,9 @@ export default function Todo() {
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    addTodo(inputValue, false);
+    if (inputValue.length !=0) {
+      addTodo(inputValue, false);
+    }
   };
 
   useEffect(() => {
@@ -33,6 +35,7 @@ export default function Todo() {
   }, [task]);
 
   const addTodo = (title: string, status: boolean) => {
+    console.log(task)
     setTask({ id: title.length + 1, title, status });
     setInputValue("");
   };
