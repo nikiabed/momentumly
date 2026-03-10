@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { iranSansX } from "./_utils/constants";
+import { TodoProvider } from "./_utils/contexts/TodoContext";
 
 export const metadata: Metadata = {
   title: "Niki Portfolio",
@@ -15,7 +16,9 @@ export default function RootLayout({
   return (
     <html lang="en" dir="rtl">
       <body>
-        <main className={`min-h-screen ${iranSansX.className}`}>{children}</main>
+        <main className={`min-h-screen overflow-y-auto ${iranSansX.className}`}>
+          <TodoProvider>{children}</TodoProvider>
+        </main>
       </body>
     </html>
   );
