@@ -20,7 +20,7 @@ export const getDateFormater = (day: string, month: string, daynum:string) => {
     case "Wed":
       day = "چهارنشبه";
       break;
-    case "Thr":
+    case "Thu":
       day = "پنجشنبه";
       break;
     case "Fri":

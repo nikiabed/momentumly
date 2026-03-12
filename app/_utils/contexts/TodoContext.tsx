@@ -3,7 +3,9 @@
 import { Context, TodoListType } from "@/app/todo/_common/Todo/Todo.const";
 import { createContext, useState } from "react";
 
-export const TodoContext = createContext<Context>({todo:[{id:0, title:"string", status:false}]});
+export const TodoContext = createContext<Context>({
+  todo: [{ id: "", title: "string", status: false }],
+});
 
 export function TodoProvider({ children }: { children: React.ReactNode }) {
   const [todo, setTodo] = useState<TodoListType>([]);
@@ -11,7 +13,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
   const [isCompleted, setIsCompleted] = useState<any[]>([]);
 
   const addTodo = (title: string, status: boolean) => {
-    let newTask = { id: title.length, title: title, status: status };
+    let newTask = { id: crypto.randomUUID(), title: title, status: status };
     setTodo([...todo, newTask]);
     setInputValue("");
   };
@@ -34,24 +36,21 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
-  const changeTaskState = (index: number) => {
-    const updatedList = todo.map((list: any, idx: number) => {
-      // change status
-      if (idx === index) {
-        list.status = !list.status;
-        return list;
-      }
-      return list;
-    });
-    const complete = todo.map((list: any) => {
-      // change status
-      if (list.status === true) {
-        return list;
-      }
-      return false;
-    });
-    setTodo(updatedList);
-    setIsCompleted(complete)
+  const changeTaskState = (index: string) => {
+    // const updatedList = todo.map((list: any, idx: number) => {
+    //   // change status
+    //   if (idx === index) {
+    //     list.status = !list.status;
+    //     return list;
+    //   }
+    //   return list;
+    // });
+    // setTodo(updatedList);
+    setTodo((prev: any) =>
+      prev.map((item: any) =>
+        item.id === index ? { ...item, status: !item.status } : item,
+      ),
+    );
   };
 
   return (

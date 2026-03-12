@@ -14,24 +14,14 @@ export type InputProps = DetailedHTMLProps<
 >;
 
 export type TodoListType = Array<{
-  id: number;
+  id: string;
   title: string;
   status: boolean;
 }>;
 
 export type Context = {
   todo: TodoListType;
-  setTodo?:
-    | Dispatch<
-        SetStateAction<
-          {
-            id: number;
-            title: string;
-            status: boolean;
-          }[]
-        >
-      >
-    | undefined;
+  setTodo?: any;
   inputValue?: string | undefined;
   addTodo?: (title: string, status: boolean) => void;
   handleChange?:

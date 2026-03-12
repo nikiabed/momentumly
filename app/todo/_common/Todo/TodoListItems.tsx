@@ -49,10 +49,9 @@ export const TodoListItems: FC<itemProps> = ({ list, idx, ...props }: any) => {
       {...props}
       className="flex gap-1 bg-pink-100 rounded-lg hover:bg-pink-50 group py-2  pl-2"
     >
-      {isEdit && isId == idx ? (
+      {isEdit && isId == list.id ? (
         <form
           name="edited task"
-          key={idx + 5}
           onSubmit={(e) => {
             e.preventDefault();
             handleNewChange(idx);
@@ -60,7 +59,6 @@ export const TodoListItems: FC<itemProps> = ({ list, idx, ...props }: any) => {
           className="flex items-center justify-center w-full"
         >
           <button
-            key={idx + 6}
             type="button"
             className="pr-5 px-1"
             onClick={() => {
@@ -69,11 +67,10 @@ export const TodoListItems: FC<itemProps> = ({ list, idx, ...props }: any) => {
           >
             -
           </button>
-          <button key={idx + 7} type="submit" className="pl-1 px-2">
+          <button  type="submit" className="pl-1 px-2">
             +
           </button>
           <input
-            key={idx}
             type="text"
             defaultValue={list.title}
             autoFocus
