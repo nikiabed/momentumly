@@ -21,26 +21,21 @@ export const TodoListItems: FC<itemProps> = ({ list, idx, ...props }: any) => {
   const [isId, setId] = useState<number>(-1);
   const [editedTask, setEditedTask] = useState<string>("");
 
-  const handleEdit = (index: number) => {
-    setId(index);
-    todo.map((_: any, idx: number) => {
-      if (idx == index) {
+  const handleEdit = (index: string) => {
+    // setId(index);
+    todo.map((list: any) => {
+      if (list.id === index) {
         setEdit(() => !isEdit);
       }
     });
   };
 
-  const handleNewChange = (index: number) => {
-    let editedTodoList = todo.map((list: any, idx: number) => {
-      if (index == idx && editedTask) {
-        list.title = editedTask;
-        return list;
-      }
-      return list;
-    });
-    {
-      setTodo && setTodo(editedTodoList);
-    }
+  const handleNewChange = (index: string) => {
+    setTodo((prev: any) =>
+      prev.map((list: any) => {
+        index === list.id && editedTask ? { ...list, title: editedTask, status:list.status } : list;
+      }),
+    );
     setEdit(() => !isEdit);
   };
 
@@ -49,12 +44,12 @@ export const TodoListItems: FC<itemProps> = ({ list, idx, ...props }: any) => {
       {...props}
       className="flex gap-1 bg-pink-100 rounded-lg hover:bg-pink-50 group py-2  pl-2"
     >
-      {isEdit && isId == list.id ? (
+      {isEdit ? (
         <form
           name="edited task"
           onSubmit={(e) => {
             e.preventDefault();
-            handleNewChange(idx);
+            handleNewChange(list.id);
           }}
           className="flex items-center justify-center w-full"
         >
@@ -67,7 +62,7 @@ export const TodoListItems: FC<itemProps> = ({ list, idx, ...props }: any) => {
           >
             -
           </button>
-          <button  type="submit" className="pl-1 px-2">
+          <button type="submit" className="pl-1 px-2">
             +
           </button>
           <input

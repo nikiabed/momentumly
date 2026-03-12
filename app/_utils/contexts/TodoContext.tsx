@@ -10,11 +10,10 @@ export const TodoContext = createContext<Context>({
 export function TodoProvider({ children }: { children: React.ReactNode }) {
   const [todo, setTodo] = useState<TodoListType>([]);
   const [inputValue, setInputValue] = useState<string>("");
-  const [isCompleted, setIsCompleted] = useState<any[]>([]);
 
   const addTodo = (title: string, status: boolean) => {
     let newTask = { id: crypto.randomUUID(), title: title, status: status };
-    setTodo([...todo, newTask]);
+    setTodo((prev)=>[...prev, newTask]);
     setInputValue("");
   };
 
@@ -30,22 +29,13 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const handleDelete = (index: number) => {
+  const handleDelete = (index: string) => {
     setTodo((list: any) => {
-      return list.filter((_: any, i: number) => i !== index);
+      return list.filter((l: any) => l.id !== index);
     });
   };
 
   const changeTaskState = (index: string) => {
-    // const updatedList = todo.map((list: any, idx: number) => {
-    //   // change status
-    //   if (idx === index) {
-    //     list.status = !list.status;
-    //     return list;
-    //   }
-    //   return list;
-    // });
-    // setTodo(updatedList);
     setTodo((prev: any) =>
       prev.map((item: any) =>
         item.id === index ? { ...item, status: !item.status } : item,
@@ -64,7 +54,6 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
         handleDelete,
         changeTaskState,
         handleSubmit,
-        isCompleted,
       }}
     >
       {children}

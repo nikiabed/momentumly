@@ -24,7 +24,7 @@ export default function TodoEditInput({
         {list.title}
       </div>
       <button
-        onClick={() => handleEdit(idx)}
+        onClick={() => handleEdit(list.id)}
         className="cursor-pointer px-2 h-10 text-sm bg-blue-400 rounded-lg text-pink-50"
       >
         ویرایش
@@ -33,7 +33,7 @@ export default function TodoEditInput({
       <button
         className="cursor-pointer px-3 h-10 text-sm bg-rose-400 rounded-lg text-pink-50"
         onClick={() => {
-          handleDelete && handleDelete(idx);
+          handleDelete && handleDelete(list.id);
         }}
       >
         حذف

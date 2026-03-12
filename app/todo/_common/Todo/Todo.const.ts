@@ -27,11 +27,9 @@ export type Context = {
   handleChange?:
     | ChangeEventHandler<HTMLInputElement, HTMLInputElement>
     | undefined;
-  handleDelete?: (index: number) => void;
-  changeTaskState?: (index: number) => void;
+  handleDelete?: (index: string) => void;
+  changeTaskState?: (index: string) => void;
   handleSubmit?: SubmitEventHandler<HTMLFormElement> | undefined;
   isCompleted?: any[];
 };
 
-{
-}
