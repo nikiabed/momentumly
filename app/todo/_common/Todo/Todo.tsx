@@ -11,7 +11,7 @@ export default function Todo() {
       focused?.map((item: any) => {
         if (item.state) {
           let Component = item.component 
-          return <Component key={item.id}/>;
+          return <Component item={item} key={item.id} />;
         } else {
           
         }

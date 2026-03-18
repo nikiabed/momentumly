@@ -1,5 +1,6 @@
 "use client";
 
+import All from "@/app/todo/_common/Todo/All/All";
 import Complete from "@/app/todo/_common/Todo/Complete/Complete";
 import Today from "@/app/todo/_common/Todo/Today/Today";
 import {
@@ -33,7 +34,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       state: false,
       id: "2",
       icon: Card,
-      component: Today,
+      component: All,
     },
     {
       title: sidebar.complete,
