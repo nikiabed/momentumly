@@ -11,7 +11,6 @@ const date = new Date();
   let day: string = dateString[0];
   let month: string = newDate2[1];
   let daynum: string = newDate2[2];
-  console.log(newDate2);
 
   switch (day) {
     case "Sat":
