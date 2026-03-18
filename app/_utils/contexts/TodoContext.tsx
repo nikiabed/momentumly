@@ -1,6 +1,14 @@
 "use client";
 
-import { Context, TodoListType } from "@/app/todo/_common/Todo/Todo.const";
+import Complete from "@/app/todo/_common/Todo/Complete/Complete";
+import Today from "@/app/todo/_common/Todo/Today/Today";
+import {
+  Context,
+  sidebar,
+  TodoListType,
+} from "@/app/todo/_common/Todo/Todo.const";
+import { Card, SearchNormal1, Sun1, TickCircle } from "iconsax-reactjs";
+
 import { createContext, useState } from "react";
 
 export const TodoContext = createContext<Context>({
@@ -12,6 +20,29 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
   const [inputValue, setInputValue] = useState<string>("");
   const [editedTask, setEditedTask] = useState<string>("");
   const [isEdit, setEdit] = useState<boolean>(false);
+  const [focused, setFocused] = useState([
+    {
+      title: sidebar.myDay,
+      state: true,
+      id: "1",
+      icon: Sun1,
+      component: Today,
+    },
+    {
+      title: sidebar.All,
+      state: false,
+      id: "2",
+      icon: Card,
+      component: Today,
+    },
+    {
+      title: sidebar.complete,
+      state: false,
+      id: "3",
+      icon: TickCircle,
+      component: Complete,
+    },
+  ]);
 
   const addTodo = (title: string, status: boolean) => {
     let newTask = { id: crypto.randomUUID(), title: title, status: status };
@@ -54,14 +85,14 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     //       : list;
     //   })
     // );
-    const newList = todo.map((l:any) => {
+    const newList = todo.map((l: any) => {
       if (index === l.id) {
-        l.title = editedTask
-        return l
-      } 
-      return l
-    })
-    setTodo(newList)
+        l.title = editedTask;
+        return l;
+      }
+      return l;
+    });
+    setTodo(newList);
     setEdit(() => !isEdit);
   };
 
@@ -86,6 +117,8 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
         isEdit,
         setEditedTask,
         handleEditedTask,
+        focused,
+        setFocused,
       }}
     >
       {children}

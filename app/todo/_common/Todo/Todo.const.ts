@@ -1,7 +1,10 @@
+import { Icon } from "iconsax-reactjs";
 import {
   ChangeEventHandler,
   DetailedHTMLProps,
+  Dispatch,
   HTMLAttributes,
+  SetStateAction,
   SubmitEventHandler,
 } from "react";
 
@@ -33,18 +36,34 @@ export type Context = {
   handleNewChange?: (index: string) => void;
   setEditedTask?: any;
   handleEditedTask?: (e: any) => void;
+  focused?: {
+    title: string;
+    state: boolean;
+    id: string;
+    icon: Icon;
+  }[];
+  setFocused?: Dispatch<
+    SetStateAction<
+      {
+        title: string;
+        state: boolean;
+        id: string;
+        icon: Icon;
+      }[]
+    >
+  >;
 };
 
 export const header = {
-  today: "امروز"
-}
+  today: "امروز",
+};
 
 export const completed = {
   header: "تموم شده ها",
 };
 
 export const input = {
-  placeholder : "یک کار اضافه کن..",
+  placeholder: "یک کار اضافه کن..",
 };
 
 export const sidebar = {
@@ -52,5 +71,5 @@ export const sidebar = {
   myDay: "امروز",
   All: "همه",
   complete: "تکمیل شده",
-  
-}
+  button: "لیست جدید"
+};

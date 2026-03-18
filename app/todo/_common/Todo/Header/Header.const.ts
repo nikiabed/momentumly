@@ -26,7 +26,7 @@ const date = new Date();
       day = "سه شنبه";
       break;
     case "Wed":
-      day = "چهارنشبه";
+      day = "چهارشنبه";
       break;
     case "Thu":
       day = "پنجشنبه";
