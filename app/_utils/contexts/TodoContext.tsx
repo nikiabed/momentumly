@@ -10,10 +10,12 @@ export const TodoContext = createContext<Context>({
 export function TodoProvider({ children }: { children: React.ReactNode }) {
   const [todo, setTodo] = useState<TodoListType>([]);
   const [inputValue, setInputValue] = useState<string>("");
+  const [editedTask, setEditedTask] = useState<string>("");
+  const [isEdit, setEdit] = useState<boolean>(false);
 
   const addTodo = (title: string, status: boolean) => {
     let newTask = { id: crypto.randomUUID(), title: title, status: status };
-    setTodo((prev)=>[...prev, newTask]);
+    setTodo((prev) => [...prev, newTask]);
     setInputValue("");
   };
 
@@ -43,6 +45,31 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     );
   };
 
+  const handleNewChange = (index: string) => {
+    // console.log(todo);
+    // setTodo((prev: any) =>
+    //   prev.map((list: any) => {
+    //     index === list.id
+    //       ? { ...list, title: editedTask, status: list.status }
+    //       : list;
+    //   })
+    // );
+    const newList = todo.map((l:any) => {
+      if (index === l.id) {
+        l.title = editedTask
+        return l
+      } 
+      return l
+    })
+    setTodo(newList)
+    setEdit(() => !isEdit);
+  };
+
+  const handleEditedTask = (e: any) => {
+    setEditedTask(e.target.value);
+    console.log(editedTask);
+  };
+
   return (
     <TodoContext.Provider
       value={{
@@ -54,6 +81,11 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
         handleDelete,
         changeTaskState,
         handleSubmit,
+        handleNewChange,
+        setEdit,
+        isEdit,
+        setEditedTask,
+        handleEditedTask,
       }}
     >
       {children}

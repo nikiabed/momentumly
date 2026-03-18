@@ -13,16 +13,11 @@ type itemProps = DetailedHTMLProps<
   HTMLDivElement
 > & {
   list: string[];
-  idx: number;
 };
-export const TodoListItems: FC<itemProps> = ({ list, idx, ...props }: any) => {
-  const { todo, setTodo } = useContext(TodoContext);
-  const [isEdit, setEdit] = useState<boolean>(false);
-  const [isId, setId] = useState<number>(-1);
-  const [editedTask, setEditedTask] = useState<string>("");
+export const TodoListItems: FC<itemProps> = ({ list, ...props }: any) => {
+  const { todo, isEdit, setEdit, handleNewChange,editedTask, handleEditedTask } = useContext(TodoContext);
 
   const handleEdit = (index: string) => {
-    // setId(index);
     todo.map((list: any) => {
       if (list.id === index) {
         setEdit(() => !isEdit);
@@ -30,26 +25,18 @@ export const TodoListItems: FC<itemProps> = ({ list, idx, ...props }: any) => {
     });
   };
 
-  const handleNewChange = (index: string) => {
-    setTodo((prev: any) =>
-      prev.map((list: any) => {
-        index === list.id && editedTask ? { ...list, title: editedTask, status:list.status } : list;
-      }),
-    );
-    setEdit(() => !isEdit);
-  };
-
   return (
     <div
       {...props}
-      className="flex gap-1 bg-pink-100 rounded-lg hover:bg-pink-50 group py-2  pl-2"
+      className="flex justify-center items-center gap-1 bg-pink-100 rounded-lg hover:bg-pink-50 group py-2 pl-2"
     >
       {isEdit ? (
         <form
           name="edited task"
           onSubmit={(e) => {
             e.preventDefault();
-            handleNewChange(list.id);
+            console.log(editedTask)
+            handleNewChange && handleNewChange(list.id);
           }}
           className="flex items-center justify-center w-full"
         >
@@ -70,11 +57,11 @@ export const TodoListItems: FC<itemProps> = ({ list, idx, ...props }: any) => {
             defaultValue={list.title}
             autoFocus
             className="h-10 px-2 w-full bg-pink-100 rounded-lg group-hover:bg-pink-50 focus:outline-none on focus:bg-white"
-            onChange={(e) => setEditedTask(e.target.value)}
+            onChange={handleEditedTask}
           />
         </form>
       ) : (
-        <TodoEditInput list={list} idx={idx} handleEdit={handleEdit} />
+        <TodoEditInput list={list} handleEdit={handleEdit} />
       )}
     </div>
   );

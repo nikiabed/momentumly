@@ -3,16 +3,25 @@
 type Month = {
   Mar: string;
 };
-export const getDateFormater = (day: string, month: string, daynum:string) => {
+
+export const getDateFormater = () => {
+const date = new Date();
+  const dateString = date.toDateString().split(" ");
+  let newDate2 = date.toLocaleDateString("fa").split("/");
+  let day: string = dateString[0];
+  let month: string = newDate2[1];
+  let daynum: string = newDate2[2];
+  console.log(newDate2);
+
   switch (day) {
     case "Sat":
       day = "شنبه";
       break;
     case "Sun":
-      day = "یک شنبه";
+      day = "یکشنبه";
       break;
     case "Mon":
-      day = "دو شنبه";
+      day = "دوشنبه";
       break;
     case "Tue":
       day = "سه شنبه";
@@ -30,18 +39,16 @@ export const getDateFormater = (day: string, month: string, daynum:string) => {
       break;
   }
 
-  const mon: Month = {
-    Mar: "مارس",
-  };
-
-  switch (month) {
-    case "Mar":
-      month = mon.Mar;
-      break;
-    default:
-      break;
-  }
-
+switch (month) {
+  case "۱":
+    month = "فروردین"
+    break;
+  case "۱۲":
+    month = "اسفند"
+  default:
+    break;
+}
+  
   if (daynum[0]=='0'){
     daynum = daynum.slice(1)
   }

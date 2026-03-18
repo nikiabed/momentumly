@@ -1,10 +1,7 @@
 import {
   ChangeEventHandler,
   DetailedHTMLProps,
-  Dispatch,
-  FC,
   HTMLAttributes,
-  SetStateAction,
   SubmitEventHandler,
 } from "react";
 
@@ -30,6 +27,30 @@ export type Context = {
   handleDelete?: (index: string) => void;
   changeTaskState?: (index: string) => void;
   handleSubmit?: SubmitEventHandler<HTMLFormElement> | undefined;
-  isCompleted?: any[];
+  isEdit?: boolean;
+  setEdit?: any;
+  editedTask?: string | undefined;
+  handleNewChange?: (index: string) => void;
+  setEditedTask?: any;
+  handleEditedTask?: (e: any) => void;
 };
 
+export const header = {
+  today: "امروز"
+}
+
+export const completed = {
+  header: "تموم شده ها",
+};
+
+export const input = {
+  placeholder : "یک کار اضافه کن..",
+};
+
+export const sidebar = {
+  placeholder: "پیدا کردن..",
+  myDay: "امروز",
+  All: "همه",
+  complete: "تکمیل شده",
+  
+}

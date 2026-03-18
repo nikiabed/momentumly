@@ -13,8 +13,9 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = 'fa'
   return (
-    <html lang="en" dir="rtl">
+    <html lang={locale} dir="rtl">
       <body>
         <main className={`min-h-screen overflow-y-auto ${iranSansX.className}`}>
           <TodoProvider>{children}</TodoProvider>

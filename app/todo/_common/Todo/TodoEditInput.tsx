@@ -1,22 +1,35 @@
 import { TodoContext } from "@/app/_utils/contexts/TodoContext";
+import {
+  AddCircle,
+  Edit,
+  LinkCircle,
+  Record,
+  RecordCircle,
+  TickCircle,
+  TickSquare,
+  Trash,
+  UserTick,
+} from "iconsax-reactjs";
 import { useContext } from "react";
 
-export default function TodoEditInput({
-  list,
-  idx,
-  handleEdit,
-}: any) {
-
-  const {changeTaskState, handleDelete} = useContext(TodoContext)
+export default function TodoEditInput({ list, handleEdit }: any) {
+  const { changeTaskState, handleDelete } = useContext(TodoContext);
   return (
     <>
-      <input
-        type="checkbox"
-        checked={list.status}
-        className="mx-4 bg-pink-100 rounded-lg group-hover:bg-pink-50"
-        // aria-checked={list.status}
-        onChange={() => changeTaskState && changeTaskState(list.id)}
-      />
+      {list.status ? (
+        <TickCircle
+          variant="Bold"
+          size={26}
+          className="mx-5 group-hover:bg-pink-50 text-rose-400 "
+          onClick={() => changeTaskState && changeTaskState(list.id)}
+        />
+      ) : (
+        <Record
+          size={26}
+          className="mx-5 group-hover:bg-pink-50 text-black/55 "
+          onClick={() => changeTaskState && changeTaskState(list.id)}
+        />
+      )}
       <div
         aria-checked={list.status}
         className="flex items-center aria-checked:line-through aria-checked:text-black/30 w-full"
@@ -25,18 +38,18 @@ export default function TodoEditInput({
       </div>
       <button
         onClick={() => handleEdit(list.id)}
-        className="cursor-pointer px-2 h-10 text-sm bg-blue-400 rounded-lg text-pink-50"
+        className="cursor-pointer px-2 h-8 text-sm bg-blue-400 rounded-lg text-pink-50"
       >
-        ویرایش
+        <Edit size={18} />
       </button>
 
       <button
-        className="cursor-pointer px-3 h-10 text-sm bg-rose-400 rounded-lg text-pink-50"
+        className="cursor-pointer px-2 h-8 text-sm bg-rose-400 rounded-lg text-pink-50"
         onClick={() => {
           handleDelete && handleDelete(list.id);
         }}
       >
-        حذف
+        <Trash size={18} />
       </button>
     </>
   );
