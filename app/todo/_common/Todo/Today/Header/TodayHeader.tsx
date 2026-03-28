@@ -1,15 +1,12 @@
+import Header from "../../../Header/Header";
+import { ListItemProps } from "../../Todo.const";
 import { getDateFormater } from "./Header.const";
 
-export default function Header({ item }: any) {
+export default function TodayHeader({ item }: {item:ListItemProps}) {
   const newDate = getDateFormater();
-  const Icon = item.icon;
-
   return (
     <header className="flex gap-1 flex-col text-rose-50">
-      <div className="flex gap-3">
-        <Icon size={30} />
-        <h2 className="font-extrabold text-3xl">{item.title}</h2>
-      </div>
+      <Header item={item}/>
       <span className="text-lg">
         {newDate.day}، {newDate.daynum} {newDate.month}
       </span>

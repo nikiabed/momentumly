@@ -7,6 +7,7 @@ import {
 } from "react";
 import TodoEditInput from "./TodoEditInput";
 import { TodoContext } from "@/app/_utils/contexts/TodoContext";
+import { CloseCircle, TickCircle } from "iconsax-reactjs";
 
 type itemProps = DetailedHTMLProps<
   HTMLAttributes<HTMLDivElement>,
@@ -15,27 +16,25 @@ type itemProps = DetailedHTMLProps<
   list: string[];
 };
 export const TodoListItems: FC<itemProps> = ({ list, ...props }: any) => {
-  const { todo, isEdit, setEdit, handleNewChange,editedTask, handleEditedTask } = useContext(TodoContext);
-
-  const handleEdit = (index: string) => {
-    todo.map((list: any) => {
-      if (list.id === index) {
-        setEdit(() => !isEdit);
-      }
-    });
-  };
+  const { handleNewChange, handleEditedTask, handleIsEdit } =
+    useContext(TodoContext);
 
   return (
     <div
       {...props}
       className="flex justify-center items-center gap-1 bg-pink-100 rounded-lg hover:bg-pink-50 group py-2 pl-2"
     >
-      {isEdit ? (
+      {list.isEdit ? (
         <form
           name="edited task"
+          onKeyDown={(e: any) => {
+            console.log(e);
+            if (e.key === "Escape") {
+              handleIsEdit && handleIsEdit(list.id);
+            }
+          }}
           onSubmit={(e) => {
             e.preventDefault();
-            console.log(editedTask)
             handleNewChange && handleNewChange(list.id);
           }}
           className="flex items-center justify-center w-full"
@@ -44,13 +43,13 @@ export const TodoListItems: FC<itemProps> = ({ list, ...props }: any) => {
             type="button"
             className="pr-5 px-1"
             onClick={() => {
-              setEdit(() => !isEdit);
+              handleIsEdit && handleIsEdit(list.id);
             }}
           >
-            -
+            <CloseCircle size={20} />
           </button>
           <button type="submit" className="pl-1 px-2">
-            +
+            <TickCircle size={20} />
           </button>
           <input
             type="text"
@@ -61,7 +60,7 @@ export const TodoListItems: FC<itemProps> = ({ list, ...props }: any) => {
           />
         </form>
       ) : (
-        <TodoEditInput list={list} handleEdit={handleEdit} />
+        <TodoEditInput list={list} />
       )}
     </div>
   );

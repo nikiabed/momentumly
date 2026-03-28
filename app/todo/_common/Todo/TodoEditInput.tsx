@@ -12,8 +12,10 @@ import {
 } from "iconsax-reactjs";
 import { useContext } from "react";
 
-export default function TodoEditInput({ list, handleEdit }: any) {
-  const { changeTaskState, handleDelete } = useContext(TodoContext);
+export default function TodoEditInput({ list }: any) {
+  const { handleIsEdit, changeTaskState, handleDelete } =
+    useContext(TodoContext);
+
   return (
     <>
       {list.status ? (
@@ -26,7 +28,7 @@ export default function TodoEditInput({ list, handleEdit }: any) {
       ) : (
         <Record
           size={26}
-          className="mx-5 group-hover:bg-pink-50 text-black/55 "
+          className="mx-5 group-hover:bg-pink-50 text-black/55 cursor-pointer"
           onClick={() => changeTaskState && changeTaskState(list.id)}
         />
       )}
@@ -37,7 +39,9 @@ export default function TodoEditInput({ list, handleEdit }: any) {
         {list.title}
       </div>
       <button
-        onClick={() => handleEdit(list.id)}
+        onClick={() => {
+          handleIsEdit && handleIsEdit(list.id);
+        }}
         className="cursor-pointer px-2 h-8 text-sm bg-blue-400 rounded-lg text-pink-50"
       >
         <Edit size={18} />

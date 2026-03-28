@@ -4,18 +4,17 @@ import Search from "./Search/Search";
 import ListItem from "./ListItem/ListItem";
 import { useContext } from "react";
 import { TodoContext } from "@/app/_utils/contexts/TodoContext";
-import { sidebar } from "../Todo/Todo.const";
+import { ListItemProps, sidebar } from "../Todo/Todo.const";
 import { Add } from "iconsax-reactjs";
 
 export default function Sidebar() {
   const { focused, setFocused } = useContext(TodoContext);
   const handleClick = (e: any) => {
-    console.log(e.target.id);
     setFocused &&
       setFocused((prev: any) =>
         prev.map((item: any) =>
           e.target.id == item.id
-            ? { ...item, state: !item.state }
+            ? { ...item, state: true }
             : { ...item, state: false },
         ),
       );
@@ -35,7 +34,7 @@ export default function Sidebar() {
       <Search />
       <div className="flex flex-col gap-2 mt-5 text-gray-800 text-md pb-1.5 border-b border-gray-300 shadow-gray-600">
         {focused &&
-          focused.map((list) => {
+          focused.map((list:ListItemProps) => {
             return (
               <ListItem
                 key={list.id}

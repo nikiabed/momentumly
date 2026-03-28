@@ -1,11 +1,21 @@
-import { useContext } from "react";
+import { useContext, JSX, useState } from "react";
 import { TodoContext } from "@/app/_utils/contexts/TodoContext";
+import { ListItemProps} from "../../Todo";
 
-const ListItem = ({ focused, handleClick }: any) => {
+const ListItem = ({
+  focused,
+  handleClick,
+}: {
+  focused: ListItemProps;
+  handleClick: (e: any) => void;
+}) => {
   const { todo } = useContext(TodoContext);
   const Icon2 = focused.icon;
   const notCompletedTodo = todo.filter((list: any) => !list.status);
   const completedTodo = todo.filter((list: any) => list.status);
+  const [todoNum, setTodoNum] = useState()
+
+
   return (
     <li
       id={focused.id}
@@ -21,7 +31,7 @@ const ListItem = ({ focused, handleClick }: any) => {
           <span id={focused.id}>{focused.title}</span>
         </div>
       </div>
-      {todo.length > 0 && (
+      {todo.length > 0 && focused.id != "4" && (
         <span className="bg-rose-400 h-5 px-1 rounded-md text-pink-50 text-sm">
           {focused.id == "3" ? completedTodo.length : notCompletedTodo.length}
         </span>

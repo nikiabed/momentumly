@@ -4,6 +4,7 @@ import {
   DetailedHTMLProps,
   Dispatch,
   HTMLAttributes,
+  JSX,
   SetStateAction,
   SubmitEventHandler,
 } from "react";
@@ -17,7 +18,18 @@ export type TodoListType = Array<{
   id: string;
   title: string;
   status: boolean;
+  isEdit: boolean;
 }>;
+
+export type ListItems = ListItemProps[];
+
+export type ListItemProps = {
+  title: string;
+  state: boolean;
+  id: string;
+  icon: Icon;
+  component: ({ item }: any) => React.JSX.Element;
+};
 
 export type Context = {
   todo: TodoListType;
@@ -36,22 +48,9 @@ export type Context = {
   handleNewChange?: (index: string) => void;
   setEditedTask?: any;
   handleEditedTask?: (e: any) => void;
-  focused?: {
-    title: string;
-    state: boolean;
-    id: string;
-    icon: Icon;
-  }[];
-  setFocused?: Dispatch<
-    SetStateAction<
-      {
-        title: string;
-        state: boolean;
-        id: string;
-        icon: Icon;
-      }[]
-    >
-  >;
+  focused?: ListItems;
+  setFocused?: Dispatch<SetStateAction<ListItems>>;
+  handleIsEdit?: (index: string) => void;
 };
 
 export const header = {
@@ -71,5 +70,16 @@ export const sidebar = {
   myDay: "امروز",
   All: "همه",
   complete: "تکمیل شده",
-  button: "لیست جدید"
+  button: "لیست جدید",
 };
+
+export const todoData = [
+  { id: crypto.randomUUID(), title: "باشگاه", status: false, isEdit: false },
+  { id: crypto.randomUUID(), title: "خرید خانه", status: false, isEdit: false },
+  {
+    id: crypto.randomUUID(),
+    title: "آب دادن به گل ها",
+    status: false,
+    isEdit: false,
+  },
+];

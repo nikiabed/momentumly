@@ -1,75 +1,110 @@
-import React from "react";
-import { useContext, useEffect, useRef, useState } from "react";
-
+import { useContext, useState } from "react";
 import { TodoContext } from "@/app/_utils/contexts/TodoContext";
-import Header from "./Header/Header";
+import Header from "./Header/TodayHeader";
 import TodoInput from "../TodoInput";
 import TodoList from "../TodoList";
 import CompletedList from "../CompletedList";
 
+type ListItem = {
+  id?: number | undefined;
+  title?: string | undefined;
+  dragEnter?: boolean | undefined;
+  dropped?: boolean | undefined;
+};
+
 const Today = ({ item }: any) => {
-  const { todo } = useContext(TodoContext);
+  const { todo, setTodo } = useContext(TodoContext);
   const notCompletedTodo = todo.filter((list: any) => !list.status);
   const completedTodo = todo.filter((list: any) => list.status);
-
-  const [dragEnter, setDragEnter] = useState(false);
-  const handleDrag = (e: any) => {
-    console.log(e.target.id);
-    e.dataTransfer.setData("text", e.target.id);
-  };
-  const handleDragEnter = () => {
-    console.log(dragEnter);
-    setDragEnter(true);
-  };
-  const handleDragLeave = () => {
-    console.log(dragEnter);
-    setDragEnter(false);
-  };
-
-  const [dropped, setDrop] = useState(false);
-  const [dropped1, setDrop1] = useState(false);
-  const handleOver = (e: any) => {
-    e.preventDefault();
-  };
-
-  const handleDrop = (e: any) => {
-    const draggedId = e.dataTransfer.getData("text");
-    if (draggedId === "white") {
-      setDrop(true);
-    } else {
-      setDrop1(true);
-    }
-  };
-
   const [list, setList] = useState([
     {
-      id: 1,
+      id: crypto.randomUUID(),
       title: "box1",
       dragEnter: false,
       dropped: false,
     },
     {
-      id: 2,
+      id: crypto.randomUUID(),
       title: "box2",
       dragEnter: false,
       dropped: false,
     },
     {
-      id: 3,
+      id: crypto.randomUUID(),
       title: "box3",
       dragEnter: false,
       dropped: false,
     },
   ]);
+  // const dragList = list.filter((li:any)=>!li.dragEnter)
+  // const draggedItem = list.filter((li:any)=>li.dragEnter)
+
+  const [dragEnter, setDragEnter] = useState(false);
+  const handleDrag = (e: any) => {
+    setList((prev) =>
+      prev.map((li: any) =>
+        li.title == e.target.innerHTML ? { ...li, dragEnter: true } : li,
+      ),
+    );
+  };
+  const handleDragEnter = (e: any) => {
+    // console.log(dragEnter);
+    // // console.log(e)
+    // const draggedId = e.dataTransfer.getData("text");
+    // console.log(draggedId)
+  };
+  const handleDragLeave = (e: any) => {
+    // setList((prev) =>
+    //   prev.map((li: any) => (li.dragEnter ? { ...li, dragEnter: false } : li)),
+    // );
+  };
+
+  const [dropped, setDrop] = useState(false);
+  const [dropped1, setDrop1] = useState(false);
+  const [newItem, setNewItem] = useState({
+      id: crypto.randomUUID(),
+      title: "box1",
+      dragEnter: false,
+      dropped: false,
+    });
+
+  const handleOver = (e: any) => {
+    e.preventDefault();
+    setDragEnter(true);
+    const item = list.map((li: any) => {
+      if (li.dragEnter) {
+        return li;
+      }
+    });
+    item.filter((l: any) => l!=undefined);
+    console.log(item)
+    setNewItem(item[0]);
+    // setList((prev) =>
+    //   prev.filter((li: any) => (!li.dragEnter)),
+    // );
+    // setNewItem({ ...newItem , id:list.length+1 });
+  };
+
+  const handleDrop = (e: any) => {
+    console.log(newItem);
+    console.log(newItem.id)
+    setDragEnter(false);
+    console.log(newItem.id)
+    // newItem && setList((old:any)=>{
+    //   let clone=[...old]
+    //   clone.splice(1)
+    //   return clone
+    // });
+  };
 
   return (
     <div className="overflow-y-auto flex-4 flex gap-3 flex-col bg-linear-45 from-purple-300 to-rose-400 h-screen p-15">
       <Header item={item} />
       <TodoInput />
-      <TodoList todo={notCompletedTodo} />
+      <TodoList todo={notCompletedTodo} setTodo={setTodo}/>
       {completedTodo.length > 0 && <CompletedList todo={completedTodo} />}
 
-      <div className="flex gap-10">
+      {/* <div className="flex gap-10">
         <div>
           {!dropped && (
             <div
@@ -121,20 +156,21 @@ const Today = ({ item }: any) => {
             </div>
           )}
         </div>
-      </div>
+      </div> */}
 
-      <div className="my-10">
+      {/* <div className="my-10">
         <ul
           onDrop={handleDrop}
           onDragOver={handleOver}
           onDragEnter={handleDragEnter}
           onDragLeave={handleDragLeave}
-          className="bg-gray-400 flex flex-col gap-2 w-50 h-50"
+          className={` ${dragEnter ? "border border-black" : ""} flex flex-col bg-gray-200 w-50 gap-2 h-70`}
         >
           {list.map((l) => {
             return (
               <li
                 key={l.id}
+                id={`${l.id}`}
                 onDragStart={handleDrag}
                 draggable={true}
                 className="w-50 bg-white"
@@ -144,7 +180,8 @@ const Today = ({ item }: any) => {
             );
           })}
         </ul>
-      </div>
+      </div> */}
+      
     </div>
   );
 };

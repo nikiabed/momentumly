@@ -2,25 +2,41 @@
 
 import All from "@/app/todo/_common/Todo/All/All";
 import Complete from "@/app/todo/_common/Todo/Complete/Complete";
+import Progress from "@/app/todo/_common/Todo/Progress/Progress";
 import Today from "@/app/todo/_common/Todo/Today/Today";
 import {
   Context,
   sidebar,
+  todoData,
   TodoListType,
 } from "@/app/todo/_common/Todo/Todo.const";
-import { Card, SearchNormal1, Sun1, TickCircle } from "iconsax-reactjs";
-
-import { createContext, useState } from "react";
+import { Card, Chart, Sun1, TickCircle } from "iconsax-reactjs";
+import { createContext, useEffect, useState } from "react";
 
 export const TodoContext = createContext<Context>({
-  todo: [{ id: "", title: "string", status: false }],
+  todo: [{ id: "", title: "string", status: false, isEdit: false }],
 });
 
+export const save = (todo: any) => {
+  localStorage.setItem("todo", JSON.stringify(todo));
+};
+
 export function TodoProvider({ children }: { children: React.ReactNode }) {
-  const [todo, setTodo] = useState<TodoListType>([]);
+  const [todo, setTodo] = useState<TodoListType>(todoData);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const item = localStorage.getItem("todo");
+    const parsed = item && JSON.parse(item);
+    setTodo(parsed);
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    save(todo);
+  }, [todo]);
   const [inputValue, setInputValue] = useState<string>("");
   const [editedTask, setEditedTask] = useState<string>("");
-  const [isEdit, setEdit] = useState<boolean>(false);
   const [focused, setFocused] = useState([
     {
       title: sidebar.myDay,
@@ -43,11 +59,21 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       icon: TickCircle,
       component: Complete,
     },
+    {
+      title: "پیشرفت",
+      state: false,
+      id: "4",
+      icon: Chart,
+      component: Progress,
+    },
   ]);
 
   const addTodo = (title: string, status: boolean) => {
     let newTask = { id: crypto.randomUUID(), title: title, status: status };
-    setTodo((prev) => [...prev, newTask]);
+    setTodo((prev: any) => {
+      let clone = [...prev, newTask];
+      return clone;
+    });
     setInputValue("");
   };
 
@@ -78,14 +104,6 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
   };
 
   const handleNewChange = (index: string) => {
-    // console.log(todo);
-    // setTodo((prev: any) =>
-    //   prev.map((list: any) => {
-    //     index === list.id
-    //       ? { ...list, title: editedTask, status: list.status }
-    //       : list;
-    //   })
-    // );
     const newList = todo.map((l: any) => {
       if (index === l.id) {
         l.title = editedTask;
@@ -94,12 +112,19 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       return l;
     });
     setTodo(newList);
-    setEdit(() => !isEdit);
+    handleIsEdit(index)
   };
 
   const handleEditedTask = (e: any) => {
     setEditedTask(e.target.value);
-    console.log(editedTask);
+  };
+
+  const handleIsEdit = (index: string) => {
+    setTodo((prev: any) =>
+      prev.map((item: any) =>
+        item.id === index ? { ...item, isEdit: !item.isEdit } : item,
+      ),
+    );
   };
 
   return (
@@ -114,10 +139,9 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
         changeTaskState,
         handleSubmit,
         handleNewChange,
-        setEdit,
-        isEdit,
         setEditedTask,
         handleEditedTask,
+        handleIsEdit,
         focused,
         setFocused,
       }}
