@@ -1,3 +1,4 @@
+"use client"
 import { useContext, JSX, useState } from "react";
 import { TodoContext } from "@/app/_utils/contexts/TodoContext";
 import { ListItemProps} from "../../Todo";
@@ -13,14 +14,12 @@ const ListItem = ({
   const Icon2 = focused.icon;
   const notCompletedTodo = todo.filter((list: any) => !list.status);
   const completedTodo = todo.filter((list: any) => list.status);
-  const [todoNum, setTodoNum] = useState()
-
 
   return (
     <li
       id={focused.id}
       onClick={handleClick}
-      className={`justify-between cursor-pointer pl-1 py-2 w-full rounded flex gap-1 items-center group hover:bg-black/5 hover:rounded ${focused.state ? "bg-black/5" : "bg-none"} `}
+      className={`relative justify-between cursor-pointer  pl-1 py-2 w-full rounded flex gap-1 items-center group hover:bg-black/5 hover:rounded ${focused.state ? "bg-black/5" : "bg-none"} `}
     >
       <div
         id={focused.id}
@@ -36,6 +35,7 @@ const ListItem = ({
           {focused.id == "3" ? completedTodo.length : notCompletedTodo.length}
         </span>
       )}
+      {focused.id == "4" && <div className="border-b border-gray-300 p absolute -bottom-1 w-full"></div>}
     </li>
   );
 };

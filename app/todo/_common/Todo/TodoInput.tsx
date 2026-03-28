@@ -1,7 +1,7 @@
 import { FC, useContext } from "react";
 import { input, InputProps } from "./Todo.const";
 import { TodoContext } from "@/app/_utils/contexts/TodoContext";
-import { Add, AddCircle, Additem } from "iconsax-reactjs";
+import { Add } from "iconsax-reactjs";
 
 export const TodoInput: FC<InputProps> = () => {
 

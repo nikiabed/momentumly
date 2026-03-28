@@ -19,6 +19,7 @@ export type TodoListType = Array<{
   title: string;
   status: boolean;
   isEdit: boolean;
+  date: string;
 }>;
 
 export type ListItems = ListItemProps[];
@@ -49,6 +50,8 @@ export type Context = {
   setEditedTask?: any;
   handleEditedTask?: (e: any) => void;
   focused?: ListItems;
+  newList?: ListItems;
+  setNewList?: Dispatch<SetStateAction<ListItems>>;
   setFocused?: Dispatch<SetStateAction<ListItems>>;
   handleIsEdit?: (index: string) => void;
 };
@@ -72,14 +75,35 @@ export const sidebar = {
   complete: "تکمیل شده",
   button: "لیست جدید",
 };
-
+const date = new Date();
+export const todoDate = date.toDateString();
 export const todoData = [
-  { id: crypto.randomUUID(), title: "باشگاه", status: false, isEdit: false },
-  { id: crypto.randomUUID(), title: "خرید خانه", status: false, isEdit: false },
+  {
+    id: crypto.randomUUID(),
+    title: "باشگاه",
+    status: false,
+    isEdit: false,
+    date: todoDate,
+  },
+  {
+    id: crypto.randomUUID(),
+    title: "خرید خانه",
+    status: false,
+    isEdit: false,
+    date: todoDate,
+  },
   {
     id: crypto.randomUUID(),
     title: "آب دادن به گل ها",
     status: false,
     isEdit: false,
+    date: "Sun Mar 27 2026",
+  },
+  {
+    id: crypto.randomUUID(),
+    title: "حموم!",
+    status: false,
+    isEdit: false,
+    date: "Sun Mar 28 2026",
   },
 ];

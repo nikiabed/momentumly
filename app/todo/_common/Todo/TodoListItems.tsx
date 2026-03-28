@@ -3,7 +3,6 @@ import {
   FC,
   HTMLAttributes,
   useContext,
-  useState,
 } from "react";
 import TodoEditInput from "./TodoEditInput";
 import { TodoContext } from "@/app/_utils/contexts/TodoContext";

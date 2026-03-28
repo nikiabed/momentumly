@@ -14,8 +14,14 @@ type ListItem = {
 
 const Today = ({ item }: any) => {
   const { todo, setTodo } = useContext(TodoContext);
-  const notCompletedTodo = todo.filter((list: any) => !list.status);
-  const completedTodo = todo.filter((list: any) => list.status);
+  const notCompletedTodo = todo.filter((list: any) => {
+    const date = new Date();
+    return !list.status && list.date === date.toDateString();
+  });
+  const completedTodo = todo.filter((list: any) => {
+    const date = new Date();
+    return list.status && list.date === date.toDateString();
+  });
   const [list, setList] = useState([
     {
       id: crypto.randomUUID(),
@@ -62,11 +68,11 @@ const Today = ({ item }: any) => {
   const [dropped, setDrop] = useState(false);
   const [dropped1, setDrop1] = useState(false);
   const [newItem, setNewItem] = useState({
-      id: crypto.randomUUID(),
-      title: "box1",
-      dragEnter: false,
-      dropped: false,
-    });
+    id: crypto.randomUUID(),
+    title: "box1",
+    dragEnter: false,
+    dropped: false,
+  });
 
   const handleOver = (e: any) => {
     e.preventDefault();
@@ -76,8 +82,8 @@ const Today = ({ item }: any) => {
         return li;
       }
     });
-    item.filter((l: any) => l!=undefined);
-    console.log(item)
+    item.filter((l: any) => l != undefined);
+    console.log(item);
     setNewItem(item[0]);
     // setList((prev) =>
     //   prev.filter((li: any) => (!li.dragEnter)),
@@ -87,9 +93,9 @@ const Today = ({ item }: any) => {
 
   const handleDrop = (e: any) => {
     console.log(newItem);
-    console.log(newItem.id)
+    console.log(newItem.id);
     setDragEnter(false);
-    console.log(newItem.id)
+    console.log(newItem.id);
     // newItem && setList((old:any)=>{
     //   let clone=[...old]
     //   clone.splice(1)
@@ -98,10 +104,10 @@ const Today = ({ item }: any) => {
   };
 
   return (
-    <div className="overflow-y-auto flex-4 flex gap-3 flex-col bg-linear-45 from-purple-300 to-rose-400 h-screen p-15">
+    <div className="overflow-y-auto flex-4 flex gap-3 flex-col bg-linear-45 from-purple-300 to-rose-400 h-screen px-15 pt-5">
       <Header item={item} />
       <TodoInput />
-      <TodoList todo={notCompletedTodo} setTodo={setTodo}/>
+      <TodoList todo={notCompletedTodo} setTodo={setTodo} />
       {completedTodo.length > 0 && <CompletedList todo={completedTodo} />}
 
       {/* <div className="flex gap-10">
@@ -181,7 +187,6 @@ const Today = ({ item }: any) => {
           })}
         </ul>
       </div> */}
-      
     </div>
   );
 };

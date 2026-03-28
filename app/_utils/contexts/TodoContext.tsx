@@ -10,11 +10,12 @@ import {
   todoData,
   TodoListType,
 } from "@/app/todo/_common/Todo/Todo.const";
-import { Card, Chart, Sun1, TickCircle } from "iconsax-reactjs";
+import Work from "@/app/todo/_common/Todo/Work/Work";
+import { Barcode, Card, Chart, HamburgerMenu, Sun1, TickCircle } from "iconsax-reactjs";
 import { createContext, useEffect, useState } from "react";
 
 export const TodoContext = createContext<Context>({
-  todo: [{ id: "", title: "string", status: false, isEdit: false }],
+  todo: [{ id: "", title: "string", status: false, isEdit: false, date: "" }],
 });
 
 export const save = (todo: any) => {
@@ -23,9 +24,8 @@ export const save = (todo: any) => {
 
 export function TodoProvider({ children }: { children: React.ReactNode }) {
   const [todo, setTodo] = useState<TodoListType>(todoData);
-
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    // if (typeof window === "undefined") return;
     const item = localStorage.getItem("todo");
     const parsed = item && JSON.parse(item);
     setTodo(parsed);
@@ -35,6 +35,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     if (typeof window === "undefined") return;
     save(todo);
   }, [todo]);
+
   const [inputValue, setInputValue] = useState<string>("");
   const [editedTask, setEditedTask] = useState<string>("");
   const [focused, setFocused] = useState([
@@ -66,10 +67,33 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       icon: Chart,
       component: Progress,
     },
+     {
+      title: "کار",
+      state: false,
+      id: "5",
+      icon: HamburgerMenu,
+      component: Work,
+    },
+  ]);
+
+  const [newList, setNewList] = useState([
+    {
+      title: "کار",
+      state: true,
+      id: "1",
+      icon: HamburgerMenu,
+      component: Work,
+    },
   ]);
 
   const addTodo = (title: string, status: boolean) => {
-    let newTask = { id: crypto.randomUUID(), title: title, status: status };
+    let newTask = {
+      id: crypto.randomUUID(),
+      title: title,
+      status: status,
+      isEdit: false,
+      // date: todoDate,
+    };
     setTodo((prev: any) => {
       let clone = [...prev, newTask];
       return clone;
@@ -112,7 +136,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       return l;
     });
     setTodo(newList);
-    handleIsEdit(index)
+    handleIsEdit(index);
   };
 
   const handleEditedTask = (e: any) => {
@@ -144,6 +168,8 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
         handleIsEdit,
         focused,
         setFocused,
+        newList,
+        setNewList,
       }}
     >
       {children}
