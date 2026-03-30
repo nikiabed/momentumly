@@ -1,7 +1,7 @@
-"use client"
-import { useContext, JSX, useState } from "react";
+"use client";
+import { useContext } from "react";
 import { TodoContext } from "@/app/_utils/contexts/TodoContext";
-import { ListItemProps} from "../../Todo";
+import { ListItemProps, TodoListType } from "../../Todo";
 
 const ListItem = ({
   focused,
@@ -12,9 +12,27 @@ const ListItem = ({
 }) => {
   const { todo } = useContext(TodoContext);
   const Icon2 = focused.icon;
-  const notCompletedTodo = todo.filter((list: any) => !list.status);
-  const completedTodo = todo.filter((list: any) => list.status);
 
+  const getTodoCount = (list: TodoListType) => {
+    const completedTodo = todo.filter((list: any) => list.status);
+    const todayTodo = list.filter((l: any) => {
+      const date = new Date();
+      return !l.status && l.date === date.toDateString();
+    });
+    const importantTodo = todo.filter((list: any) => list.isImportant);
+    switch (focused.id) {
+      case "1":
+        return todayTodo.length;
+      case "2":
+        return importantTodo.length;
+      case "3":
+        return todo.length;
+      case "4":
+        return completedTodo.length;
+      default:
+        return -1;
+    }
+  };
   return (
     <li
       id={focused.id}
@@ -30,12 +48,14 @@ const ListItem = ({
           <span id={focused.id}>{focused.title}</span>
         </div>
       </div>
-      {todo.length > 0 && focused.id != "4" && (
+      {getTodoCount(todo) > 0 && (
         <span className="bg-rose-400 h-5 px-1 rounded-md text-pink-50 text-sm">
-          {focused.id == "3" ? completedTodo.length : notCompletedTodo.length}
+          {getTodoCount(todo)}
         </span>
       )}
-      {focused.id == "4" && <div className="border-b border-gray-300 p absolute -bottom-1 w-full"></div>}
+      {focused.id == "5" && (
+        <div className="border-b border-gray-300 p absolute -bottom-1 w-full"></div>
+      )}
     </li>
   );
 };

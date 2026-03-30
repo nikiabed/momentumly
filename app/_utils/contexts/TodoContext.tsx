@@ -2,20 +2,38 @@
 
 import All from "@/app/todo/_common/Todo/All/All";
 import Complete from "@/app/todo/_common/Todo/Complete/Complete";
+import Important from "@/app/todo/_common/Todo/Important/Important";
 import Progress from "@/app/todo/_common/Todo/Progress/Progress";
 import Today from "@/app/todo/_common/Todo/Today/Today";
 import {
   Context,
   sidebar,
   todoData,
+  todoDate,
   TodoListType,
 } from "@/app/todo/_common/Todo/Todo.const";
 import Work from "@/app/todo/_common/Todo/Work/Work";
-import { Barcode, Card, Chart, HamburgerMenu, Sun1, TickCircle } from "iconsax-reactjs";
+import {
+  Card,
+  Chart,
+  HamburgerMenu,
+  Star1,
+  Sun1,
+  TickCircle,
+} from "iconsax-reactjs";
 import { createContext, useEffect, useState } from "react";
 
 export const TodoContext = createContext<Context>({
-  todo: [{ id: "", title: "string", status: false, isEdit: false, date: "" }],
+  todo: [
+    {
+      id: "",
+      title: "string",
+      status: false,
+      isEdit: false,
+      date: "",
+      isImportant: false,
+    },
+  ],
 });
 
 export const save = (todo: any) => {
@@ -24,8 +42,10 @@ export const save = (todo: any) => {
 
 export function TodoProvider({ children }: { children: React.ReactNode }) {
   const [todo, setTodo] = useState<TodoListType>(todoData);
+  const [inputValue, setInputValue] = useState<string>("");
+  const [editedTask, setEditedTask] = useState<string>("");
   useEffect(() => {
-    // if (typeof window === "undefined") return;
+    if (typeof window === "undefined") return;
     const item = localStorage.getItem("todo");
     const parsed = item && JSON.parse(item);
     setTodo(parsed);
@@ -36,8 +56,6 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     save(todo);
   }, [todo]);
 
-  const [inputValue, setInputValue] = useState<string>("");
-  const [editedTask, setEditedTask] = useState<string>("");
   const [focused, setFocused] = useState([
     {
       title: sidebar.myDay,
@@ -46,41 +64,38 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       icon: Sun1,
       component: Today,
     },
+      {
+      title: "مهم!",
+      state: false,
+      id: "2",
+      icon: Star1,
+      component: Important,
+    },
     {
       title: sidebar.All,
       state: false,
-      id: "2",
+      id: "3",
       icon: Card,
       component: All,
     },
     {
       title: sidebar.complete,
       state: false,
-      id: "3",
+      id: "4",
       icon: TickCircle,
       component: Complete,
     },
     {
       title: "پیشرفت",
       state: false,
-      id: "4",
+      id: "5",
       icon: Chart,
       component: Progress,
     },
-     {
-      title: "کار",
-      state: false,
-      id: "5",
-      icon: HamburgerMenu,
-      component: Work,
-    },
-  ]);
-
-  const [newList, setNewList] = useState([
     {
       title: "کار",
-      state: true,
-      id: "1",
+      state: false,
+      id: "6",
       icon: HamburgerMenu,
       component: Work,
     },
@@ -92,7 +107,8 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       title: title,
       status: status,
       isEdit: false,
-      // date: todoDate,
+      date: todoDate,
+      isImportant: false,
     };
     setTodo((prev: any) => {
       let clone = [...prev, newTask];
@@ -144,9 +160,17 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
   };
 
   const handleIsEdit = (index: string) => {
-    setTodo((prev: any) =>
+    setTodo((prev: TodoListType) =>
       prev.map((item: any) =>
         item.id === index ? { ...item, isEdit: !item.isEdit } : item,
+      ),
+    );
+  };
+
+  const handleImportant = (index: string) => {
+    setTodo((prev: TodoListType) =>
+      prev.map((item: any) =>
+        item.id === index ? { ...item, isImportant: !item.isImportant } : item,
       ),
     );
   };
@@ -166,10 +190,9 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
         setEditedTask,
         handleEditedTask,
         handleIsEdit,
+        handleImportant,
         focused,
         setFocused,
-        newList,
-        setNewList,
       }}
     >
       {children}

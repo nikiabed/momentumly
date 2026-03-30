@@ -1,11 +1,11 @@
 "use client";
 
 import { TodoContext } from "@/app/_utils/contexts/TodoContext";
-import { Edit, Record, TickCircle, Trash } from "iconsax-reactjs";
+import { Edit, Record, Star, Star1, TickCircle, Trash } from "iconsax-reactjs";
 import { useContext, useState } from "react";
 
 export default function TodoEditInput({ list }: any) {
-  const { handleIsEdit, changeTaskState, handleDelete } =
+  const { handleImportant, handleIsEdit, changeTaskState, handleDelete } =
     useContext(TodoContext);
 
   const [isOpen, setOpen] = useState(false);
@@ -39,13 +39,13 @@ export default function TodoEditInput({ list }: any) {
             onClick={() => {
               handleIsEdit && handleIsEdit(list.id);
             }}
-            className="cursor-pointer px-2 h-8 text-sm bg-blue-400 rounded-lg text-pink-50"
+            className="cursor-pointer px-2 h-8 text-sm bg-blue-400 hover:bg-blue-500 rounded-lg text-pink-50"
           >
             <Edit size={18} />
           </button>
 
           <button
-            className="cursor-pointer px-2 h-8 text-sm bg-rose-400 rounded-lg text-pink-50"
+            className="cursor-pointer px-2 h-8 text-sm bg-rose-400 hover:bg-rose-500 rounded-lg text-pink-50"
             onClick={() => {
               handleDelete && handleDelete(list.id);
             }}
@@ -55,6 +55,18 @@ export default function TodoEditInput({ list }: any) {
         </>
       )}
       {/* <span>{list.date}</span> */}
+      <button
+        className={` hover:cursor-pointer rounded-md h-8 px-2 text-sm  ${isOpen ? "bg-pink-500 text-rose-50 hover:bg-pink-600 " : "hover:text-pink-800"}`}
+        onClick={() => {
+          handleImportant && handleImportant(list.id);
+        }}
+      >
+        {list.isImportant ? (
+          <Star1 size={18} variant="Bold" className={` ${isOpen ? "text-rose-50" : "text-pink-800"}`} />
+        ) : (
+          <Star1 size={18} variant="Linear" />
+        )}
+      </button>
     </>
   );
 }

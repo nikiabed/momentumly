@@ -20,6 +20,7 @@ export type TodoListType = Array<{
   status: boolean;
   isEdit: boolean;
   date: string;
+  isImportant: boolean;
 }>;
 
 export type ListItems = ListItemProps[];
@@ -50,10 +51,9 @@ export type Context = {
   setEditedTask?: any;
   handleEditedTask?: (e: any) => void;
   focused?: ListItems;
-  newList?: ListItems;
-  setNewList?: Dispatch<SetStateAction<ListItems>>;
   setFocused?: Dispatch<SetStateAction<ListItems>>;
   handleIsEdit?: (index: string) => void;
+  handleImportant?: (index: string) => void;
 };
 
 export const header = {
@@ -84,6 +84,7 @@ export const todoData = [
     status: false,
     isEdit: false,
     date: todoDate,
+    isImportant: false,
   },
   {
     id: crypto.randomUUID(),
@@ -91,6 +92,7 @@ export const todoData = [
     status: false,
     isEdit: false,
     date: todoDate,
+    isImportant: false,
   },
   {
     id: crypto.randomUUID(),
@@ -98,6 +100,7 @@ export const todoData = [
     status: false,
     isEdit: false,
     date: "Sun Mar 27 2026",
+    isImportant: false,
   },
   {
     id: crypto.randomUUID(),
@@ -105,5 +108,6 @@ export const todoData = [
     status: false,
     isEdit: false,
     date: "Sun Mar 28 2026",
+    isImportant: false,
   },
 ];
