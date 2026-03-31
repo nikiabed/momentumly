@@ -1,16 +1,16 @@
 "use client";
 
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { TodoContext } from "@/app/_utils/contexts/TodoContext";
+import Board from "./Board";
 
 export default function Todo() {
-  const { focused, newList } = useContext(TodoContext);
+  const { focused } = useContext(TodoContext);
   return (
     <>
       {focused?.map((item: any) => {
         if (item.state) {
-          let Component = item.component;
-          return <Component item={item} key={item.id} />;
+          return <Board item={item} key={item.id} />;
         }
       })}
     </>

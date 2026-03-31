@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { TodoContext } from "@/app/_utils/contexts/TodoContext";
-import Header from "./Header/TodayHeader";
+import Header from "../../Header/Header";
 import TodoInput from "../TodoInput";
 import TodoList from "../TodoList";
 import CompletedList from "../CompletedList";
@@ -108,7 +108,7 @@ const Today = ({ item }: any) => {
       <Header item={item} />
       <TodoInput />
       <TodoList todo={notCompletedTodo} setTodo={setTodo} />
-      {completedTodo.length > 0 && <CompletedList todo={completedTodo} />}
+      {/* {completedTodo.length > 0 && <CompletedList todo={completedTodo} />} */}
 
       {/* <div className="flex gap-10">
         <div>

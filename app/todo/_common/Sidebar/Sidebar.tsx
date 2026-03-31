@@ -5,25 +5,14 @@ import ListItem from "./ListItem/ListItem";
 import { useContext } from "react";
 import { TodoContext } from "@/app/_utils/contexts/TodoContext";
 import { ListItemProps, sidebar } from "../Todo/Todo.const";
-import { Add } from "iconsax-reactjs";
+import { Add, HamburgerMenu } from "iconsax-reactjs";
 
 export default function Sidebar() {
-  const { focused, setFocused } = useContext(TodoContext);
-
-  const handleClick = (e: any) => {
-    setFocused &&
-      setFocused((prev: any) =>
-        prev.map((item: any) =>
-          e.target.id == item.id
-            ? { ...item, state: true }
-            : { ...item, state: false },
-        ),
-      );
-  };
+  const { focused, handleNewList } = useContext(TodoContext);
 
   return (
-    <div className="relative h-screen pt-5 px-3 bg-pink-50 flex flex-1 flex-col gap-2 justify-between">
-      <div className="flex flex-col gap-2">
+    <div className="overflow-y-hidden h-screen pt-5 px-3 bg-pink-50 flex flex-1 flex-col gap-2 justify-between">
+      <div className="shrink-0">
         <div className="flex ">
           <Image
             src={"/images/niki-abedzade.jpg"}
@@ -34,24 +23,21 @@ export default function Sidebar() {
           />
         </div>
         <Search />
-        <div className="flex flex-col gap-2 text-gray-800 text-md pb-1.5  shadow-gray-600">
-          {focused &&
-            focused.map((list: ListItemProps) => {
-              return (
-                <ListItem
-                  key={list.id}
-                  focused={list}
-                  handleClick={handleClick}
-                />
-              );
-            })}
-        </div>
       </div>
 
-      <div className="cursor-pointer flex items-center gap-4 px-2 text-gray-700 hover:bg-black/5 hover:rounded py-2 ">
-        <Add size={23} className="cursor-pointer text-xs" />
-        <button className="cursor-pointer">{sidebar.button}</button>
+      <div className="overflow-auto grow flex flex-col gap-2 text-gray-800 text-md pb-1.5  shadow-gray-600">
+        {focused?.map((list: ListItemProps) => {
+          return <ListItem key={list.id} focused={list} />;
+        })}
       </div>
+
+      <button
+        onClick={handleNewList}
+        className="shrink-0 cursor-pointer flex items-center gap-4 px-2 text-gray-700 hover:bg-black/5 hover:rounded py-2 "
+      >
+        <Add size={23} className="cursor-pointer text-xs" />
+        {sidebar.button}
+      </button>
     </div>
   );
 }

@@ -1,18 +1,14 @@
 "use client";
-
-import All from "@/app/todo/_common/Todo/All/All";
-import Complete from "@/app/todo/_common/Todo/Complete/Complete";
 import Important from "@/app/todo/_common/Todo/Important/Important";
-import Progress from "@/app/todo/_common/Todo/Progress/Progress";
-import Today from "@/app/todo/_common/Todo/Today/Today";
 import {
   Context,
+  items,
+  ListItemProps,
   sidebar,
   todoData,
   todoDate,
   TodoListType,
 } from "@/app/todo/_common/Todo/Todo.const";
-import Work from "@/app/todo/_common/Todo/Work/Work";
 import {
   Card,
   Chart,
@@ -40,66 +36,27 @@ export const save = (todo: any) => {
   localStorage.setItem("todo", JSON.stringify(todo));
 };
 
+export const saveFocused = (focused: any) => {
+  localStorage.setItem("focused", JSON.stringify(focused));
+};
+
 export function TodoProvider({ children }: { children: React.ReactNode }) {
   const [todo, setTodo] = useState<TodoListType>(todoData);
   const [inputValue, setInputValue] = useState<string>("");
   const [editedTask, setEditedTask] = useState<string>("");
+  const [focused, setFocused] = useState(items);
+  const [boardValue, setBoardValue] = useState("");
+  
   useEffect(() => {
     if (typeof window === "undefined") return;
     const item = localStorage.getItem("todo");
     const parsed = item && JSON.parse(item);
     setTodo(parsed);
   }, []);
-
   useEffect(() => {
     if (typeof window === "undefined") return;
     save(todo);
   }, [todo]);
-
-  const [focused, setFocused] = useState([
-    {
-      title: sidebar.myDay,
-      state: true,
-      id: "1",
-      icon: Sun1,
-      component: Today,
-    },
-      {
-      title: "مهم!",
-      state: false,
-      id: "2",
-      icon: Star1,
-      component: Important,
-    },
-    {
-      title: sidebar.All,
-      state: false,
-      id: "3",
-      icon: Card,
-      component: All,
-    },
-    {
-      title: sidebar.complete,
-      state: false,
-      id: "4",
-      icon: TickCircle,
-      component: Complete,
-    },
-    {
-      title: "پیشرفت",
-      state: false,
-      id: "5",
-      icon: Chart,
-      component: Progress,
-    },
-    {
-      title: "کار",
-      state: false,
-      id: "6",
-      icon: HamburgerMenu,
-      component: Work,
-    },
-  ]);
 
   const addTodo = (title: string, status: boolean) => {
     let newTask = {
@@ -167,12 +124,118 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     );
   };
 
+  const updateFocused = (list: TodoListType) => {
+    let newItem = {
+      title: sidebar.important,
+      state: false,
+      id: crypto.randomUUID(),
+      icon: "Star1",
+      todos: [],
+      color: ["red-300", "red-400"],
+      isEdit: false,
+      editable: false,
+    };
+    const exists = focused.find(
+      (focus: ListItemProps) => focus.title == sidebar.important,
+    );
+
+    const importantCount = list.filter((l: any) => l.isImportant).length;
+    const open = focused.find((f: ListItemProps) => f.state);
+    setFocused((prev: any) => {
+      let old = [...prev];
+      if (exists) {
+        if (importantCount == 0) {
+          old.splice(1, 1);
+          let today = old[0];
+          if (open?.title == sidebar.important) {
+            console.log(open);
+            today = { ...today, state: true };
+          }
+          old.splice(0, 1, today);
+          return old;
+        } else {
+          return old;
+        }
+      } else {
+        old.splice(1, 0, newItem);
+        return old;
+      }
+    });
+  };
+
   const handleImportant = (index: string) => {
-    setTodo((prev: TodoListType) =>
-      prev.map((item: any) =>
-        item.id === index ? { ...item, isImportant: !item.isImportant } : item,
+    const newTodos = todo.map((item: any) =>
+      item.id === index ? { ...item, isImportant: !item.isImportant } : item,
+    );
+    setTodo(newTodos);
+    updateFocused(newTodos);
+  };
+
+  const handleBoardInput = (e: any) => {
+    setBoardValue(e.target.value);
+  };
+
+  const handleBoardEditable = (index: string) => {
+    setFocused((prev: ListItemProps[]) => {
+      return prev.map((item: ListItemProps) => {
+        if (item.id === index && item.editable && !item.isEdit) {
+          return { ...item, isEdit: true };
+        }
+        return item;
+      });
+    });
+  };
+
+  const handleBoardSubmit = (index: string, text: string) => {
+    const newList = focused.map((l: ListItemProps) => {
+      if (index === l.id) {
+        l.title = text;
+        return l;
+      }
+      return l;
+    });
+    setFocused(newList);
+    handleBoardIsEdit(index);
+  };
+
+  const handleBoardClick = (index: string) => {
+    setFocused &&
+      setFocused((prev: any) =>
+        prev.map((item: any) =>
+          index === item.id
+            ? { ...item, state: true }
+            : { ...item, state: false },
+        ),
+      );
+  };
+
+  const handleBoardIsEdit = (index: string) => {
+    setFocused((prev: ListItemProps[]) =>
+      prev.map((item: ListItemProps) =>
+        item.id === index ? { ...item, isEdit: !item.isEdit } : item,
       ),
     );
+  };
+
+  const handleNewList = () => {
+    const newItem = {
+      title: sidebar.untitled,
+      state: true,
+      id: crypto.randomUUID(),
+      icon: "HamburgerMenu",
+      todos: [],
+      color: ["purple-300", "purple-600"],
+      isEdit: true,
+      editable: true,
+    };
+    setFocused &&
+      setFocused((prev: any) => {
+        let old = [...prev];
+        const newList = old.map((item: any) => {
+          return { ...item, state: false };
+        });
+        return [...newList, newItem];
+      });
   };
 
   return (
@@ -193,6 +256,13 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
         handleImportant,
         focused,
         setFocused,
+        handleBoardSubmit,
+        handleBoardInput,
+        boardValue,
+        handleBoardClick,
+        handleNewList,
+        handleBoardIsEdit,
+        handleBoardEditable,
       }}
     >
       {children}

@@ -1,2 +1,2 @@
-export * from './TodayHeader'
+export * from './Header'
 export * from './Header.const'

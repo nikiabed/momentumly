@@ -1,4 +1,11 @@
-import { Icon } from "iconsax-reactjs";
+import {
+  Card,
+  Chart,
+  HamburgerMenu,
+  Icon,
+  Sun1,
+  TickCircle,
+} from "iconsax-reactjs";
 import {
   ChangeEventHandler,
   DetailedHTMLProps,
@@ -14,14 +21,15 @@ export type InputProps = DetailedHTMLProps<
   HTMLDivElement
 >;
 
-export type TodoListType = Array<{
+export type TodoType = {
   id: string;
   title: string;
   status: boolean;
   isEdit: boolean;
   date: string;
   isImportant: boolean;
-}>;
+}
+export type TodoListType = TodoType[]
 
 export type ListItems = ListItemProps[];
 
@@ -29,8 +37,11 @@ export type ListItemProps = {
   title: string;
   state: boolean;
   id: string;
-  icon: Icon;
-  component: ({ item }: any) => React.JSX.Element;
+  icon: string;
+  todos: never[];
+  color: string[];
+  isEdit: boolean;
+  editable: boolean;
 };
 
 export type Context = {
@@ -54,6 +65,13 @@ export type Context = {
   setFocused?: Dispatch<SetStateAction<ListItems>>;
   handleIsEdit?: (index: string) => void;
   handleImportant?: (index: string) => void;
+  handleBoardSubmit?: (index: string, text: string) => void;
+  boardValue?: string;
+  handleBoardInput?: (e: any) => void;
+  handleBoardClick?: (index: string) => void;
+  handleNewList?: () => void;
+  handleBoardIsEdit?: (index: string) => void;
+  handleBoardEditable?: (index: string) => void
 };
 
 export const header = {
@@ -71,9 +89,13 @@ export const input = {
 export const sidebar = {
   placeholder: "پیدا کردن..",
   myDay: "امروز",
+  important: "مهم",
   All: "همه",
   complete: "تکمیل شده",
   button: "لیست جدید",
+  progress: "پیشرفت",
+  newList: "کار",
+  untitled: "بدون عنوان",
 };
 const date = new Date();
 export const todoDate = date.toDateString();
@@ -109,5 +131,57 @@ export const todoData = [
     isEdit: false,
     date: "Sun Mar 28 2026",
     isImportant: false,
+  },
+]
+export const items = [
+  {
+    title: sidebar.myDay,
+    state: true,
+    id: crypto.randomUUID(),
+    icon: "Sun1",
+    todos: [],
+    color: ["purple-300", "rose-400"],
+    isEdit: false,
+    editable: false,
+  },
+  {
+    title: sidebar.All,
+    state: false,
+    id: crypto.randomUUID(),
+    icon: "Card",
+    todos: [],
+    color: ["purple-300", "purple-400"],
+    isEdit: false,
+    editable: false,
+  },
+  {
+    title: sidebar.complete,
+    state: false,
+    id: crypto.randomUUID(),
+    icon: "TickCircle",
+    todos: [],
+    color: ["[#cac8d8]", "[#239e9a]"],
+    isEdit: false,
+    editable: false,
+  },
+  {
+    title: sidebar.progress,
+    state: false,
+    id: crypto.randomUUID(),
+    icon: "Chart",
+    todos: [],
+    color: ["[#a4cbce]", "[#41bbc4]"],
+    isEdit: false,
+    editable: false,
+  },
+  {
+    title: sidebar.newList,
+    state: false,
+    id: crypto.randomUUID(),
+    icon: "HamburgerMenu",
+    todos: [],
+    color: ["purple-300", "purple-600"],
+    isEdit: false,
+    editable: true,
   },
 ];

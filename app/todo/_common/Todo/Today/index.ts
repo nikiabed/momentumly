@@ -1,2 +1,2 @@
 export * from './Today'
-export * from './Header'
+export * from '../../Header'
