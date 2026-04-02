@@ -1,6 +1,6 @@
 "use client";
 
-import { TodoContext } from "@/app/_utils/contexts/TodoContext";
+import { TodoContext } from "@/app/_utils/ui/TodoProvider/TodoProvider";
 import { Edit, Record, Star, Star1, TickCircle, Trash } from "iconsax-reactjs";
 import { useContext, useState } from "react";
 

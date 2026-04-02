@@ -6,7 +6,6 @@ export const getDateFormater = () => {
   const date = new Date();
   const dateString = date.toDateString().split(" ");
   let newDate2 = date.toLocaleDateString("fa").split("/");
-  console.log(date.toDateString());
   let day: string = dateString[0];
   let month: string = newDate2[1];
   let daynum: string = newDate2[2];

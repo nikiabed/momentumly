@@ -5,7 +5,7 @@ import {
   useContext,
 } from "react";
 import TodoEditInput from "./TodoEditInput";
-import { TodoContext } from "@/app/_utils/contexts/TodoContext";
+import { TodoContext } from "@/app/_utils/ui/TodoProvider/TodoProvider";
 import { CloseCircle, TickCircle } from "iconsax-reactjs";
 
 type itemProps = DetailedHTMLProps<

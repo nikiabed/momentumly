@@ -10,8 +10,7 @@ const Progress = ({ item }: { item: ListItemProps }) => {
     { label: "دیروز", value: 6 },
   ];
   return (
-    <div className="flex-4 h-screen px-15 pt-5 bg-linear-45 to-[#41bbc4] from-[#a4cbce]">
-      <Header item={item} />
+    <div>
       <LineChart data={data} height={200} width={200}/>
     </div>
   );

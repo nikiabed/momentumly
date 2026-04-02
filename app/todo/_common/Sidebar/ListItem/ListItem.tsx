@@ -1,6 +1,6 @@
 "use client";
 import { useContext, useState } from "react";
-import { TodoContext } from "@/app/_utils/contexts/TodoContext";
+import { TodoContext } from "@/app/_utils/ui/TodoProvider/TodoProvider";
 import { ItemIcon, ListItemProps, sidebar, TodoListType } from "../../Todo";
 
 export const getTodoCount = (list: TodoListType, focused: ListItemProps) => {

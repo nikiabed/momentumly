@@ -1,5 +1,4 @@
 "use client";
-import Important from "@/app/todo/_common/Todo/Important/Important";
 import {
   Context,
   items,
@@ -8,15 +7,8 @@ import {
   todoData,
   todoDate,
   TodoListType,
+  TodoType,
 } from "@/app/todo/_common/Todo/Todo.const";
-import {
-  Card,
-  Chart,
-  HamburgerMenu,
-  Star1,
-  Sun1,
-  TickCircle,
-} from "iconsax-reactjs";
 import { createContext, useEffect, useState } from "react";
 
 export const TodoContext = createContext<Context>({
@@ -28,6 +20,7 @@ export const TodoContext = createContext<Context>({
       isEdit: false,
       date: "",
       isImportant: false,
+      item: ""
     },
   ],
 });
@@ -58,14 +51,15 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     save(todo);
   }, [todo]);
 
-  const addTodo = (title: string, status: boolean) => {
+  const addTodo = (title: string, item:ListItemProps) => {
     let newTask = {
       id: crypto.randomUUID(),
       title: title,
-      status: status,
+      status: false,
       isEdit: false,
       date: todoDate,
       isImportant: false,
+      item: item.title
     };
     setTodo((prev: any) => {
       let clone = [...prev, newTask];
@@ -79,10 +73,10 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     setInputValue(e.target.value);
   };
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = (e: any, item:ListItemProps) => {
     e.preventDefault();
     if (inputValue.length != 0) {
-      addTodo(inputValue, false);
+      addTodo(inputValue, item);
     }
   };
 
@@ -134,6 +128,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       color: ["red-300", "red-400"],
       isEdit: false,
       editable: false,
+       filter: (todo: TodoType) => todo.isImportant
     };
     const exists = focused.find(
       (focus: ListItemProps) => focus.title == sidebar.important,
@@ -190,6 +185,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     const newList = focused.map((l: ListItemProps) => {
       if (index === l.id) {
         l.title = text;
+        l.filter = (todo: TodoType) => todo.item === text
         return l;
       }
       return l;
@@ -223,10 +219,10 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       state: true,
       id: crypto.randomUUID(),
       icon: "HamburgerMenu",
-      todos: [],
       color: ["purple-300", "purple-600"],
       isEdit: true,
       editable: true,
+      filter: (todo: TodoType) => todo.item === sidebar.untitled
     };
     setFocused &&
       setFocused((prev: any) => {

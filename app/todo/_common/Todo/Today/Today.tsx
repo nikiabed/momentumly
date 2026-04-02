@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { TodoContext } from "@/app/_utils/contexts/TodoContext";
+import { TodoContext } from "@/app/_utils/ui/TodoProvider/TodoProvider";
 import Header from "../../Header/Header";
 import TodoInput from "../TodoInput";
 import TodoList from "../TodoList";

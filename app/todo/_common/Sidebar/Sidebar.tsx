@@ -3,9 +3,9 @@ import Image from "next/image";
 import Search from "./Search/Search";
 import ListItem from "./ListItem/ListItem";
 import { useContext } from "react";
-import { TodoContext } from "@/app/_utils/contexts/TodoContext";
+import { TodoContext } from "@/app/_utils/ui/TodoProvider/TodoProvider";
 import { ListItemProps, sidebar } from "../Todo/Todo.const";
-import { Add, HamburgerMenu } from "iconsax-reactjs";
+import { Add } from "iconsax-reactjs";
 
 export default function Sidebar() {
   const { focused, handleNewList } = useContext(TodoContext);

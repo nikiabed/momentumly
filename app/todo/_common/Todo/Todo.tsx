@@ -1,7 +1,7 @@
 "use client";
 
 import { useContext } from "react";
-import { TodoContext } from "@/app/_utils/contexts/TodoContext";
+import { TodoContext } from "@/app/_utils/ui/TodoProvider/TodoProvider";
 import Board from "./Board";
 
 export default function Todo() {

@@ -1,25 +1,4 @@
-import {
-  Card,
-  Chart,
-  HamburgerMenu,
-  Icon,
-  Sun1,
-  TickCircle,
-} from "iconsax-reactjs";
-import {
-  ChangeEventHandler,
-  DetailedHTMLProps,
-  Dispatch,
-  HTMLAttributes,
-  JSX,
-  SetStateAction,
-  SubmitEventHandler,
-} from "react";
-
-export type InputProps = DetailedHTMLProps<
-  HTMLAttributes<HTMLDivElement>,
-  HTMLDivElement
->;
+import { ChangeEventHandler, Dispatch, SetStateAction } from "react";
 
 export type TodoType = {
   id: string;
@@ -28,8 +7,9 @@ export type TodoType = {
   isEdit: boolean;
   date: string;
   isImportant: boolean;
-}
-export type TodoListType = TodoType[]
+  item: string;
+};
+export type TodoListType = TodoType[];
 
 export type ListItems = ListItemProps[];
 
@@ -38,23 +18,23 @@ export type ListItemProps = {
   state: boolean;
   id: string;
   icon: string;
-  todos: never[];
   color: string[];
   isEdit: boolean;
   editable: boolean;
+  filter: (todo: TodoType) => any
 };
 
 export type Context = {
   todo: TodoListType;
   setTodo?: any;
   inputValue?: string | undefined;
-  addTodo?: (title: string, status: boolean) => void;
+  addTodo?: (title: string, item: ListItemProps) => void;
   handleChange?:
     | ChangeEventHandler<HTMLInputElement, HTMLInputElement>
     | undefined;
   handleDelete?: (index: string) => void;
   changeTaskState?: (index: string) => void;
-  handleSubmit?: SubmitEventHandler<HTMLFormElement> | undefined;
+  handleSubmit?: (e: any, item: ListItemProps) => void;
   isEdit?: boolean;
   setEdit?: any;
   editedTask?: string | undefined;
@@ -71,7 +51,7 @@ export type Context = {
   handleBoardClick?: (index: string) => void;
   handleNewList?: () => void;
   handleBoardIsEdit?: (index: string) => void;
-  handleBoardEditable?: (index: string) => void
+  handleBoardEditable?: (index: string) => void;
 };
 
 export const header = {
@@ -94,11 +74,63 @@ export const sidebar = {
   complete: "تکمیل شده",
   button: "لیست جدید",
   progress: "پیشرفت",
-  newList: "کار",
+  work: "کار",
   untitled: "بدون عنوان",
 };
 const date = new Date();
 export const todoDate = date.toDateString();
+export const items = [
+  {
+    title: sidebar.myDay,
+    state: true,
+    id: crypto.randomUUID(),
+    icon: "Sun1",
+    color: ["purple-300", "rose-400"],
+    isEdit: false,
+    editable: false,
+    filter: (todo: TodoType) =>  todo.item === sidebar.myDay && !todo.status
+  },
+  {
+    title: sidebar.All,
+    state: false,
+    id: crypto.randomUUID(),
+    icon: "Card",
+    color: ["purple-300", "purple-400"],
+    isEdit: false,
+    editable: false,
+    filter: (todo: TodoType) => todo && !todo.status
+  },
+  {
+    title: sidebar.complete,
+    state: false,
+    id: crypto.randomUUID(),
+    icon: "TickCircle",
+    color: ["[#cac8d8]", "[#239e9a]"],
+    isEdit: false,
+    editable: false,
+    filter: (todo: TodoType) => todo.status
+  },
+  {
+    title: sidebar.progress,
+    state: false,
+    id: crypto.randomUUID(),
+    icon: "Chart",
+    color: ["[#a4cbce]", "rose-400"],
+    isEdit: false,
+    editable: false,
+    filter: (todo: TodoType) => todo
+  },
+  {
+    title: sidebar.work,
+    state: false,
+    id: crypto.randomUUID(),
+    icon: "HamburgerMenu",
+    color: ["purple-300", "purple-400"],
+    isEdit: false,
+    editable: true,
+    filter: (todo: TodoType) => todo.item === sidebar.work
+  },
+];
 export const todoData = [
   {
     id: crypto.randomUUID(),
@@ -107,6 +139,7 @@ export const todoData = [
     isEdit: false,
     date: todoDate,
     isImportant: false,
+    item: items[0].title,
   },
   {
     id: crypto.randomUUID(),
@@ -115,6 +148,7 @@ export const todoData = [
     isEdit: false,
     date: todoDate,
     isImportant: false,
+    item: items[0].title,
   },
   {
     id: crypto.randomUUID(),
@@ -123,6 +157,7 @@ export const todoData = [
     isEdit: false,
     date: "Sun Mar 27 2026",
     isImportant: false,
+    item: items[1].title,
   },
   {
     id: crypto.randomUUID(),
@@ -131,57 +166,6 @@ export const todoData = [
     isEdit: false,
     date: "Sun Mar 28 2026",
     isImportant: false,
-  },
-]
-export const items = [
-  {
-    title: sidebar.myDay,
-    state: true,
-    id: crypto.randomUUID(),
-    icon: "Sun1",
-    todos: [],
-    color: ["purple-300", "rose-400"],
-    isEdit: false,
-    editable: false,
-  },
-  {
-    title: sidebar.All,
-    state: false,
-    id: crypto.randomUUID(),
-    icon: "Card",
-    todos: [],
-    color: ["purple-300", "purple-400"],
-    isEdit: false,
-    editable: false,
-  },
-  {
-    title: sidebar.complete,
-    state: false,
-    id: crypto.randomUUID(),
-    icon: "TickCircle",
-    todos: [],
-    color: ["[#cac8d8]", "[#239e9a]"],
-    isEdit: false,
-    editable: false,
-  },
-  {
-    title: sidebar.progress,
-    state: false,
-    id: crypto.randomUUID(),
-    icon: "Chart",
-    todos: [],
-    color: ["[#a4cbce]", "[#41bbc4]"],
-    isEdit: false,
-    editable: false,
-  },
-  {
-    title: sidebar.newList,
-    state: false,
-    id: crypto.randomUUID(),
-    icon: "HamburgerMenu",
-    todos: [],
-    color: ["purple-300", "purple-600"],
-    isEdit: false,
-    editable: true,
+    item: items[1].title,
   },
 ];
