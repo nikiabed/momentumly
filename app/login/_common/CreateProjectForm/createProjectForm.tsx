@@ -11,7 +11,6 @@ export default function CreateProjectForm() {
         e.preventDefault()
         const data = {title , description}
         const res = await createProjectAction(data);
-        console.log(res)
     }
 
     return (

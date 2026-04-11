@@ -1,7 +1,8 @@
 "use client";
-import { useContext, useState } from "react";
-import { TodoContext } from "@/app/_utils/ui/TodoProvider/TodoProvider";
-import { ItemIcon, ListItemProps, sidebar, TodoListType } from "../../Todo";
+import {  ListItemProps,  TodoListType } from "../../Todo";
+import { useTodoContext } from "@/app/_utils/hooks";
+import { ItemIcon } from "../../Header";
+import { sidebar } from "../Sidebar.const";
 
 export const getTodoCount = (list: TodoListType, focused: ListItemProps) => {
   const completedTodo = list.filter((list: any) => list.status);
@@ -24,7 +25,7 @@ export const getTodoCount = (list: TodoListType, focused: ListItemProps) => {
   }
 };
 
-const ListItem = ({ focused }: { focused: ListItemProps }) => {
+export const ListItem = ({ focused }: { focused: ListItemProps }) => {
   const {
     todo,
     handleBoardSubmit,
@@ -32,7 +33,7 @@ const ListItem = ({ focused }: { focused: ListItemProps }) => {
     boardValue,
     handleBoardClick,
     handleBoardEditable,
-  } = useContext(TodoContext);
+  } = useTodoContext()
 
   return (
     <li
@@ -76,5 +77,3 @@ const ListItem = ({ focused }: { focused: ListItemProps }) => {
     </li>
   );
 };
-
-export default ListItem;

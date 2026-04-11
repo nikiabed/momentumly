@@ -1,12 +1,7 @@
-import {
-  DetailedHTMLProps,
-  FC,
-  HTMLAttributes,
-  useContext,
-} from "react";
-import TodoEditInput from "./TodoEditInput";
-import { TodoContext } from "@/app/_utils/ui/TodoProvider/TodoProvider";
+import { DetailedHTMLProps, FC, HTMLAttributes, memo } from "react";
 import { CloseCircle, TickCircle } from "iconsax-reactjs";
+import { useTodoContext } from "@/app/_utils/hooks";
+import { TodoEditInput } from "../TodoEditInput";
 
 type itemProps = DetailedHTMLProps<
   HTMLAttributes<HTMLDivElement>,
@@ -15,8 +10,7 @@ type itemProps = DetailedHTMLProps<
   list: string[];
 };
 export const TodoListItems: FC<itemProps> = ({ list, ...props }: any) => {
-  const { handleNewChange, handleEditedTask, handleIsEdit } =
-    useContext(TodoContext);
+  const { handleNewChange, handleEditedTask, handleIsEdit } = useTodoContext();
 
   return (
     <div
@@ -27,7 +21,6 @@ export const TodoListItems: FC<itemProps> = ({ list, ...props }: any) => {
         <form
           name="edited task"
           onKeyDown={(e: any) => {
-            console.log(e);
             if (e.key === "Escape") {
               handleIsEdit && handleIsEdit(list.id);
             }

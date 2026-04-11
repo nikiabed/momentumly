@@ -1,10 +1,12 @@
+"use client"
+
+import { TodoContext } from "@/app/_utils/hooks";
 import { ArrowDown2 } from "iconsax-reactjs";
 import { useContext, useState } from "react";
-import TodoList from "../TodoList";
-import { TodoContext } from "@/app/_utils/ui";
+import { TodoList } from "../TodoList";
 
 
-const Lists = ({ todo, list }: any) => {
+export const Lists = ({ todo, list }: any) => {
   const [isOpen, setOpen] = useState(true);
   const { setTodo } = useContext(TodoContext);
 
@@ -30,5 +32,3 @@ const Lists = ({ todo, list }: any) => {
     </div>
   );
 };
-
-export default Lists;

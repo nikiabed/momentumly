@@ -1,3 +1,4 @@
+"use client"
 import React, { FC, useEffect, useRef } from "react";
 
 type LinechartProps = React.DetailedHTMLProps<
@@ -9,7 +10,8 @@ type LinechartProps = React.DetailedHTMLProps<
     value: number;
   }[];
 };
-const LineChart: FC<LinechartProps> = ({ data, width, height }) => {
+
+export const LineChart: FC<LinechartProps> = ({ data, width, height }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -62,5 +64,3 @@ const LineChart: FC<LinechartProps> = ({ data, width, height }) => {
     />
   );
 };
-
-export default LineChart;

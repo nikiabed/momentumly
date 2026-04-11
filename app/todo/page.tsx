@@ -1,6 +1,5 @@
 import { Metadata } from "next";
-import Sidebar from "./_common/Sidebar/Sidebar";
-import Todo from "./_common/Todo/Todo";
+import { Sidebar, Todo } from "./_common";
 
 export const metadata: Metadata = {
   title: "Todo App",

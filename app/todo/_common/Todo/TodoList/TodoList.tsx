@@ -1,15 +1,15 @@
 "use client";
-import { TodoListItems } from "./TodoListItems";
-import { TodoListType } from "./Todo.const";
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import { TodoListType } from "../Todo.const";
+import { TodoListItems } from "../TodoListItem";
 
-export default function TodoList({
+export const TodoList = ({
   todo,
   setTodo,
 }: {
   todo: TodoListType;
   setTodo: any;
-}) {
+}) => {
   const [dragEnter, setDragEnter] = useState(false);
   const [dragPage, setDragPage] = useState(0);
   const handleDrag = (e: any) => {
@@ -17,8 +17,7 @@ export default function TodoList({
     
   };
   const handleDragEnter = (e: any) => {
-    // console.log(dragEnter);
-    // console.log(e)
+    
   };
   const handleDragLeave = (e: any) => {
     // setList((prev) =>
@@ -38,10 +37,7 @@ export default function TodoList({
   const handleOver = (e: any) => {
     e.preventDefault();
     setDragEnter(true);
-    console.log(e)
-    // console.log(e.pageY, "handleOver");
     if (e.pageY - dragPage < 80 && e.pageY - dragPage > 50) {
-      // console.log("jaye avali");
       setTodo((old: any) => {
         let clone = [...old];
         clone.map((c: any) => {
@@ -59,7 +55,6 @@ export default function TodoList({
     //   }
     // });
     // item.filter((l: any) => l!=undefined);
-    // console.log(item)
     // setNewItem(item[0]);
     // // setList((prev) =>
     // //   prev.filter((li: any) => (!li.dragEnter)),
@@ -67,17 +62,14 @@ export default function TodoList({
     // // setNewItem({ ...newItem , id:list.length+1 });
   };
 
-  const handleDrop = (e: any) => {
+  const handleDrop = useCallback((e: any) => {
     setDragEnter(false);
-    // console.log(newItem);
-    // console.log(newItem.id)
-    // console.log(newItem.id)
     // newItem && setList((old:any)=>{
     //   let clone=[...old]
     //   clone.splice(1)
     //   return clone
     // });
-  };
+  },[]);
   return (
     <>
       <ul

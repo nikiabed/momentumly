@@ -1,7 +1,7 @@
-import { SearchNormal, SearchNormal1 } from "iconsax-reactjs";
-import { sidebar } from "../../Todo/Todo.const";
+import { SearchNormal } from "iconsax-reactjs";
+import { sidebar } from "../Sidebar.const";
 
-const Search = () => {
+export const Search = () => {
   return (
     <div className="relative w-full flex justify-center">
       <input
@@ -15,5 +15,3 @@ const Search = () => {
     </div>
   );
 };
-
-export default Search;

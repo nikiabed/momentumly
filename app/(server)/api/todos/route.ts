@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server"
-import "../../../db.json"
 
 let todos = [{ id: "", title: "string", status: false }]
 

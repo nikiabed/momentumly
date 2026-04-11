@@ -1,7 +1,7 @@
-import { DetailedHTMLProps, FC, HTMLAttributes, useContext } from "react";
-import { input, ListItemProps } from "./Todo.const";
-import { TodoContext } from "@/app/_utils/ui/TodoProvider/TodoProvider";
+import { DetailedHTMLProps, FC, HTMLAttributes } from "react";
+import { input, ListItemProps } from "../Todo.const";
 import { Add } from "iconsax-reactjs";
+import { useTodoContext } from "@/app/_utils/hooks";
 
 type InputProps = DetailedHTMLProps<
   HTMLAttributes<HTMLDivElement>,
@@ -10,8 +10,7 @@ type InputProps = DetailedHTMLProps<
   }
 
 export const TodoInput: FC<InputProps> = ({item}) => {
-
-  const {handleSubmit, handleChange, inputValue} = useContext(TodoContext)
+  const {handleSubmit, handleChange, inputValue} = useTodoContext()
   return (
       <form name="todo" onSubmit={(e:any)=>handleSubmit?.(e,item)} className="py-2 pl-2 items-center flex w-full bg-pink-100 rounded-lg group hover:bg-white">
         <button type="submit" className={`pl-4 pr-5 h-10 text-black/55`} >
@@ -28,5 +27,3 @@ export const TodoInput: FC<InputProps> = ({item}) => {
       </form>
   );
 };
-
-export default TodoInput;

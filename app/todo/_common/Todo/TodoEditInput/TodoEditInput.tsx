@@ -1,12 +1,12 @@
 "use client";
 
-import { TodoContext } from "@/app/_utils/ui/TodoProvider/TodoProvider";
-import { Edit, Record, Star, Star1, TickCircle, Trash } from "iconsax-reactjs";
-import { useContext, useState } from "react";
+import { useTodoContext } from "@/app/_utils/hooks";
+import { Edit, Record, Star1, TickCircle, Trash } from "iconsax-reactjs";
+import { useState } from "react";
 
-export default function TodoEditInput({ list }: any) {
+export const TodoEditInput = ({ list }: any) => {
   const { handleImportant, handleIsEdit, changeTaskState, handleDelete } =
-    useContext(TodoContext);
+    useTodoContext();
 
   const [isOpen, setOpen] = useState(false);
   return (
@@ -62,11 +62,15 @@ export default function TodoEditInput({ list }: any) {
         }}
       >
         {list.isImportant ? (
-          <Star1 size={18} variant="Bold" className={` ${isOpen ? "text-rose-50" : "text-pink-800"}`} />
+          <Star1
+            size={18}
+            variant="Bold"
+            className={` ${isOpen ? "text-rose-50" : "text-pink-800"}`}
+          />
         ) : (
           <Star1 size={18} variant="Linear" />
         )}
       </button>
     </>
   );
-}
+};

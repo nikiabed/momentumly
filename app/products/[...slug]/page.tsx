@@ -14,10 +14,8 @@ type paramsType = {
 
 export default async function slugPage({ params }: any) {
   const { slug }: paramsType = await params;
-  console.log(slug);
-
   let item: string = slug[0];
-  let productsData: productType[] = products[item];
+  let productsData: productType[] = products[item as keyof typeof product];
   let category: string[] = [];
   productsData.map((pro: productType) => {
     if (!category.includes(pro.category)) {
@@ -44,11 +42,9 @@ export default async function slugPage({ params }: any) {
   }
 
   if (slug.length == 2) {
-    console.log(slug);
     let filterData = productsData.filter((e:productType)=>{
       return e.category == slug[1]
     })
-    console.log(filterData)
     return (
       <div>
         <ul>

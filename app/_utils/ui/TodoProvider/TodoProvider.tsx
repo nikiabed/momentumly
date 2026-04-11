@@ -1,37 +1,14 @@
 "use client";
 import {
-  Context,
-  items,
   ListItemProps,
-  sidebar,
   todoData,
   todoDate,
   TodoListType,
   TodoType,
 } from "@/app/todo/_common/Todo/Todo.const";
-import { createContext, useEffect, useState } from "react";
-
-export const TodoContext = createContext<Context>({
-  todo: [
-    {
-      id: "",
-      title: "string",
-      status: false,
-      isEdit: false,
-      date: "",
-      isImportant: false,
-      item: ""
-    },
-  ],
-});
-
-export const save = (todo: any) => {
-  localStorage.setItem("todo", JSON.stringify(todo));
-};
-
-export const saveFocused = (focused: any) => {
-  localStorage.setItem("focused", JSON.stringify(focused));
-};
+import { useEffect, useMemo, useState } from "react";
+import { TodoContext } from "../../hooks";
+import { items, sidebar } from "@/app/todo/_common/Sidebar/Sidebar.const";
 
 export function TodoProvider({ children }: { children: React.ReactNode }) {
   const [todo, setTodo] = useState<TodoListType>(todoData);
@@ -39,19 +16,49 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
   const [editedTask, setEditedTask] = useState<string>("");
   const [focused, setFocused] = useState(items);
   const [boardValue, setBoardValue] = useState("");
-  
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const item = localStorage.getItem("todo");
-    const parsed = item && JSON.parse(item);
-    setTodo(parsed);
-  }, []);
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    save(todo);
-  }, [todo]);
 
-  const addTodo = (title: string, item:ListItemProps) => {
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const saveTodo = localStorage.getItem("todo");
+    const saveFocused = localStorage.getItem("focused");
+    if (saveTodo) {
+      setTodo(JSON.parse(saveTodo));
+    }
+
+    if (saveFocused) {
+      const parsedFocused = JSON.parse(saveFocused);
+      const rehydrateFocused = parsedFocused.map((item: ListItemProps) => ({
+        ...item,
+        filter: (todo: TodoType) => {
+          if (item.title === sidebar.All) return todo && !todo.status;
+          if (item.title === sidebar.complete) return todo.status;
+          if (item.title === sidebar.important) return todo.isImportant;
+          if (item.title === sidebar.myDay)
+            return todo.item === sidebar.myDay && !todo.status;
+          if (item.title === sidebar.work) return todo.item === sidebar.work;
+          if (item.title === sidebar.progress) return todo;
+          if (item.title === sidebar.untitled)
+            return todo.item === sidebar.untitled;
+          if (item.title === boardValue) return todo.item === boardValue;
+          return true;
+        },
+      }));
+      setFocused(() => rehydrateFocused);
+    } else {
+      setFocused(() => items);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    localStorage.setItem("todo", JSON.stringify(todo));
+  }, [todo]);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    localStorage.setItem("focused", JSON.stringify(focused));
+  }, [focused]);
+
+  const addTodo = (title: string, item: ListItemProps) => {
     let newTask = {
       id: crypto.randomUUID(),
       title: title,
@@ -59,7 +66,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       isEdit: false,
       date: todoDate,
       isImportant: false,
-      item: item.title
+      item: item.title,
     };
     setTodo((prev: any) => {
       let clone = [...prev, newTask];
@@ -73,7 +80,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     setInputValue(e.target.value);
   };
 
-  const handleSubmit = (e: any, item:ListItemProps) => {
+  const handleSubmit = (e: any, item: ListItemProps) => {
     e.preventDefault();
     if (inputValue.length != 0) {
       addTodo(inputValue, item);
@@ -128,7 +135,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       color: ["red-300", "red-400"],
       isEdit: false,
       editable: false,
-       filter: (todo: TodoType) => todo.isImportant
+      filter: (todo: TodoType) => todo.isImportant,
     };
     const exists = focused.find(
       (focus: ListItemProps) => focus.title == sidebar.important,
@@ -143,7 +150,6 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
           old.splice(1, 1);
           let today = old[0];
           if (open?.title == sidebar.important) {
-            console.log(open);
             today = { ...today, state: true };
           }
           old.splice(0, 1, today);
@@ -185,7 +191,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     const newList = focused.map((l: ListItemProps) => {
       if (index === l.id) {
         l.title = text;
-        l.filter = (todo: TodoType) => todo.item === text
+        l.filter = (todo: TodoType) => todo.item === text;
         return l;
       }
       return l;
@@ -222,7 +228,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       color: ["purple-300", "purple-600"],
       isEdit: true,
       editable: true,
-      filter: (todo: TodoType) => todo.item === sidebar.untitled
+      filter: (todo: TodoType) => todo.item === sidebar.untitled,
     };
     setFocused &&
       setFocused((prev: any) => {
@@ -234,34 +240,56 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       });
   };
 
-  return (
-    <TodoContext.Provider
-      value={{
-        todo,
-        setTodo,
-        inputValue,
-        addTodo,
-        handleChange,
-        handleDelete,
-        changeTaskState,
-        handleSubmit,
-        handleNewChange,
-        setEditedTask,
-        handleEditedTask,
-        handleIsEdit,
-        handleImportant,
-        focused,
-        setFocused,
-        handleBoardSubmit,
-        handleBoardInput,
-        boardValue,
-        handleBoardClick,
-        handleNewList,
-        handleBoardIsEdit,
-        handleBoardEditable,
-      }}
-    >
-      {children}
-    </TodoContext.Provider>
+  const value = useMemo(
+    () => ({
+      todo,
+      setTodo,
+      inputValue,
+      addTodo,
+      handleChange,
+      handleDelete,
+      changeTaskState,
+      handleSubmit,
+      handleNewChange,
+      setEditedTask,
+      handleEditedTask,
+      handleIsEdit,
+      handleImportant,
+      focused,
+      setFocused,
+      handleBoardSubmit,
+      handleBoardInput,
+      boardValue,
+      handleBoardClick,
+      handleNewList,
+      handleBoardIsEdit,
+      handleBoardEditable,
+    }),
+    [
+      todo,
+      setTodo,
+      inputValue,
+      addTodo,
+      handleChange,
+      handleDelete,
+      changeTaskState,
+      handleSubmit,
+      handleNewChange,
+      setEditedTask,
+      handleEditedTask,
+      handleIsEdit,
+      handleImportant,
+      focused,
+      setFocused,
+      handleBoardSubmit,
+      handleBoardInput,
+      boardValue,
+      handleBoardClick,
+      handleNewList,
+      handleBoardIsEdit,
+      handleBoardEditable,
+    ],
   );
+
+  return <TodoContext.Provider value={value}>{children}</TodoContext.Provider>;
 }

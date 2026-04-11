@@ -1,9 +1,10 @@
-import { useContext, useState } from "react";
-import { TodoContext } from "@/app/_utils/ui/TodoProvider/TodoProvider";
-import Header from "../../Header/Header";
-import TodoInput from "../TodoInput";
-import TodoList from "../TodoList";
-import CompletedList from "../CompletedList";
+"use client"
+
+import { useState } from "react";
+import { useTodoContext } from "@/app/_utils/hooks";
+import { TodoInput } from "../TodoInput";
+import { TodoList } from "../TodoList";
+import { Header } from "../../Header";
 
 type ListItem = {
   id?: number | undefined;
@@ -12,8 +13,8 @@ type ListItem = {
   dropped?: boolean | undefined;
 };
 
-const Today = ({ item }: any) => {
-  const { todo, setTodo } = useContext(TodoContext);
+export const Today = ({ item }: any) => {
+  const { todo, setTodo } = useTodoContext();
   const notCompletedTodo = todo.filter((list: any) => {
     const date = new Date();
     return !list.status && list.date === date.toDateString();
@@ -54,10 +55,7 @@ const Today = ({ item }: any) => {
     );
   };
   const handleDragEnter = (e: any) => {
-    // console.log(dragEnter);
-    // // console.log(e)
     // const draggedId = e.dataTransfer.getData("text");
-    // console.log(draggedId)
   };
   const handleDragLeave = (e: any) => {
     // setList((prev) =>
@@ -83,7 +81,6 @@ const Today = ({ item }: any) => {
       }
     });
     item.filter((l: any) => l != undefined);
-    console.log(item);
     setNewItem(item[0]);
     // setList((prev) =>
     //   prev.filter((li: any) => (!li.dragEnter)),
@@ -92,10 +89,7 @@ const Today = ({ item }: any) => {
   };
 
   const handleDrop = (e: any) => {
-    console.log(newItem);
-    console.log(newItem.id);
     setDragEnter(false);
-    console.log(newItem.id);
     // newItem && setList((old:any)=>{
     //   let clone=[...old]
     //   clone.splice(1)
@@ -106,7 +100,7 @@ const Today = ({ item }: any) => {
   return (
     <div className="overflow-y-auto flex-4 flex gap-3 flex-col bg-linear-45 from-purple-300 to-rose-400 h-screen px-15 pt-5">
       <Header item={item} />
-      <TodoInput />
+      {<TodoInput item={item} />}
       <TodoList todo={notCompletedTodo} setTodo={setTodo} />
       {/* {completedTodo.length > 0 && <CompletedList todo={completedTodo} />} */}
 
@@ -190,5 +184,3 @@ const Today = ({ item }: any) => {
     </div>
   );
 };
-
-export default Today;

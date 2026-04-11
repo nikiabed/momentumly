@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { iranSansX } from "./_utils/constants";
-import { TodoProvider } from "./_utils/ui/TodoProvider/TodoProvider";
+import { iranSansX, TodoProvider } from "./_utils";
 
 export const metadata: Metadata = {
   title: "Niki Portfolio",

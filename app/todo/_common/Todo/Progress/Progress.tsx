@@ -1,8 +1,7 @@
+import { LineChart } from "../../LineChart";
 import { ListItemProps } from "../Todo.const";
-import Header from "../../Header/Header";
-import LineChart from "../../LineChart/LineChart";
 
-const Progress = ({ item }: { item: ListItemProps }) => {
+export const Progress = ({ item }: { item: ListItemProps }) => {
   const data = [
     { label: "امروز", value: 8 },
     { label: "دیروز", value: 2 },
@@ -15,5 +14,3 @@ const Progress = ({ item }: { item: ListItemProps }) => {
     </div>
   );
 };
-
-export default Progress;

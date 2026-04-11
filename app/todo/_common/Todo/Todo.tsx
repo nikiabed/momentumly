@@ -1,11 +1,12 @@
 "use client";
 
-import { useContext } from "react";
-import { TodoContext } from "@/app/_utils/ui/TodoProvider/TodoProvider";
-import Board from "./Board";
+import { memo } from "react";
+import { useTodoContext } from "@/app/_utils/hooks/useTodoContext";
+import { Board } from "./Board";
 
-export default function Todo() {
-  const { focused } = useContext(TodoContext);
+export const Todo = () => {
+  const { focused } = useTodoContext();
+  console.log("todo");
   return (
     <>
       {focused?.map((item: any) => {
@@ -15,4 +16,4 @@ export default function Todo() {
       })}
     </>
   );
-}
+};

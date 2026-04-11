@@ -1,15 +1,15 @@
 "use client";
 import Image from "next/image";
-import Search from "./Search/Search";
-import ListItem from "./ListItem/ListItem";
-import { useContext } from "react";
-import { TodoContext } from "@/app/_utils/ui/TodoProvider/TodoProvider";
-import { ListItemProps, sidebar } from "../Todo/Todo.const";
+import { ListItemProps } from "../Todo/Todo.const";
 import { Add } from "iconsax-reactjs";
+import { useTodoContext } from "@/app/_utils/hooks/useTodoContext";
+import { Search } from "./Search";
+import { ListItem } from "./ListItem";
+import { sidebar } from "./Sidebar.const";
 
-export default function Sidebar() {
-  const { focused, handleNewList } = useContext(TodoContext);
-
+export const Sidebar = () => {
+  const { focused, handleNewList } = useTodoContext()
+  console.log("sidebar")
   return (
     <div className="overflow-y-hidden h-screen pt-5 px-3 bg-pink-50 flex flex-1 flex-col gap-2 justify-between">
       <div className="shrink-0">

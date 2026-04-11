@@ -66,71 +66,9 @@ export const input = {
   placeholder: "یک کار اضافه کن..",
 };
 
-export const sidebar = {
-  placeholder: "پیدا کردن..",
-  myDay: "امروز",
-  important: "مهم",
-  All: "همه",
-  complete: "تکمیل شده",
-  button: "لیست جدید",
-  progress: "پیشرفت",
-  work: "کار",
-  untitled: "بدون عنوان",
-};
+
 const date = new Date();
 export const todoDate = date.toDateString();
-export const items = [
-  {
-    title: sidebar.myDay,
-    state: true,
-    id: crypto.randomUUID(),
-    icon: "Sun1",
-    color: ["purple-300", "rose-400"],
-    isEdit: false,
-    editable: false,
-    filter: (todo: TodoType) =>  todo.item === sidebar.myDay && !todo.status
-  },
-  {
-    title: sidebar.All,
-    state: false,
-    id: crypto.randomUUID(),
-    icon: "Card",
-    color: ["purple-300", "purple-400"],
-    isEdit: false,
-    editable: false,
-    filter: (todo: TodoType) => todo && !todo.status
-  },
-  {
-    title: sidebar.complete,
-    state: false,
-    id: crypto.randomUUID(),
-    icon: "TickCircle",
-    color: ["[#cac8d8]", "[#239e9a]"],
-    isEdit: false,
-    editable: false,
-    filter: (todo: TodoType) => todo.status
-  },
-  {
-    title: sidebar.progress,
-    state: false,
-    id: crypto.randomUUID(),
-    icon: "Chart",
-    color: ["[#a4cbce]", "rose-400"],
-    isEdit: false,
-    editable: false,
-    filter: (todo: TodoType) => todo
-  },
-  {
-    title: sidebar.work,
-    state: false,
-    id: crypto.randomUUID(),
-    icon: "HamburgerMenu",
-    color: ["purple-300", "purple-400"],
-    isEdit: false,
-    editable: true,
-    filter: (todo: TodoType) => todo.item === sidebar.work
-  },
-];
 export const todoData = [
   {
     id: crypto.randomUUID(),
@@ -139,7 +77,7 @@ export const todoData = [
     isEdit: false,
     date: todoDate,
     isImportant: false,
-    item: items[0].title,
+    item: "همه",
   },
   {
     id: crypto.randomUUID(),
@@ -148,7 +86,7 @@ export const todoData = [
     isEdit: false,
     date: todoDate,
     isImportant: false,
-    item: items[0].title,
+    item: "همه",
   },
   {
     id: crypto.randomUUID(),
@@ -157,7 +95,7 @@ export const todoData = [
     isEdit: false,
     date: "Sun Mar 27 2026",
     isImportant: false,
-    item: items[1].title,
+    item: "امروز",
   },
   {
     id: crypto.randomUUID(),
@@ -166,6 +104,6 @@ export const todoData = [
     isEdit: false,
     date: "Sun Mar 28 2026",
     isImportant: false,
-    item: items[1].title,
+    item: "امروز",
   },
 ];
