@@ -1,29 +1,8 @@
 "use client";
-import {  ListItemProps,  TodoListType } from "../../Todo";
+import { ListItemProps } from "../../Todo";
 import { useTodoContext } from "@/app/_utils/hooks";
 import { ItemIcon } from "../../Header";
 import { sidebar } from "../Sidebar.const";
-
-export const getTodoCount = (list: TodoListType, focused: ListItemProps) => {
-  const completedTodo = list.filter((list: any) => list.status);
-  const todayTodo = list.filter((l: any) => {
-    const date = new Date();
-    return !l.status && l.date === date.toDateString();
-  });
-  const importantTodo = list.filter((list: any) => list.isImportant);
-  switch (focused.title) {
-    case sidebar.myDay:
-      return todayTodo.length;
-    case sidebar.important:
-      return importantTodo.length;
-    case sidebar.All:
-      return list.length;
-    case sidebar.complete:
-      return completedTodo.length;
-    default:
-      return -1;
-  }
-};
 
 export const ListItem = ({ focused }: { focused: ListItemProps }) => {
   const {
@@ -33,7 +12,7 @@ export const ListItem = ({ focused }: { focused: ListItemProps }) => {
     boardValue,
     handleBoardClick,
     handleBoardEditable,
-  } = useTodoContext()
+  } = useTodoContext();
 
   return (
     <li
@@ -50,8 +29,7 @@ export const ListItem = ({ focused }: { focused: ListItemProps }) => {
             <form
               onSubmit={(e) => {
                 e.preventDefault();
-                  boardValue &&
-                  handleBoardSubmit?.(focused.id, boardValue);
+                boardValue && handleBoardSubmit?.(focused.id, boardValue);
               }}
             >
               <input
@@ -66,11 +44,12 @@ export const ListItem = ({ focused }: { focused: ListItemProps }) => {
           )}
         </div>
       </div>
-      {getTodoCount(todo, focused) > 0 && (
-        <span className="bg-rose-400 h-5 px-1 rounded-md text-pink-50 text-sm">
-          {getTodoCount(todo, focused)}
-        </span>
-      )}
+      {todo.filter(focused.filter).length > 0 &&
+        focused.title !== sidebar.progress && (
+          <span className="bg-rose-400 h-5 px-1 rounded-md text-pink-50 text-sm">
+            {todo.filter(focused.filter).length}
+          </span>
+        )}
       {focused.title == sidebar.progress && (
         <div className="border-b border-gray-300 p absolute -bottom-1 w-full"></div>
       )}

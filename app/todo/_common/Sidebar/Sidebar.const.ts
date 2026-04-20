@@ -9,6 +9,9 @@ export const sidebar = {
   work: "کار",
   untitled: "بدون عنوان",
 };
+
+const date = new Date();
+export const todoDate = date.toDateString();
 export const items = [
   {
     title: sidebar.myDay,
@@ -18,7 +21,7 @@ export const items = [
     color: ["purple-300", "rose-400"],
     isEdit: false,
     editable: false,
-    filter: (todo: any) =>  todo.item === sidebar.myDay && !todo.status
+    filter: (todo: any) =>  todo.item === sidebar.myDay && !todo.status && todo.date === todoDate
   },
   {
     title: sidebar.All,

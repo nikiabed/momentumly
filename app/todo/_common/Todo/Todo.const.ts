@@ -8,6 +8,7 @@ export type TodoType = {
   date: string;
   isImportant: boolean;
   item: string;
+  itemId?: string;
 };
 export type TodoListType = TodoType[];
 

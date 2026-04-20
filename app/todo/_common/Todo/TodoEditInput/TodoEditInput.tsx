@@ -30,7 +30,7 @@ export const TodoEditInput = ({ list }: any) => {
         className="flex items-center aria-checked:line-through aria-checked:text-black/30 flex-2 h-8"
         onClick={() => setOpen((prev: Boolean) => !prev)}
       >
-        {list.title}
+        {list.title} 
       </div>
 
       {isOpen && (
