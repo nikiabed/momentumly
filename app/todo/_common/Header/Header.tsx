@@ -1,10 +1,15 @@
 import { sidebar } from "../Sidebar/Sidebar.const";
 import { ListItemProps } from "../Todo/Todo.const";
-import { getDateFormater } from "./Header.const";
 import { ItemIcon } from "./ItemIcon";
 
 export const Header = ({ item }: { item: ListItemProps }) => {
-  const newDate = getDateFormater();
+  const formatPersianDate = (date: Date) => {
+    return new Intl.DateTimeFormat("fa-IR", {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+    }).format(date).replace(" ","، ");
+  };
   return (
     <header className="flex gap-1 flex-col text-rose-50">
       <div className="flex gap-5 text-rose-50">
@@ -13,7 +18,7 @@ export const Header = ({ item }: { item: ListItemProps }) => {
       </div>
       {item.title === sidebar.myDay && (
         <span className="text-lg">
-          {newDate.day}، {newDate.daynum} {newDate.month}
+          {formatPersianDate(new Date())}
         </span>
       )}
     </header>

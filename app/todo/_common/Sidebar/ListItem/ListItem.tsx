@@ -3,6 +3,8 @@ import { ListItemProps } from "../../Todo";
 import { useTodoContext } from "@/app/_utils/hooks";
 import { ItemIcon } from "../../Header";
 import { sidebar } from "../Sidebar.const";
+import { More } from "iconsax-reactjs";
+import { useState } from "react";
 
 export const ListItem = ({ focused }: { focused: ListItemProps }) => {
   const {
@@ -12,46 +14,65 @@ export const ListItem = ({ focused }: { focused: ListItemProps }) => {
     boardValue,
     handleBoardClick,
     handleBoardEditable,
+    removeList,
   } = useTodoContext();
 
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
-    <li
-      onClick={() => handleBoardClick?.(focused.id)}
-      onDoubleClick={() => handleBoardEditable?.(focused.id)}
-      className={`relative justify-between cursor-pointer  pl-1 py-2 w-full rounded flex gap-1 items-center group hover:bg-black/5 hover:rounded ${focused.state ? "bg-black/5" : "bg-none"} `}
-    >
+    <li className=" relative flex items-center justify-between">
       <div
-        className={`flex items-center gap-1.5 before:border-r-4 before:border-transparent before:rounded before:h-5 ${focused.state ? " justify-between before:border-rose-700!" : ""}`}
+        onClick={() => handleBoardClick?.(focused.id)}
+        onDoubleClick={() => handleBoardEditable?.(focused.id)}
+        className={` justify-between rounded cursor-pointer w-full flex gap-1 items-center group hover:bg-black/5 hover:rounded ${focused.state ? "bg-black/5" : "bg-none"} `}
       >
-        <div className=" flex items-center gap-4">
-          <ItemIcon item={focused} size={20} className="text-rose-400" />
-          {focused.isEdit ? (
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                boardValue && handleBoardSubmit?.(focused.id, boardValue);
-              }}
-            >
-              <input
-                autoFocus
-                type="text"
-                defaultValue={focused.title}
-                onChange={handleBoardInput}
-              />
-            </form>
-          ) : (
-            <span>{focused.title}</span>
-          )}
+        <div
+          className={`flex py-2 items-center gap-2 before:border-r-4 before:border-transparent before:rounded before:h-5 ${focused.state ? " before:border-rose-700!" : ""}`}
+        >
+          <div className="flex gap-2">
+            <ItemIcon item={focused} size={20} className="text-rose-400" />
+            {focused.isEdit ? (
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  boardValue && handleBoardSubmit?.(focused.id, boardValue);
+                }}
+              >
+                <input
+                  autoFocus
+                  type="text"
+                  defaultValue={focused.title}
+                  onChange={handleBoardInput}
+                />
+              </form>
+            ) : (
+              <span>{focused.title}</span>
+            )}
+          </div>
         </div>
-      </div>
-      {todo.filter(focused.filter).length > 0 &&
-        focused.title !== sidebar.progress && (
-          <span className="bg-rose-400 h-5 px-1 rounded-md text-pink-50 text-sm">
-            {todo.filter(focused.filter).length}
-          </span>
+        {todo.filter(focused.filter).length > 0 &&
+          focused.title !== sidebar.progress && (
+            <span className="bg-rose-400 h-5 px-1 rounded-md text-pink-50 text-sm">
+              {todo.filter(focused.filter).length}
+            </span>
+          )}
+        {focused.title == sidebar.progress && (
+          <div className="border-b border-gray-300 p absolute -bottom-1 w-full"></div>
         )}
-      {focused.title == sidebar.progress && (
-        <div className="border-b border-gray-300 p absolute -bottom-1 w-full"></div>
+      </div>
+      <More
+        className=" max-h-4 text-gray-400 rotate-90 cursor-pointer"
+        onClick={() => setIsOpen(!isOpen)}
+      />
+      {isOpen && (
+        <ul className="absolute left-5 top-5 w-40 z-20">
+          <li
+            onClick={() => removeList?.(focused.id)}
+            className="bg-white rounded px-2 py-1 text-sm cursor-pointer shadow"
+          >
+            حذف لیست
+          </li>
+        </ul>
       )}
     </li>
   );

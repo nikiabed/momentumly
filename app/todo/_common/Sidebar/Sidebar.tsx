@@ -25,7 +25,7 @@ export const Sidebar = () => {
         <Search />
       </div>
 
-      <div className="overflow-auto grow flex flex-col gap-2 text-gray-800 text-md pb-1.5  shadow-gray-600">
+      <div className="overflow-auto grow flex flex-col gap-2 text-gray-800 text-md pb-1.5 shadow-gray-600">
         {focused?.map((list: ListItemProps) => {
           return <ListItem key={list.id} focused={list} />;
         })}

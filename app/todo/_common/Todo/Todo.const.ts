@@ -22,7 +22,7 @@ export type ListItemProps = {
   color: string[];
   isEdit: boolean;
   editable: boolean;
-  filter: (todo: TodoType) => any
+  filter: (todo: TodoType) => any;
 };
 
 export type Context = {
@@ -53,6 +53,8 @@ export type Context = {
   handleNewList?: () => void;
   handleBoardIsEdit?: (index: string) => void;
   handleBoardEditable?: (index: string) => void;
+  removeList?: (index: string) => void;
+  moveToMyDay?: (index: string) => void;
 };
 
 export const header = {
@@ -66,7 +68,6 @@ export const completed = {
 export const input = {
   placeholder: "یک کار اضافه کن..",
 };
-
 
 const date = new Date();
 export const todoDate = date.toDateString();

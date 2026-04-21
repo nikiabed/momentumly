@@ -2,75 +2,97 @@
 
 import { useTodoContext } from "@/app/_utils/hooks";
 import { Edit, Record, Star1, TickCircle, Trash } from "iconsax-reactjs";
-import { useState } from "react";
+import { MouseEvent, useState } from "react";
 
 export const TodoEditInput = ({ list }: any) => {
-  const { handleImportant, handleIsEdit, changeTaskState, handleDelete } =
-    useTodoContext();
+  const {
+    handleImportant,
+    handleIsEdit,
+    changeTaskState,
+    handleDelete,
+    moveToMyDay,
+  } = useTodoContext();
 
   const [isOpen, setOpen] = useState(false);
+  const [isRightClicked, setRightClick] = useState(false);
   return (
-    <>
-      {list.status ? (
-        <TickCircle
-          variant="Bold"
-          size={26}
-          className="mx-5 group-hover:bg-pink-50 text-rose-400 "
-          onClick={() => changeTaskState && changeTaskState(list.id)}
-        />
-      ) : (
-        <Record
-          size={26}
-          className="mx-5 group-hover:bg-pink-50 text-black/55 cursor-pointer"
-          onClick={() => changeTaskState && changeTaskState(list.id)}
-        />
-      )}
-      <div
-        aria-checked={list.status}
-        className="flex items-center aria-checked:line-through aria-checked:text-black/30 flex-2 h-8"
-        onClick={() => setOpen((prev: Boolean) => !prev)}
-      >
-        {list.title} 
-      </div>
-
-      {isOpen && (
-        <>
-          <button
-            onClick={() => {
-              handleIsEdit && handleIsEdit(list.id);
-            }}
-            className="cursor-pointer px-2 h-8 text-sm bg-blue-400 hover:bg-blue-500 rounded-lg text-pink-50"
-          >
-            <Edit size={18} />
-          </button>
-
-          <button
-            className="cursor-pointer px-2 h-8 text-sm bg-rose-400 hover:bg-rose-500 rounded-lg text-pink-50"
-            onClick={() => {
-              handleDelete && handleDelete(list.id);
-            }}
-          >
-            <Trash size={18} />
-          </button>
-        </>
-      )}
-      {/* <span>{list.date}</span> */}
-      <button
-        className={` hover:cursor-pointer rounded-md h-8 px-2 text-sm  ${isOpen ? "bg-pink-500 text-rose-50 hover:bg-pink-600 " : "hover:text-pink-800"}`}
-        onClick={() => {
-          handleImportant && handleImportant(list.id);
-        }}
-      >
-        {list.isImportant ? (
-          <Star1
-            size={18}
+    <div className="relative w-full">
+      <div className="flex justify-end">
+        {list.status ? (
+          <TickCircle
             variant="Bold"
-            className={` ${isOpen ? "text-rose-50" : "text-pink-800"}`}
+            size={26}
+            className="mx-5 group-hover:bg-pink-50 text-rose-400 "
+            onClick={() => changeTaskState && changeTaskState(list.id)}
           />
         ) : (
-          <Star1 size={18} variant="Linear" />
+          <Record
+            size={26}
+            className="mx-5 group-hover:bg-pink-50 text-black/55 cursor-pointer"
+            onClick={() => changeTaskState && changeTaskState(list.id)}
+          />
         )}
-      </button>
-    </>
+        <div
+          aria-checked={list.status}
+          className="flex items-center aria-checked:line-through aria-checked:text-black/30 flex-2 h-8"
+          onClick={() => setOpen((prev: Boolean) => !prev)}
+          onContextMenu={(e: MouseEvent) => {
+            e.preventDefault();
+            setRightClick((prev: Boolean) => !prev);
+          }}
+        >
+          {list.title}
+        </div>
+
+        {isOpen && (
+          <>
+            <button
+              onClick={() => {
+                handleIsEdit && handleIsEdit(list.id);
+              }}
+              className="cursor-pointer px-2 h-8 text-sm bg-blue-400 hover:bg-blue-500 rounded-lg text-pink-50"
+            >
+              <Edit size={18} />
+            </button>
+
+            <button
+              className="cursor-pointer px-2 h-8 text-sm bg-rose-400 hover:bg-rose-500 rounded-lg text-pink-50"
+              onClick={() => {
+                handleDelete && handleDelete(list.id);
+              }}
+            >
+              <Trash size={18} />
+            </button>
+          </>
+        )}
+        {/* <span>{list.date}</span> */}
+        <button
+          className={` hover:cursor-pointer rounded-md h-8 px-2 text-sm  ${isOpen ? "bg-pink-500 text-rose-50 hover:bg-pink-600 " : "hover:text-pink-800"}`}
+          onClick={() => {
+            handleImportant && handleImportant(list.id);
+          }}
+        >
+          {list.isImportant ? (
+            <Star1
+              size={18}
+              variant="Bold"
+              className={` ${isOpen ? "text-rose-50" : "text-pink-800"}`}
+            />
+          ) : (
+            <Star1 size={18} variant="Linear" />
+          )}
+        </button>
+      </div>
+      {isRightClicked && (
+        <ul className="absolute z-50 -bottom-12 bg-white w-60 rounded ">
+          <li
+            onClick={() => moveToMyDay?.(list.id)}
+            className="text-sm hover:bg-black/5 p-2"
+          >
+            جابه جایی به امروز
+          </li>
+        </ul>
+      )}
+    </div>
   );
 };

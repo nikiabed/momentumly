@@ -1,6 +1,7 @@
 "use client";
 import {
   ListItemProps,
+  ListItems,
   todoData,
   todoDate,
   TodoListType,
@@ -268,6 +269,34 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       });
   };
 
+  const removeList = (index: string) => {
+    setFocused((items: ListItems) => {
+      const old = [...items];
+      const removeIndex = old.findIndex(
+        (item: ListItemProps) => item.id === index,
+      );
+      old.splice(removeIndex, 1);
+      old[removeIndex - 1] = {
+        ...old[removeIndex - 1],
+        state: true,
+      };
+      return old;
+    });
+  };
+
+  const moveToMyDay = (index: string) => {
+    setTodo((prev: TodoListType) => {
+      const old = [...prev];
+      old.map((todo: TodoType) => {
+        if (todo.id === index) {
+          todo.date = todoDate;
+          todo.item = items[0].title;
+        }
+      });
+      return old;
+    });
+  };
+
   const value = useMemo(
     () => ({
       todo,
@@ -292,6 +321,8 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       handleNewList,
       handleBoardIsEdit,
       handleBoardEditable,
+      removeList,
+      moveToMyDay,
     }),
     [
       todo,
@@ -316,6 +347,8 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       handleNewList,
       handleBoardIsEdit,
       handleBoardEditable,
+      removeList,
+      moveToMyDay
     ],
   );
 
