@@ -1,12 +1,11 @@
 "use client";
-import { ListItemProps, todoDate, TodoType } from "../Todo.const";
-import { memo, useMemo } from "react";
+import { ListItemProps, todoDate} from "../Todo.const";
 import { TodoList } from "../TodoList";
 import { Progress } from "../Progress";
 import { TodoInput } from "../TodoInput";
 import { useTodoContext } from "@/app/_utils";
 import { Header } from "../../Header";
-import { sidebar } from "../../Sidebar/Sidebar.const";
+import { gradiants, sidebar } from "../../Sidebar/Sidebar.const";
 import { Lists } from "../Lists";
 
 export const Board = ({ item }: { item: ListItemProps }) => {
@@ -19,17 +18,18 @@ export const Board = ({ item }: { item: ListItemProps }) => {
   const importantTodo = todo.filter((todo: any) => todo.isImportant);
   const sliceIndex = () => {
     if (importantTodo.length > 0) {
-      return 5
+      return 5;
     } else {
-      return 4
+      return 4;
     }
-  }
+  };
+
   return (
     <div
-      className={` from-${item.color[0]} to-${item.color[1]} overflow-hidden flex-4 bg-linear-45 h-screen w-full py-5`}
+      className={` ${gradiants[item.color]} overflow-hidden flex-4 h-screen w-full py-5`}
     >
       <div className="flex gap-4 flex-col h-screen py-5">
-        <div className="shrink-0 px-15 flex flex-col gap-4">
+        <div className="shrink-0 px-15 flex flex-col gap-4 ">
           <Header item={item} />
           {item.title !== sidebar.progress && <TodoInput item={item} />}
         </div>

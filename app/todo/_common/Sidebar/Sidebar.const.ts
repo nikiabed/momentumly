@@ -12,13 +12,25 @@ export const sidebar = {
 
 const date = new Date();
 export const todoDate = date.toDateString();
+
+export const gradiants = {
+    myDay: " bg-linear-45 from-purple-300 to-rose-400",
+    all: " bg-linear-45 from-purple-300 to-purple-400",
+    complete: " bg-linear-45 from-[#cac8d8] to-[#239e9a]",
+    progress: " bg-linear-45 from-[#a4cbce] to-blue-400",
+    newList: " bg-linear-45 from-purple-300 to-purple-400",
+    important: " bg-linear-45 from-red-300 to-red-400",
+  } as const;
+
+export type GradientsKey = keyof typeof gradiants
+
 export const items = [
   {
     title: sidebar.myDay,
     state: true,
     id: crypto.randomUUID(),
     icon: "Sun1",
-    color: ["purple-300", "rose-400"],
+    color: "myDay",
     isEdit: false,
     editable: false,
     filter: (todo: any) =>  todo.item === sidebar.myDay && !todo.status && todo.date === todoDate
@@ -28,7 +40,7 @@ export const items = [
     state: false,
     id: crypto.randomUUID(),
     icon: "Card",
-    color: ["purple-300", "purple-400"],
+    color: "all",
     isEdit: false,
     editable: false,
     filter: (todo: any) => todo && !todo.status
@@ -38,7 +50,7 @@ export const items = [
     state: false,
     id: crypto.randomUUID(),
     icon: "TickCircle",
-    color: ["[#cac8d8]", "[#239e9a]"],
+    color: "complete",
     isEdit: false,
     editable: false,
     filter: (todo: any) => todo.status
@@ -48,7 +60,7 @@ export const items = [
     state: false,
     id: crypto.randomUUID(),
     icon: "Chart",
-    color: ["[#a4cbce]", "rose-400"],
+    color: "progress",
     isEdit: false,
     editable: false,
     filter: (todo: any) => todo
@@ -58,7 +70,7 @@ export const items = [
     state: false,
     id: crypto.randomUUID(),
     icon: "HamburgerMenu",
-    color: ["purple-300", "purple-400"],
+    color: "newList",
     isEdit: false,
     editable: true,
     filter: (todo: any) => todo.item === sidebar.work

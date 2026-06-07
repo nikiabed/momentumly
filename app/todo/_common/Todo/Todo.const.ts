@@ -1,4 +1,5 @@
 import { ChangeEventHandler, Dispatch, SetStateAction } from "react";
+import { GradientsKey } from "../Sidebar/Sidebar.const";
 
 export type TodoType = {
   id: string;
@@ -14,12 +15,13 @@ export type TodoListType = TodoType[];
 
 export type ListItems = ListItemProps[];
 
+
 export type ListItemProps = {
   title: string;
   state: boolean;
   id: string;
   icon: string;
-  color: string[];
+  color: GradientsKey;
   isEdit: boolean;
   editable: boolean;
   filter: (todo: TodoType) => any;

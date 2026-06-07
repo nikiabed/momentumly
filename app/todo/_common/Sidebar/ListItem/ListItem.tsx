@@ -60,19 +60,27 @@ export const ListItem = ({ focused }: { focused: ListItemProps }) => {
           <div className="border-b border-gray-300 p absolute -bottom-1 w-full"></div>
         )}
       </div>
-      <More
-        className=" max-h-4 text-gray-400 rotate-90 cursor-pointer"
-        onClick={() => setIsOpen(!isOpen)}
-      />
-      {isOpen && (
-        <ul className="absolute left-5 top-5 w-40 z-20">
-          <li
-            onClick={() => removeList?.(focused.id)}
-            className="bg-white rounded px-2 py-1 text-sm cursor-pointer shadow"
-          >
-            حذف لیست
-          </li>
-        </ul>
+      {focused.editable && (
+        <div>
+          <More
+            color="transparent"
+            style={{
+              fill: "#000",
+            }}
+            className=" max-h-4 text-gray-400 rotate-90 cursor-pointer"
+            onClick={() => setIsOpen(!isOpen)}
+          />
+          {isOpen && (
+            <ul className="absolute left-5 top-5 w-40 z-20">
+              <li
+                onClick={() => removeList?.(focused.id)}
+                className="bg-white rounded px-2 py-1 text-sm cursor-pointer shadow"
+              >
+                حذف لیست
+              </li>
+            </ul>
+          )}
+        </div>
       )}
     </li>
   );
