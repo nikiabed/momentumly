@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from "uuid";
+
 export const sidebar = {
   placeholder: "پیدا کردن..",
   myDay: "امروز",
@@ -28,7 +30,7 @@ export const items = [
   {
     title: sidebar.myDay,
     state: true,
-    id: crypto.randomUUID(),
+    id: uuidv4(),
     icon: "Sun1",
     color: "myDay",
     isEdit: false,
@@ -38,7 +40,7 @@ export const items = [
   {
     title: sidebar.All,
     state: false,
-    id: crypto.randomUUID(),
+    id: uuidv4(),
     icon: "Card",
     color: "all",
     isEdit: false,
@@ -48,7 +50,7 @@ export const items = [
   {
     title: sidebar.complete,
     state: false,
-    id: crypto.randomUUID(),
+    id: uuidv4(),
     icon: "TickCircle",
     color: "complete",
     isEdit: false,
@@ -58,7 +60,7 @@ export const items = [
   {
     title: sidebar.progress,
     state: false,
-    id: crypto.randomUUID(),
+    id: uuidv4(),
     icon: "Chart",
     color: "progress",
     isEdit: false,
@@ -68,7 +70,7 @@ export const items = [
   {
     title: sidebar.work,
     state: false,
-    id: crypto.randomUUID(),
+    id: uuidv4(),
     icon: "HamburgerMenu",
     color: "newList",
     isEdit: false,

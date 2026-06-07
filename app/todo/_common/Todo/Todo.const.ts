@@ -1,5 +1,6 @@
 import { ChangeEventHandler, Dispatch, SetStateAction } from "react";
 import { GradientsKey } from "../Sidebar/Sidebar.const";
+import { v4 as uuidv4 } from "uuid";
 
 export type TodoType = {
   id: string;
@@ -75,7 +76,7 @@ const date = new Date();
 export const todoDate = date.toDateString();
 export const todoData = [
   {
-    id: crypto.randomUUID(),
+    id: uuidv4(),
     title: "باشگاه",
     status: false,
     isEdit: false,
@@ -84,7 +85,7 @@ export const todoData = [
     item: "همه",
   },
   {
-    id: crypto.randomUUID(),
+    id: uuidv4(),
     title: "خرید خانه",
     status: false,
     isEdit: false,
@@ -93,7 +94,7 @@ export const todoData = [
     item: "همه",
   },
   {
-    id: crypto.randomUUID(),
+    id: uuidv4(),
     title: "آب دادن به گل ها",
     status: false,
     isEdit: false,
@@ -102,7 +103,7 @@ export const todoData = [
     item: "امروز",
   },
   {
-    id: crypto.randomUUID(),
+    id: uuidv4(),
     title: "حموم!",
     status: false,
     isEdit: false,

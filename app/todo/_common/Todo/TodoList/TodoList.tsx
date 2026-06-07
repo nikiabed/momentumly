@@ -2,6 +2,8 @@
 import { useCallback, useState } from "react";
 import { TodoListType } from "../Todo.const";
 import { TodoListItems } from "../TodoListItem";
+import { v4 as uuidv4 } from "uuid";
+
 
 export const TodoList = ({
   todo,
@@ -28,7 +30,7 @@ export const TodoList = ({
   const [dropped, setDrop] = useState(false);
   const [dropped1, setDrop1] = useState(false);
   const [newItem, setNewItem] = useState({
-    id: crypto.randomUUID(),
+    id: uuidv4(),
     title: "box1",
     dragEnter: false,
     dropped: false,
