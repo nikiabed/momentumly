@@ -8,8 +8,7 @@ import { ListItem } from "./ListItem";
 import { sidebar } from "./Sidebar.const";
 
 export const Sidebar = () => {
-  const { focused, handleNewList } = useTodoContext()
-  console.log("sidebar")
+  const { handleNewList, boardList } = useTodoContext()
   return (
     <div className="overflow-y-hidden h-screen pt-5 px-3 bg-pink-50 flex flex-1 flex-col gap-2 justify-between">
       <div className="shrink-0">
@@ -26,8 +25,8 @@ export const Sidebar = () => {
       </div>
 
       <div className="overflow-auto grow flex flex-col gap-2 text-gray-800 text-md pb-1.5 shadow-gray-600">
-        {focused?.map((list: ListItemProps) => {
-          return <ListItem key={list.id} focused={list} />;
+        {boardList?.map((list: ListItemProps) => {
+          return <ListItem key={list._id} focused={list} />;
         })}
       </div>
 

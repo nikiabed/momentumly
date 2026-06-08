@@ -1,12 +1,10 @@
 "use client";
 
-import { memo } from "react";
 import { useTodoContext } from "@/app/_utils/hooks/useTodoContext";
 import { Board } from "./Board";
 
 export const Todo = () => {
-  const { focused } = useTodoContext();
-  console.log("todo");
+  const { focused, setFocused } = useTodoContext();
   return (
     <>
       {focused?.map((item: any) => {

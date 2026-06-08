@@ -20,7 +20,7 @@ export type ListItems = ListItemProps[];
 export type ListItemProps = {
   title: string;
   state: boolean;
-  id: string;
+  _id: string;
   icon: string;
   color: GradientsKey;
   isEdit: boolean;
@@ -58,6 +58,10 @@ export type Context = {
   handleBoardEditable?: (index: string) => void;
   removeList?: (index: string) => void;
   moveToMyDay?: (index: string) => void;
+  boardList?: ListItemProps[];
+  setBoardList?: Dispatch<SetStateAction<ListItemProps[]>>;
+  loadBoards?: () => Promise<void>;
+  createBoard?: (name: string) => void;
 };
 
 export const header = {

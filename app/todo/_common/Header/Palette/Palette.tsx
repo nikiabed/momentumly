@@ -2,6 +2,8 @@
 import { More } from "iconsax-reactjs";
 import { useState } from "react";
 import { ListItemProps } from "../..";
+import { gradiants } from "../../Sidebar/Sidebar.const";
+import { useTodoContext } from "@/app/_utils/hooks/useTodoContext";
 
 const colors = [
   "bg-linear-45 from-purple-300 to-rose-400",
@@ -14,17 +16,29 @@ const colors = [
   "bg-blue-100 border-2 border-blue-600",
   "bg-green-100 border-2 border-green-600",
   "bg-red-100 border-2 border-red-600",
-]; 
+];
 
 export const Palette = ({ item }: { item: ListItemProps }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const { focused, setFocused } = useTodoContext();
+
   const togglePalette = () => {
     setIsOpen(!isOpen);
   };
   const [selectedColor, setSelectedColor] = useState(colors[0]);
 
-  const handleColorChange = () => {
-    // setSelectedColor(gradiants[color]);
+  const handleColorChange = (color: string, key: string) => {
+    setSelectedColor(color);
+    Object.keys(gradiants).forEach((key) => {
+      if (key === item.color) {
+        gradiants[key as keyof typeof gradiants] = color as any;
+      }
+    });
+    setFocused?.((prev: any) =>
+      prev.map((prevItem: any) =>
+        prevItem.id === item.id ? { ...prevItem, color: key } : prevItem
+      )
+    );
   };
   return (
     <div className="relative" onClick={togglePalette}>
@@ -43,7 +57,7 @@ export const Palette = ({ item }: { item: ListItemProps }) => {
             {colors.map((theme: string, i: number) => (
               <div
                 key={i}
-                onClick={() => setSelectedColor(theme)}
+                onClick={() => handleColorChange(theme, item.color)}
                 className={`p-2 cursor-pointer ${theme} rounded h-10 w-10
                 ${selectedColor === theme ? "ring-2 ring-offset-2 ring-blue-500" : ""}
               `}

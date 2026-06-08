@@ -17,49 +17,60 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
   const [editedTask, setEditedTask] = useState<string>("");
   const [focused, setFocused] = useState(items);
   const [boardValue, setBoardValue] = useState("");
-  const [boardList, setBoardList] = useState<string[]>([]);
+  const [boardList, setBoardList] = useState<Board[]>([]);
+
+  type Board = {
+    title: string;
+    state: boolean;
+    id: string;
+    icon: string;
+    color: string;
+    isEdit: boolean;
+    editable: boolean;
+    filter: (todo: any) => any;
+  };
 
   useEffect(() => {
     if (typeof window === "undefined") return;
     const saveTodo = localStorage.getItem("todo");
-    const saveFocused = localStorage.getItem("focused");
-    const saveBoardList = localStorage.getItem("boardList");
+    // const saveFocused = localStorage.getItem("focused");
+    // const saveBoardList = localStorage.getItem("boardList");
     if (saveTodo) {
       setTodo(JSON.parse(saveTodo));
     }
 
-    if (saveBoardList) {
-      setBoardList(JSON.parse(saveBoardList));
-    }
+    // if (saveBoardList) {
+    //   setBoardList(JSON.parse(saveBoardList));
+    // }
 
-    if (saveFocused) {
-      const parsedFocused = JSON.parse(saveFocused);
-      const rehydrateFocused = parsedFocused.map((item: ListItemProps) => ({
-        ...item,
-        filter: (todo: TodoType) => {
-          if (item.title === sidebar.All)
-            return (
-              (todo.item === item.title ||
-                todo.item === sidebar.myDay ||
-                todo.item === sidebar.important) &&
-              !todo.status
-            );
-          if (item.title === sidebar.complete) return todo.status;
-          if (item.title === sidebar.important) return todo.isImportant;
-          if (item.title === sidebar.myDay)
-            return (
-              todo.item === sidebar.myDay &&
-              !todo.status &&
-              todo.date === todoDate
-            );
+    // if (saveFocused) {
+    //   const parsedFocused = JSON.parse(saveFocused);
+    //   const rehydrateFocused = parsedFocused.map((item: ListItemProps) => ({
+    //     ...item,
+    //     filter: (todo: TodoType) => {
+    //       if (item.title === sidebar.All)
+    //         return (
+    //           (todo.item === item.title ||
+    //             todo.item === sidebar.myDay ||
+    //             todo.item === sidebar.important) &&
+    //           !todo.status
+    //         );
+    //       if (item.title === sidebar.complete) return todo.status;
+    //       if (item.title === sidebar.important) return todo.isImportant;
+    //       if (item.title === sidebar.myDay)
+    //         return (
+    //           todo.item === sidebar.myDay &&
+    //           !todo.status &&
+    //           todo.date === todoDate
+    //         );
 
-          return todo.itemId === item.id;
-        },
-      }));
-      setFocused(() => rehydrateFocused);
-    } else {
-      setFocused(() => items);
-    }
+    //       return todo.itemId === item.id;
+    //     },
+    //   }));
+    //   setFocused(() => rehydrateFocused);
+    // } else {
+    //   setFocused(() => items);
+    // }
   }, []);
 
   useEffect(() => {
@@ -67,15 +78,36 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem("todo", JSON.stringify(todo));
   }, [todo]);
 
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    localStorage.setItem("focused", JSON.stringify(focused));
-  }, [focused]);
+  // useEffect(() => {
+  //   if (typeof window === "undefined") return;
+  //   localStorage.setItem("focused", JSON.stringify(focused));
+  // }, [focused]);
+
+  // useEffect(() => {
+  //   if (typeof window === "undefined") return;
+  //   localStorage.setItem("boardList", JSON.stringify(boardList));
+  // }, [boardList]);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    localStorage.setItem("boardList", JSON.stringify(boardList));
-  }, [boardList]);
+    loadBoards();
+  }, []);
+
+  async function loadBoards() {
+    const res = await fetch("/api/boards");
+    setBoardList(await res.json());
+  }
+
+  async function createBoard(name: string) {
+    await fetch("/api/boards", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name }),
+    });
+
+    await loadBoards();
+  }
 
   const addTodo = (title: string, item: ListItemProps) => {
     let newTask = {
@@ -299,6 +331,10 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
 
   const value = useMemo(
     () => ({
+      createBoard,
+      loadBoards,
+      boardList,
+      setBoardList,
       todo,
       setTodo,
       inputValue,
@@ -325,6 +361,10 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       moveToMyDay,
     }),
     [
+      createBoard,
+      boardList,
+      setBoardList,
+      loadBoards,
       todo,
       setTodo,
       inputValue,
@@ -348,7 +388,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       handleBoardIsEdit,
       handleBoardEditable,
       removeList,
-      moveToMyDay
+      moveToMyDay,
     ],
   );
 

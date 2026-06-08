@@ -24,7 +24,7 @@ export const Header = ({ item }: { item: ListItemProps }) => {
           <span className="text-lg">{formatPersianDate(new Date())}</span>
         )}
       </div>
-      <Palette/>
+      <Palette item={item} />
     </header>
   );
 };

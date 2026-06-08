@@ -22,8 +22,8 @@ export const ListItem = ({ focused }: { focused: ListItemProps }) => {
   return (
     <li className=" relative flex items-center justify-between">
       <div
-        onClick={() => handleBoardClick?.(focused.id)}
-        onDoubleClick={() => handleBoardEditable?.(focused.id)}
+        onClick={() => handleBoardClick?.(focused._id)}
+        onDoubleClick={() => handleBoardEditable?.(focused._id)}
         className={` justify-between rounded cursor-pointer w-full flex gap-1 items-center group hover:bg-black/5 hover:rounded ${focused.state ? "bg-black/5" : "bg-none"} `}
       >
         <div
@@ -35,7 +35,7 @@ export const ListItem = ({ focused }: { focused: ListItemProps }) => {
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
-                  boardValue && handleBoardSubmit?.(focused.id, boardValue);
+                  boardValue && handleBoardSubmit?.(focused._id, boardValue);
                 }}
               >
                 <input
@@ -50,12 +50,12 @@ export const ListItem = ({ focused }: { focused: ListItemProps }) => {
             )}
           </div>
         </div>
-        {todo.filter(focused.filter).length > 0 &&
+        {/* {todo.filter(focused.filter).length > 0 &&
           focused.title !== sidebar.progress && (
             <span className="bg-rose-400 h-5 px-1 rounded-md text-pink-50 text-sm">
               {todo.filter(focused.filter).length}
             </span>
-          )}
+          )} */}
         {focused.title == sidebar.progress && (
           <div className="border-b border-gray-300 p absolute -bottom-1 w-full"></div>
         )}
@@ -73,7 +73,7 @@ export const ListItem = ({ focused }: { focused: ListItemProps }) => {
           {isOpen && (
             <ul className="absolute left-5 top-5 w-40 z-20">
               <li
-                onClick={() => removeList?.(focused.id)}
+                onClick={() => removeList?.(focused._id)}
                 className="bg-white rounded px-2 py-1 text-sm cursor-pointer shadow"
               >
                 حذف لیست
