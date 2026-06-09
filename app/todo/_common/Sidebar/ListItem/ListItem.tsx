@@ -5,6 +5,7 @@ import { ItemIcon } from "../../Header";
 import { sidebar } from "../Sidebar.const";
 import { More } from "iconsax-reactjs";
 import { useState } from "react";
+import { t } from "@/app/i18n/t";
 
 export const ListItem = ({ focused }: { focused: ListItemProps }) => {
   const {
@@ -18,6 +19,14 @@ export const ListItem = ({ focused }: { focused: ListItemProps }) => {
   } = useTodoContext();
 
   const [isOpen, setIsOpen] = useState(false);
+
+  const titleToKey: Record<string, string> = {
+    "My Day": "myDay",
+    "All": "all",
+    "Complete": "complete",
+    "Progress": "progress",
+    "Work": "work",
+  };
 
   return (
     <li className=" relative flex items-center justify-between">
@@ -41,12 +50,12 @@ export const ListItem = ({ focused }: { focused: ListItemProps }) => {
                 <input
                   autoFocus
                   type="text"
-                  defaultValue={focused.title}
+                  defaultValue={t(titleToKey[focused.title])}
                   onChange={handleBoardInput}
                 />
               </form>
             ) : (
-              <span>{focused.title}</span>
+              <span>{t(titleToKey[focused.title])}</span>
             )}
           </div>
         </div>
