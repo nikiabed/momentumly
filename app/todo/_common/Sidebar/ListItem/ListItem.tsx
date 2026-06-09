@@ -7,6 +7,14 @@ import { More } from "iconsax-reactjs";
 import { useState } from "react";
 import { t } from "@/app/i18n/t";
 
+export const titleToKey: Record<string, string> = {
+  "My Day": "myDay",
+  All: "all",
+  Complete: "complete",
+  Progress: "progress",
+  Work: "work",
+};
+
 export const ListItem = ({ focused }: { focused: ListItemProps }) => {
   const {
     todo,
@@ -16,27 +24,21 @@ export const ListItem = ({ focused }: { focused: ListItemProps }) => {
     handleBoardClick,
     handleBoardEditable,
     removeList,
+    selectBoard,
+    activeBoard,
   } = useTodoContext();
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const titleToKey: Record<string, string> = {
-    "My Day": "myDay",
-    "All": "all",
-    "Complete": "complete",
-    "Progress": "progress",
-    "Work": "work",
-  };
-
   return (
     <li className=" relative flex items-center justify-between">
       <div
-        onClick={() => handleBoardClick?.(focused._id)}
+        onClick={() => selectBoard?.(focused.title)}
         onDoubleClick={() => handleBoardEditable?.(focused._id)}
-        className={` justify-between rounded cursor-pointer w-full flex gap-1 items-center group hover:bg-black/5 hover:rounded ${focused.state ? "bg-black/5" : "bg-none"} `}
+        className={` justify-between rounded cursor-pointer w-full flex gap-1 items-center group hover:bg-black/5 hover:rounded ${activeBoard === focused.title ? "bg-black/5" : "bg-none"} `}
       >
         <div
-          className={`flex py-2 items-center gap-2 before:border-r-4 before:border-transparent before:rounded before:h-5 ${focused.state ? " before:border-rose-700!" : ""}`}
+          className={`flex py-2 items-center gap-2 before:border-r-4 before:border-transparent before:rounded before:h-5 ${activeBoard === focused.title ? " before:border-rose-700!" : ""}`}
         >
           <div className="flex gap-2">
             <ItemIcon item={focused} size={20} className="text-rose-400" />

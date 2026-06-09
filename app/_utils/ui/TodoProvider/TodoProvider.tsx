@@ -11,9 +11,6 @@ import { useEffect, useMemo, useState } from "react";
 import { TodoContext } from "../../hooks";
 import { items, sidebar } from "@/app/todo/_common/Sidebar/Sidebar.const";
 
-
-
-
 export function TodoProvider({ children }: { children: React.ReactNode }) {
   const [todo, setTodo] = useState<TodoListType>(todoData);
   const [inputValue, setInputValue] = useState<string>("");
@@ -21,6 +18,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
   const [focused, setFocused] = useState(items);
   const [boardValue, setBoardValue] = useState("");
   const [boardList, setBoardList] = useState<Board[]>([]);
+  const [activeBoard, setActiveBoard] = useState<string>("My Day");
 
   type Board = {
     title: string;
@@ -94,6 +92,10 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     loadBoards();
   }, []);
+
+  function selectBoard(boardKey: string) {
+    setActiveBoard(boardKey);
+  }
 
   async function loadBoards() {
     const res = await fetch("/api/boards");
@@ -334,6 +336,8 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
 
   const value = useMemo(
     () => ({
+      activeBoard,
+      selectBoard,
       createBoard,
       loadBoards,
       boardList,
@@ -364,6 +368,8 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       moveToMyDay,
     }),
     [
+      activeBoard,
+      selectBoard,
       createBoard,
       boardList,
       setBoardList,

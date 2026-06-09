@@ -1,5 +1,5 @@
 "use client";
-import { ListItemProps, todoDate} from "../Todo.const";
+import { ListItemProps, todoDate } from "../Todo.const";
 import { TodoList } from "../TodoList";
 import { Progress } from "../Progress";
 import { TodoInput } from "../TodoInput";
@@ -9,8 +9,11 @@ import { gradiants, sidebar } from "../../Sidebar/Sidebar.const";
 import { Lists } from "../Lists";
 
 export const Board = ({ item }: { item: ListItemProps }) => {
-  const { todo, setTodo, focused } = useTodoContext();
-  const filter2 = todo.filter(item.filter);
+  const { todo, setTodo, focused, boardList, activeBoard } = useTodoContext();
+
+  const currentBoard = boardList?.find((b) => b.title === activeBoard) ?? boardList?.[0];
+  if (!currentBoard) return null
+  const filter2 = todo.filter((todo) => todo.item === currentBoard?.title);
   const completedTodo = todo.filter(
     (todo: any) =>
       todo.item === sidebar.myDay && todo.status && todo.date === todoDate,
@@ -26,34 +29,34 @@ export const Board = ({ item }: { item: ListItemProps }) => {
 
   return (
     <div
-      className={` ${gradiants[item.color]} overflow-hidden flex-4 h-screen w-full py-5`}
+      className={` ${gradiants[currentBoard.color]} overflow-hidden flex-4 h-screen w-full py-5`}
     >
       <div className="flex gap-4 flex-col h-screen py-5">
         <div className="shrink-0 px-15 flex flex-col gap-4 ">
-          <Header item={item} />
-          {item.title !== sidebar.progress && <TodoInput item={item} />}
+          <Header item={currentBoard} />
+          {currentBoard?.title !== sidebar.progress && <TodoInput item={currentBoard} />}
         </div>
 
-        {item.title === sidebar.progress ? (
-          <Progress item={item} />
+        {currentBoard?.title === sidebar.progress ? (
+          <Progress item={currentBoard} />
         ) : (
           <div className=" overflow-y-auto grow flex flex-col gap-5 px-15 pb-5 w-full">
             <TodoList todo={filter2} setTodo={setTodo} />
-            {item.title === sidebar.myDay && completedTodo.length > 0 && (
+            {currentBoard?.title === sidebar.myDay && completedTodo.length > 0 && (
               <Lists
-                key={item.id}
+                key={currentBoard?._id}
                 todo={completedTodo}
                 list={sidebar.complete}
               />
             )}
-            {item.title === sidebar.All &&
-              focused
+            {currentBoard?.title === sidebar.All &&
+              boardList
                 ?.slice(sliceIndex())
-                .map((item: any) => (
+                .map((board: any) => (
                   <Lists
-                    key={item.id}
-                    todo={todo.filter(item.filter)}
-                    list={item.title}
+                    key={board._id}
+                    todo={todo.filter(board.filter)}
+                    list={board.title}
                   />
                 ))}
           </div>

@@ -3,7 +3,7 @@ import { GradientsKey } from "../Sidebar/Sidebar.const";
 import { v4 as uuidv4 } from "uuid";
 
 export type TodoType = {
-  id: string;
+  _id: string;
   title: string;
   status: boolean;
   isEdit: boolean;
@@ -15,7 +15,6 @@ export type TodoType = {
 export type TodoListType = TodoType[];
 
 export type ListItems = ListItemProps[];
-
 
 export type ListItemProps = {
   title: string;
@@ -62,6 +61,8 @@ export type Context = {
   setBoardList?: Dispatch<SetStateAction<ListItemProps[]>>;
   loadBoards?: () => Promise<void>;
   createBoard?: (name: string) => void;
+  activeBoard?: string;
+  selectBoard?: (boardKey: string) => void;
 };
 
 export const header = {
