@@ -64,11 +64,14 @@ export type Context = {
   loadBoards?: () => Promise<void>;
   createBoard?: (name: string) => void;
   activeBoard?: string;
+  setActiveBoard?: Dispatch<SetStateAction<string>>;
   selectBoard?: (board: ListItemProps, id: string) => void;
   toggleImportant?: (id: string, value: boolean) => Promise<void>;
   toggleStatus?: (id: string, value: boolean) => Promise<void>;
   loading?: boolean;
   finalBoard?: ListItemProps[];
+  searchText?: string;
+  setSearchText?: Dispatch<SetStateAction<string>>;
 };
 
 export const header = {

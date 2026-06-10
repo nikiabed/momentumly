@@ -9,20 +9,25 @@ import { gradiants, sidebar } from "../../Sidebar/Sidebar.const";
 import { Lists } from "../Lists";
 
 export const Board = ({ item }: any) => {
-  const { todo, setTodo, boardList } = useTodoContext();
+  const { todo, setTodo, boardList, searchText } = useTodoContext();
   const currentBoard = item;
 
   if (!currentBoard) return null;
   const boardFilters = {
-    "myDay": (todo: any) => todo.item === "My Day",
-    "all": () => true,
-    "important": (todo: any) => todo.isImportant,
-    "complete": (todo: any) => todo.status,
-    "progress": () => true,
-    "work": (todo: any) => todo.item === "Work",
+    myDay: (todo: any) => todo.item === "My Day",
+    all: () => true,
+    important: (todo: any) => todo.isImportant,
+    complete: (todo: any) => todo.status,
+    progress: () => true,
+    work: (todo: any) => todo.item === "Work",
+    search: (todo: any) =>
+      searchText && todo.title?.toLowerCase().includes(searchText.toLowerCase()),
   };
-  
-  const filter = boardFilters[(currentBoard?.boardKey as keyof typeof boardFilters) || "All"];
+
+  const filter =
+    boardFilters[
+      (currentBoard?.boardKey as keyof typeof boardFilters) || "All"
+    ];
   const filteredTodos = todo.filter(filter);
 
   // const completedTodo = todo.filter(

@@ -18,6 +18,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
   const [boardList, setBoardList] = useState<Board[]>([]);
   const [activeBoard, setActiveBoard] = useState<string>("myDay");
   const [loading, setLoading] = useState(true);
+  const [searchText, setSearchText] = useState("");
 
   type Board = {
     title: string;
@@ -98,12 +99,26 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     order: 2,
     filter: (todo: any) => todo.isImportant,
   };
+  const searchView = {
+    _id: "search",
+    title: "Search",
+    boardKey: "search",
+    icon: "SearchNormal1",
+    color: "search",
+    state: activeBoard === "search",
+    order: 0,
+    filter: (todo: any) =>
+      todo.title?.toLowerCase().includes(searchText.toLowerCase()),
+  };
   const hasImportant = todo.some((t) => t.isImportant);
   const exists = boardList?.some((f) => f.title === "Important");
   const finalBoard = [...boardList];
   if (hasImportant && !exists) {
     const index = finalBoard.findIndex((b) => b.order === 2);
     finalBoard.splice(index, 0, importantView);
+  }
+  if (searchText.trim()) {
+    finalBoard.unshift(searchView);
   }
 
   useEffect(() => {
@@ -138,8 +153,6 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
 
     await loadBoards();
   }
-
-  // const allBoards = [...boardList, importantBoard];
 
   async function loadTodos() {
     const res = await fetch("/api/todos");
@@ -375,6 +388,9 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
 
   const value = useMemo(
     () => ({
+      setActiveBoard,
+      searchText,
+      setSearchText,
       finalBoard,
       loading,
       toggleStatus,
@@ -407,6 +423,9 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       moveToMyDay,
     }),
     [
+      setActiveBoard,
+      searchText,
+      setSearchText,
       finalBoard,
       loading,
       toggleStatus,

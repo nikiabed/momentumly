@@ -28,8 +28,6 @@ export const ListItem = ({ focused }: { focused: any }) => {
   } = useTodoContext();
 
   const [isOpen, setIsOpen] = useState(false);
-  console.log("active",activeBoard)
-  console.log("f",focused.boardKey)
 
 
   return (

@@ -4,19 +4,9 @@ import { useTodoContext } from "@/app/_utils/hooks/useTodoContext";
 import { Board } from "./Board";
 
 export const Todo = () => {
-  const { loading, todo, finalBoard } = useTodoContext();
+  const { loading, finalBoard } = useTodoContext();
   const selectedBoard = finalBoard?.find((b) => b.state);
 
-  console.log("TODO", todo);
-
-  console.log(
-    "HAS IMPORTANT",
-    todo.some((t) => t.isImportant),
-  );
-
-  console.log("FINAL BOARD", finalBoard);
-
-  console.log("ACTIVE", selectedBoard);
   if (loading)
     return (
       <div

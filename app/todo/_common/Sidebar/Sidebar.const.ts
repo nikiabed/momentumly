@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
+import { Search } from "./Search";
 
 export const sidebar = {
   placeholder: "پیدا کردن..",
@@ -22,6 +23,7 @@ export const gradiants = {
     progress: " bg-linear-45 from-[#a4cbce] to-blue-400",
     newList: " bg-linear-45 from-purple-300 to-purple-400",
     important: " bg-linear-45 from-red-300 to-red-400",
+    search: " bg-linear-45 from-purple-300 to-purple-600"
   } as const;
 
 export type GradientsKey = keyof typeof gradiants
