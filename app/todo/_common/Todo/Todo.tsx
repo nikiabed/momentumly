@@ -4,8 +4,19 @@ import { useTodoContext } from "@/app/_utils/hooks/useTodoContext";
 import { Board } from "./Board";
 
 export const Todo = () => {
-  const { focused, loading } = useTodoContext();
-  const activeBoard = focused?.find((item) => item.state);
+  const { focused, loading, todo } = useTodoContext();
+  const importantView = {
+    _id: "important",
+    title: "Important",
+    icon: "Star1",
+    color: "important",
+    state: false,
+    filter: (todo: any) => todo.isImportant,
+  };
+  const hasImportant = todo.some((t) => t.isImportant);
+  const finalFocused = hasImportant ? [...focused, importantView] : focused;
+  const activeBoard = finalFocused?.find((item) => item.state);
+
   if (loading)
     return (
       <div

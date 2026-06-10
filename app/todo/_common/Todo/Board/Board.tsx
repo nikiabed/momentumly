@@ -11,9 +11,21 @@ import { Lists } from "../Lists";
 export const Board = () => {
   const { todo, setTodo, boardList, activeBoard } = useTodoContext();
 
-  const currentBoard = boardList?.find((b) => b.title === activeBoard) ?? boardList?.[0];
-  if (!currentBoard) return null
-  const filter2 = todo.filter((todo) => todo.item === currentBoard?.title);
+  const currentBoard = boardList?.find(b => b.title === activeBoard)
+  
+  if (!currentBoard) return null;
+  const boardFilters = {
+    "My Day": (todo: any) => todo.item === "My Day",
+    "All": () => true,
+    "Important": (todo: any) => todo.isImportant,
+    "Complete": (todo: any) => todo.status,
+    "Progress": () => true,
+    "Work": (todo: any) => todo.item === "Work",
+  };
+
+const filter = boardFilters[currentBoard?.title as keyof typeof boardFilters || "All"]
+const filteredTodos = todo.filter(filter)
+
   // const completedTodo = todo.filter(
   //   (todo: any) =>
   //     todo.item === sidebar.myDay && todo.status && todo.date === todoDate,
@@ -34,14 +46,16 @@ export const Board = () => {
       <div className="flex gap-4 flex-col h-screen py-5">
         <div className="shrink-0 px-15 flex flex-col gap-4 ">
           <Header item={currentBoard} />
-          {currentBoard?.title !== sidebar.progress && <TodoInput item={currentBoard} />}
+          {currentBoard?.title !== sidebar.progress && (
+            <TodoInput item={currentBoard} />
+          )}
         </div>
 
-        {currentBoard?.title === sidebar.progress ? (
+        {currentBoard?.title === "Progress" ? (
           <Progress item={currentBoard} />
         ) : (
           <div className=" overflow-y-auto grow flex flex-col gap-5 px-15 pb-5 w-full">
-            <TodoList todo={filter2} setTodo={setTodo} />
+            <TodoList todo={filteredTodos} setTodo={setTodo} />
             {/* {currentBoard?.title === sidebar.myDay && completedTodo.length > 0 && (
               <Lists
                 key={currentBoard?._id}
@@ -53,11 +67,7 @@ export const Board = () => {
               boardList
                 ?.slice(sliceIndex())
                 .map((board: any) => (
-                  <Lists
-                    key={board._id}
-                    todo={todo}
-                    list={board.title}
-                  />
+                  <Lists key={board._id} todo={todo} list={board.title} />
                 ))}
           </div>
         )}

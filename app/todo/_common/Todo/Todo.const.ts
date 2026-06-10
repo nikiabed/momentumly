@@ -45,7 +45,7 @@ export type Context = {
   handleNewChange?: (id: string, title: string) => Promise<void>
   setEditedTask?: any;
   handleEditedTask?: (e: any) => void;
-  focused?: ListItems;
+  focused: ListItems;
   setFocused?: Dispatch<SetStateAction<ListItems>>;
   handleIsEdit?: (index: string) => void;
   handleImportant?: (index: string) => void;

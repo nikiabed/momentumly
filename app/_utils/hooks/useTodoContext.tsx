@@ -14,6 +14,7 @@ export const TodoContext = createContext<Context>({
       createdAt: "",
     },
   ],
+  focused: []
 });
 
 export const useTodoContext = () => useContext(TodoContext);
