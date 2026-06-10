@@ -14,7 +14,8 @@ export const TodoContext = createContext<Context>({
       createdAt: "",
     },
   ],
-  focused: []
+  focused: [],
+  boardList: []
 });
 
 export const useTodoContext = () => useContext(TodoContext);

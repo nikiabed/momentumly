@@ -25,6 +25,7 @@ export type ListItemProps = {
   color: GradientsKey;
   isEdit: boolean;
   editable: boolean;
+  boardKey: string;
   filter: (todo: TodoType) => any;
 };
 
@@ -42,7 +43,7 @@ export type Context = {
   isEdit?: boolean;
   setEdit?: any;
   editedTask?: string | undefined;
-  handleNewChange?: (id: string, title: string) => Promise<void>
+  handleNewChange?: (id: string, title: string) => Promise<void>;
   setEditedTask?: any;
   handleEditedTask?: (e: any) => void;
   focused: ListItems;
@@ -58,12 +59,12 @@ export type Context = {
   handleBoardEditable?: (index: string) => void;
   removeList?: (index: string) => void;
   moveToMyDay?: (index: string) => void;
-  boardList?: ListItemProps[];
+  boardList: ListItemProps[];
   setBoardList?: Dispatch<SetStateAction<ListItemProps[]>>;
   loadBoards?: () => Promise<void>;
   createBoard?: (name: string) => void;
   activeBoard?: string;
-  selectBoard?: (boardKey: string) => void;
+  selectBoard?: (board: ListItemProps, id: string) => void;
   toggleImportant?: (id: string, value: boolean) => Promise<void>;
   toggleStatus?: (id: string, value: boolean) => Promise<void>;
   loading?: boolean;

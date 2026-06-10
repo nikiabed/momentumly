@@ -11,7 +11,7 @@ export async function GET() {
 
     console.log("DB OK");
 
-    const boards = await db.collection("boards").find({}).toArray();
+    const boards = await db.collection("boards").find({}).sort({ order: 1 }).toArray();
 
     console.log(boards);
 

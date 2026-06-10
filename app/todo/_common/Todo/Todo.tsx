@@ -4,18 +4,20 @@ import { useTodoContext } from "@/app/_utils/hooks/useTodoContext";
 import { Board } from "./Board";
 
 export const Todo = () => {
-  const { focused, loading, todo } = useTodoContext();
+  const {  loading, todo, boardList } = useTodoContext();
   const importantView = {
     _id: "important",
     title: "Important",
+    boardKey: "important",
     icon: "Star1",
     color: "important",
     state: false,
     filter: (todo: any) => todo.isImportant,
   };
   const hasImportant = todo.some((t) => t.isImportant);
-  const finalFocused = hasImportant ? [...focused, importantView] : focused;
-  const activeBoard = finalFocused?.find((item) => item.state);
+  const exists = boardList?.some((f) => f.title === "Important");
+  const finalBoard = hasImportant && !exists ? [...boardList, importantView] : boardList;
+  const activeBoard = finalBoard?.find((b) => b.state);
 
   if (loading)
     return (
@@ -23,5 +25,7 @@ export const Todo = () => {
         className={`bg-gray-300 overflow-hidden flex-4 h-screen w-full py-5`}
       ></div>
     );
-  return activeBoard ? <Board key={activeBoard._id} /> : null;
+  return activeBoard ? (
+    <Board item={activeBoard} />
+  ) : null;
 };

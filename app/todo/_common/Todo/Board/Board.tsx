@@ -8,23 +8,22 @@ import { Header } from "../../Header";
 import { gradiants, sidebar } from "../../Sidebar/Sidebar.const";
 import { Lists } from "../Lists";
 
-export const Board = () => {
-  const { todo, setTodo, boardList, activeBoard } = useTodoContext();
+export const Board = ({ item }: any) => {
+  const { todo, setTodo, boardList } = useTodoContext();
+  const currentBoard = item;
 
-  const currentBoard = boardList?.find(b => b.title === activeBoard)
-  
   if (!currentBoard) return null;
   const boardFilters = {
-    "My Day": (todo: any) => todo.item === "My Day",
-    "All": () => true,
-    "Important": (todo: any) => todo.isImportant,
-    "Complete": (todo: any) => todo.status,
-    "Progress": () => true,
-    "Work": (todo: any) => todo.item === "Work",
+    "myDay": (todo: any) => todo.item === "My Day",
+    "all": () => true,
+    "important": (todo: any) => todo.isImportant,
+    "complete": (todo: any) => todo.status,
+    "progress": () => true,
+    "work": (todo: any) => todo.item === "Work",
   };
-
-const filter = boardFilters[currentBoard?.title as keyof typeof boardFilters || "All"]
-const filteredTodos = todo.filter(filter)
+  
+  const filter = boardFilters[(currentBoard?.boardKey as keyof typeof boardFilters) || "All"];
+  const filteredTodos = todo.filter(filter);
 
   // const completedTodo = todo.filter(
   //   (todo: any) =>

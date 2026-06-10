@@ -16,17 +16,18 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
   const [focused, setFocused] = useState(items);
   const [boardValue, setBoardValue] = useState("");
   const [boardList, setBoardList] = useState<Board[]>([]);
-  const [activeBoard, setActiveBoard] = useState<string>("My Day");
+  const [activeBoard, setActiveBoard] = useState<string>("myDay");
   const [loading, setLoading] = useState(true);
 
   type Board = {
     title: string;
     state: boolean;
-    id: string;
+    _id: string;
     icon: string;
     color: string;
     isEdit: boolean;
     editable: boolean;
+    boardKey: string;
     filter: (todo: any) => any;
   };
 
@@ -92,17 +93,15 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     loadBoards();
   }, []);
 
-  const importantBoard = {
-    title: "Important",
-    state: false,
-    icon: "Star1",
-    color: "important",
-    editable: false,
-    filter: (todo: any) => todo.isImportant,
-  };
 
-  function selectBoard(boardKey: string) {
-    setActiveBoard(boardKey);
+  function selectBoard(board:Board, id: string) {
+    setActiveBoard(board.boardKey)
+    setBoardList((prev) =>
+      prev.map((board) => ({
+        ...board,
+        state: board._id === id,
+      })),
+    );
   }
 
   async function loadBoards() {
@@ -124,8 +123,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     await loadBoards();
   }
 
-  const allBoards = [...boardList, importantBoard];
-  
+  // const allBoards = [...boardList, importantBoard];
 
   async function loadTodos() {
     const res = await fetch("/api/todos");
