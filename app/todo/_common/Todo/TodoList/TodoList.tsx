@@ -84,7 +84,7 @@ export const TodoList = ({
         {todo.map((list: any) => {
           return (
             <TodoListItems
-              key={list.id}
+              key={list._id}
               list={list}
               draggable={true}
               onDragStart={handleDrag}

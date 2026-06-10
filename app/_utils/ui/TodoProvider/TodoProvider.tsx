@@ -2,7 +2,6 @@
 import {
   ListItemProps,
   ListItems,
-  todoData,
   todoDate,
   TodoListType,
   TodoType,
@@ -12,7 +11,7 @@ import { TodoContext } from "../../hooks";
 import { items, sidebar } from "@/app/todo/_common/Sidebar/Sidebar.const";
 
 export function TodoProvider({ children }: { children: React.ReactNode }) {
-  const [todo, setTodo] = useState<TodoListType>(todoData);
+  const [todo, setTodo] = useState<TodoListType>([]);
   const [inputValue, setInputValue] = useState<string>("");
   const [editedTask, setEditedTask] = useState<string>("");
   const [focused, setFocused] = useState(items);
@@ -31,53 +30,53 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     filter: (todo: any) => any;
   };
 
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const saveTodo = localStorage.getItem("todo");
-    // const saveFocused = localStorage.getItem("focused");
-    // const saveBoardList = localStorage.getItem("boardList");
-    if (saveTodo) {
-      setTodo(JSON.parse(saveTodo));
-    }
+  // useEffect(() => {
+  //   if (typeof window === "undefined") return;
+  //   const saveTodo = localStorage.getItem("todo");
+  //   // const saveFocused = localStorage.getItem("focused");
+  //   // const saveBoardList = localStorage.getItem("boardList");
+  //   if (saveTodo) {
+  //     setTodo(JSON.parse(saveTodo));
+  //   }
 
-    // if (saveBoardList) {
-    //   setBoardList(JSON.parse(saveBoardList));
-    // }
+  //   // if (saveBoardList) {
+  //   //   setBoardList(JSON.parse(saveBoardList));
+  //   // }
 
-    // if (saveFocused) {
-    //   const parsedFocused = JSON.parse(saveFocused);
-    //   const rehydrateFocused = parsedFocused.map((item: ListItemProps) => ({
-    //     ...item,
-    //     filter: (todo: TodoType) => {
-    //       if (item.title === sidebar.All)
-    //         return (
-    //           (todo.item === item.title ||
-    //             todo.item === sidebar.myDay ||
-    //             todo.item === sidebar.important) &&
-    //           !todo.status
-    //         );
-    //       if (item.title === sidebar.complete) return todo.status;
-    //       if (item.title === sidebar.important) return todo.isImportant;
-    //       if (item.title === sidebar.myDay)
-    //         return (
-    //           todo.item === sidebar.myDay &&
-    //           !todo.status &&
-    //           todo.date === todoDate
-    //         );
+  //   // if (saveFocused) {
+  //   //   const parsedFocused = JSON.parse(saveFocused);
+  //   //   const rehydrateFocused = parsedFocused.map((item: ListItemProps) => ({
+  //   //     ...item,
+  //   //     filter: (todo: TodoType) => {
+  //   //       if (item.title === sidebar.All)
+  //   //         return (
+  //   //           (todo.item === item.title ||
+  //   //             todo.item === sidebar.myDay ||
+  //   //             todo.item === sidebar.important) &&
+  //   //           !todo.status
+  //   //         );
+  //   //       if (item.title === sidebar.complete) return todo.status;
+  //   //       if (item.title === sidebar.important) return todo.isImportant;
+  //   //       if (item.title === sidebar.myDay)
+  //   //         return (
+  //   //           todo.item === sidebar.myDay &&
+  //   //           !todo.status &&
+  //   //           todo.date === todoDate
+  //   //         );
 
-    //       return todo.itemId === item.id;
-    //     },
-    //   }));
-    //   setFocused(() => rehydrateFocused);
-    // } else {
-    //   setFocused(() => items);
-    // }
-  }, []);
+  //   //       return todo.itemId === item.id;
+  //   //     },
+  //   //   }));
+  //   //   setFocused(() => rehydrateFocused);
+  //   // } else {
+  //   //   setFocused(() => items);
+  //   // }
+  // }, []);
 
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    localStorage.setItem("todo", JSON.stringify(todo));
-  }, [todo]);
+  // useEffect(() => {
+  //   if (typeof window === "undefined") return;
+  //   localStorage.setItem("todo", JSON.stringify(todo));
+  // }, [todo]);
 
   // useEffect(() => {
   //   if (typeof window === "undefined") return;
@@ -114,26 +113,50 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     await loadBoards();
   }
 
-  const addTodo = (title: string, item: ListItemProps) => {
-    let newTask = {
-      id: crypto.randomUUID(),
-      title: title,
-      status: false,
-      isEdit: false,
-      date: todoDate,
-      isImportant: false,
-      item: item.title,
-      itemId: item.id,
-    };
-    setTodo((prev: any) => {
-      if (item.title === sidebar.important) {
-        newTask.isImportant = true;
-      }
-      let clone = [...prev, newTask];
-      return clone;
+  async function loadTodos() {
+    const res = await fetch("/api/todos");
+    const data = await res.json();
+    setTodo(data);
+  }
+
+  async function createTodo(todo: {
+    title: string;
+    status: boolean;
+    isImportant: boolean;
+    item: string;
+    boardKey?: string;
+  }) {
+    await fetch("/api/todos", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...todo,
+        boardKey: activeBoard,
+        status: false,
+        isImportant: false,
+        isEdit: false,
+      }),
     });
+
+    await loadTodos();
+  }
+
+  useEffect(() => {
+    loadTodos();
+  }, []);
+
+  const addTodo = async (title: string, item: ListItemProps) => {
+    await createTodo({
+      title,
+      status: false,
+      isImportant: item.title === sidebar.important,
+      item: item.title,
+      boardKey: item._id,
+    });
+
     setInputValue("");
-    console.log(item.id);
   };
 
   const handleChange = (e: any) => {
@@ -141,11 +164,10 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     setInputValue(e.target.value);
   };
 
-  const handleSubmit = (e: any, item: ListItemProps) => {
+  const handleSubmit = async (e: any, item: ListItemProps) => {
     e.preventDefault();
-    if (inputValue.length != 0) {
-      addTodo(inputValue, item);
-    }
+    if (!inputValue.trim()) return;
+    await addTodo(inputValue, item);
   };
 
   const handleDelete = (index: string) => {
@@ -164,7 +186,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
 
   const handleNewChange = (index: string) => {
     const newList = todo.map((l: any) => {
-      if (index === l.id) {
+      if (index === l._id) {
         l.title = editedTask;
         return l;
       }
@@ -181,7 +203,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
   const handleIsEdit = (index: string) => {
     setTodo((prev: TodoListType) =>
       prev.map((item: any) =>
-        item.id === index ? { ...item, isEdit: !item.isEdit } : item,
+        item._id === index ? { ...item, isEdit: !item.isEdit } : item,
       ),
     );
   };
@@ -227,7 +249,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
 
   const handleImportant = (index: string) => {
     const newTodos = todo.map((item: any) =>
-      item.id === index ? { ...item, isImportant: !item.isImportant } : item,
+      item._id === index ? { ...item, isImportant: !item.isImportant } : item,
     );
     setTodo(newTodos);
     updateFocused(newTodos);
@@ -240,7 +262,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
   const handleBoardEditable = (index: string) => {
     setFocused((prev: ListItemProps[]) => {
       return prev.map((item: ListItemProps) => {
-        if (item.id === index && item.editable && !item.isEdit) {
+        if (item._id === index && item.editable && !item.isEdit) {
           return { ...item, isEdit: true };
         }
         return item;
@@ -250,7 +272,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
 
   const handleBoardSubmit = (index: string, text: string) => {
     const newList = focused.map((l: ListItemProps) => {
-      if (index === l.id) {
+      if (index === l._id) {
         l.title = text;
         l.filter = (todo: TodoType) => todo.itemId === index;
         return l;

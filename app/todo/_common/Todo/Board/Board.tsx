@@ -8,17 +8,17 @@ import { Header } from "../../Header";
 import { gradiants, sidebar } from "../../Sidebar/Sidebar.const";
 import { Lists } from "../Lists";
 
-export const Board = ({ item }: { item: ListItemProps }) => {
-  const { todo, setTodo, focused, boardList, activeBoard } = useTodoContext();
+export const Board = () => {
+  const { todo, setTodo, boardList, activeBoard } = useTodoContext();
 
   const currentBoard = boardList?.find((b) => b.title === activeBoard) ?? boardList?.[0];
   if (!currentBoard) return null
   const filter2 = todo.filter((todo) => todo.item === currentBoard?.title);
-  const completedTodo = todo.filter(
-    (todo: any) =>
-      todo.item === sidebar.myDay && todo.status && todo.date === todoDate,
-  );
-  const importantTodo = todo.filter((todo: any) => todo.isImportant);
+  // const completedTodo = todo.filter(
+  //   (todo: any) =>
+  //     todo.item === sidebar.myDay && todo.status && todo.date === todoDate,
+  // );
+  // const importantTodo = todo.filter((todo: any) => todo.isImportant);
   const sliceIndex = () => {
     if (importantTodo.length > 0) {
       return 5;
@@ -42,20 +42,20 @@ export const Board = ({ item }: { item: ListItemProps }) => {
         ) : (
           <div className=" overflow-y-auto grow flex flex-col gap-5 px-15 pb-5 w-full">
             <TodoList todo={filter2} setTodo={setTodo} />
-            {currentBoard?.title === sidebar.myDay && completedTodo.length > 0 && (
+            {/* {currentBoard?.title === sidebar.myDay && completedTodo.length > 0 && (
               <Lists
                 key={currentBoard?._id}
                 todo={completedTodo}
                 list={sidebar.complete}
               />
-            )}
+            )} */}
             {currentBoard?.title === sidebar.All &&
               boardList
                 ?.slice(sliceIndex())
                 .map((board: any) => (
                   <Lists
                     key={board._id}
-                    todo={todo.filter(board.filter)}
+                    todo={todo}
                     list={board.title}
                   />
                 ))}

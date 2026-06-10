@@ -6,12 +6,13 @@ export type TodoType = {
   _id: string;
   title: string;
   status: boolean;
-  isEdit: boolean;
-  date: string;
+  date?: string;
   isImportant: boolean;
   item: string;
-  itemId?: string;
+  boardKey?: string;
+  createdAt: string;
 };
+
 export type TodoListType = TodoType[];
 
 export type ListItems = ListItemProps[];
