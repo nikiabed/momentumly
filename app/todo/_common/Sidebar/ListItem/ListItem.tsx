@@ -9,10 +9,11 @@ import { t } from "@/app/i18n/t";
 
 export const titleToKey: Record<string, string> = {
   "My Day": "myDay",
-  All: "all",
-  Complete: "complete",
-  Progress: "progress",
-  Work: "work",
+  "Important": "important",
+  "All": "all",
+  "Complete": "complete",
+  "Progress": "progress",
+  "Work": "work",
 };
 
 export const ListItem = ({ focused }: { focused: any }) => {

@@ -25,9 +25,8 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     _id: string;
     icon: string;
     color: string;
-    isEdit: boolean;
-    editable: boolean;
     boardKey: string;
+    order: number;
     filter: (todo: any) => any;
   };
 
@@ -89,13 +88,30 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
   //   localStorage.setItem("boardList", JSON.stringify(boardList));
   // }, [boardList]);
 
+  const importantView = {
+    _id: "important",
+    title: "Important",
+    boardKey: "important",
+    icon: "Star1",
+    color: "important",
+    state: activeBoard === "important",
+    order: 2,
+    filter: (todo: any) => todo.isImportant,
+  };
+  const hasImportant = todo.some((t) => t.isImportant);
+  const exists = boardList?.some((f) => f.title === "Important");
+  const finalBoard = [...boardList];
+  if (hasImportant && !exists) {
+    const index = finalBoard.findIndex((b) => b.order === 2);
+    finalBoard.splice(index, 0, importantView);
+  }
+
   useEffect(() => {
     loadBoards();
   }, []);
 
-
-  function selectBoard(board:Board, id: string) {
-    setActiveBoard(board.boardKey)
+  function selectBoard(board: Board, id: string) {
+    setActiveBoard(board.boardKey);
     setBoardList((prev) =>
       prev.map((board) => ({
         ...board,
@@ -184,6 +200,10 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     });
 
     await loadTodos();
+    const importantExists = todo.some((t) => t._id !== id && t.isImportant);
+    if (activeBoard === "important" && !importantExists) {
+      setActiveBoard("myDay");
+    }
   }
 
   async function toggleStatus(id: string, value: boolean) {
@@ -355,6 +375,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
 
   const value = useMemo(
     () => ({
+      finalBoard,
       loading,
       toggleStatus,
       toggleImportant,
@@ -386,6 +407,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       moveToMyDay,
     }),
     [
+      finalBoard,
       loading,
       toggleStatus,
       toggleImportant,

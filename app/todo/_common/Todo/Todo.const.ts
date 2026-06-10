@@ -68,6 +68,7 @@ export type Context = {
   toggleImportant?: (id: string, value: boolean) => Promise<void>;
   toggleStatus?: (id: string, value: boolean) => Promise<void>;
   loading?: boolean;
+  finalBoard?: ListItemProps[];
 };
 
 export const header = {
