@@ -18,7 +18,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
   const [boardList, setBoardList] = useState<Board[]>([]);
   const [activeBoard, setActiveBoard] = useState<string>("My Day");
   const [loading, setLoading] = useState(true);
-  
+
   type Board = {
     title: string;
     state: boolean;
@@ -92,15 +92,24 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     loadBoards();
   }, []);
 
+  const importantBoard = {
+    title: "Important",
+    state: false,
+    icon: "Star1",
+    color: "important",
+    editable: false,
+    filter: (todo: any) => todo.isImportant,
+  };
+
   function selectBoard(boardKey: string) {
     setActiveBoard(boardKey);
   }
 
   async function loadBoards() {
-    setLoading(true)
+    setLoading(true);
     const res = await fetch("/api/boards");
     setBoardList(await res.json());
-    setLoading(false)
+    setLoading(false);
   }
 
   async function createBoard(name: string) {
@@ -114,6 +123,9 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
 
     await loadBoards();
   }
+
+  const allBoards = [...boardList, importantBoard];
+  
 
   async function loadTodos() {
     const res = await fetch("/api/todos");
@@ -229,10 +241,6 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     await loadTodos();
   };
 
-  const handleEditedTask = (e: any) => {
-    setEditedTask(e.target.value);
-  };
-
   const handleIsEdit = (id: string) => {
     setTodo((prev) =>
       prev.map((item) =>
@@ -244,8 +252,6 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
           : item,
       ),
     );
-    const todo1 = todo.find((t) => t._id === id);
-    todo1 && setEditedTask(todo1.title); // 👈 مهم
   };
 
   const handleBoardInput = (e: any) => {
@@ -368,7 +374,6 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       handleChange,
       handleSubmit,
       handleNewChange,
-      handleEditedTask,
       handleIsEdit,
       focused,
       setFocused,
@@ -400,7 +405,6 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       handleChange,
       handleSubmit,
       handleNewChange,
-      handleEditedTask,
       handleIsEdit,
       focused,
       setFocused,

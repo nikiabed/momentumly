@@ -12,7 +12,7 @@ type itemProps = DetailedHTMLProps<
 };
 export const TodoListItems: FC<itemProps> = ({ list, ...props }: any) => {
   const [localTitle, setLocalTitle] = useState(list.title);
-  const { handleNewChange, handleEditedTask, handleIsEdit } = useTodoContext();
+  const { handleNewChange, handleIsEdit } = useTodoContext();
 
   return (
     <div
