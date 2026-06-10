@@ -6,10 +6,10 @@ import { MouseEvent, useState } from "react";
 
 export const TodoEditInput = ({ list }: any) => {
   const {
-    handleImportant,
+    toggleImportant,
+    toggleStatus,
     handleIsEdit,
-    changeTaskState,
-    handleDelete,
+    deleteTodo,
     moveToMyDay,
   } = useTodoContext();
 
@@ -23,13 +23,13 @@ export const TodoEditInput = ({ list }: any) => {
             variant="Bold"
             size={26}
             className="mx-5 group-hover:bg-pink-50 text-rose-400 "
-            onClick={() => changeTaskState && changeTaskState(list.id)}
+            onClick={() => toggleStatus?.(list._id, !list.status)}
           />
         ) : (
           <Record
             size={26}
             className="mx-5 group-hover:bg-pink-50 text-black/55 cursor-pointer"
-            onClick={() => changeTaskState && changeTaskState(list.id)}
+            onClick={() => toggleStatus?.(list._id, !list.status)}
           />
         )}
         <div
@@ -48,7 +48,7 @@ export const TodoEditInput = ({ list }: any) => {
           <>
             <button
               onClick={() => {
-                handleIsEdit && handleIsEdit(list.id);
+                handleIsEdit?.(list._id);
               }}
               className="cursor-pointer px-2 h-8 text-sm bg-blue-400 hover:bg-blue-500 rounded-lg text-pink-50"
             >
@@ -58,7 +58,7 @@ export const TodoEditInput = ({ list }: any) => {
             <button
               className="cursor-pointer px-2 h-8 text-sm bg-rose-400 hover:bg-rose-500 rounded-lg text-pink-50"
               onClick={() => {
-                handleDelete && handleDelete(list.id);
+                deleteTodo?.(list._id);
               }}
             >
               <Trash size={18} />
@@ -69,7 +69,7 @@ export const TodoEditInput = ({ list }: any) => {
         <button
           className={` hover:cursor-pointer rounded-md h-8 px-2 text-sm  ${isOpen ? "bg-pink-500 text-rose-50 hover:bg-pink-600 " : "hover:text-pink-800"}`}
           onClick={() => {
-            handleImportant && handleImportant(list.id);
+            toggleImportant?.(list._id, !list.isImportant);
           }}
         >
           {list.isImportant ? (

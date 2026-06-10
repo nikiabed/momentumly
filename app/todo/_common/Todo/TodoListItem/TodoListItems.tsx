@@ -1,4 +1,5 @@
-import { DetailedHTMLProps, FC, HTMLAttributes, memo } from "react";
+"use client"
+import { DetailedHTMLProps, FC, HTMLAttributes, memo, useState } from "react";
 import { CloseCircle, TickCircle } from "iconsax-reactjs";
 import { useTodoContext } from "@/app/_utils/hooks";
 import { TodoEditInput } from "../TodoEditInput";
@@ -10,6 +11,7 @@ type itemProps = DetailedHTMLProps<
   list: string[];
 };
 export const TodoListItems: FC<itemProps> = ({ list, ...props }: any) => {
+  const [localTitle, setLocalTitle] = useState(list.title);
   const { handleNewChange, handleEditedTask, handleIsEdit } = useTodoContext();
 
   return (
@@ -22,12 +24,12 @@ export const TodoListItems: FC<itemProps> = ({ list, ...props }: any) => {
           name="edited task"
           onKeyDown={(e: any) => {
             if (e.key === "Escape") {
-              handleIsEdit && handleIsEdit(list.id);
+              handleIsEdit?.(list._id);
             }
           }}
           onSubmit={(e) => {
             e.preventDefault();
-            handleNewChange && handleNewChange(list.id);
+            handleNewChange?.(list._id, localTitle);
           }}
           className="flex items-center justify-center w-full"
         >
@@ -35,7 +37,7 @@ export const TodoListItems: FC<itemProps> = ({ list, ...props }: any) => {
             type="button"
             className="pr-5 px-1"
             onClick={() => {
-              handleIsEdit && handleIsEdit(list.id);
+              handleIsEdit?.(list._id);
             }}
           >
             <CloseCircle size={20} />
@@ -45,10 +47,10 @@ export const TodoListItems: FC<itemProps> = ({ list, ...props }: any) => {
           </button>
           <input
             type="text"
-            defaultValue={list.title}
+            value={localTitle}
             autoFocus
             className="h-10 px-2 w-full bg-pink-100 rounded-lg group-hover:bg-pink-50 focus:outline-none on focus:bg-white"
-            onChange={handleEditedTask}
+            onChange={(e) => setLocalTitle(e.target.value)}
           />
         </form>
       ) : (

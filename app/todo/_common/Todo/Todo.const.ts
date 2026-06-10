@@ -36,13 +36,13 @@ export type Context = {
   handleChange?:
     | ChangeEventHandler<HTMLInputElement, HTMLInputElement>
     | undefined;
-  handleDelete?: (index: string) => void;
+  deleteTodo?: (id: string) => Promise<void>;
   changeTaskState?: (index: string) => void;
   handleSubmit?: (e: any, item: ListItemProps) => void;
   isEdit?: boolean;
   setEdit?: any;
   editedTask?: string | undefined;
-  handleNewChange?: (index: string) => void;
+  handleNewChange?: (id: string, title: string) => Promise<void>
   setEditedTask?: any;
   handleEditedTask?: (e: any) => void;
   focused?: ListItems;
@@ -64,6 +64,9 @@ export type Context = {
   createBoard?: (name: string) => void;
   activeBoard?: string;
   selectBoard?: (boardKey: string) => void;
+  toggleImportant?: (id: string, value: boolean) => Promise<void>;
+  toggleStatus?: (id: string, value: boolean) => Promise<void>;
+  loading?: boolean;
 };
 
 export const header = {

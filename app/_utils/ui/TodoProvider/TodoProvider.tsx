@@ -13,12 +13,12 @@ import { items, sidebar } from "@/app/todo/_common/Sidebar/Sidebar.const";
 export function TodoProvider({ children }: { children: React.ReactNode }) {
   const [todo, setTodo] = useState<TodoListType>([]);
   const [inputValue, setInputValue] = useState<string>("");
-  const [editedTask, setEditedTask] = useState<string>("");
   const [focused, setFocused] = useState(items);
   const [boardValue, setBoardValue] = useState("");
   const [boardList, setBoardList] = useState<Board[]>([]);
   const [activeBoard, setActiveBoard] = useState<string>("My Day");
-
+  const [loading, setLoading] = useState(true);
+  
   type Board = {
     title: string;
     state: boolean;
@@ -97,8 +97,10 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
   }
 
   async function loadBoards() {
+    setLoading(true)
     const res = await fetch("/api/boards");
     setBoardList(await res.json());
+    setLoading(false)
   }
 
   async function createBoard(name: string) {
@@ -147,6 +149,48 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     loadTodos();
   }, []);
 
+  async function deleteTodo(id: string) {
+    await fetch("/api/todos/delete", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id }),
+    });
+
+    await loadTodos();
+  }
+
+  async function toggleImportant(id: string, value: boolean) {
+    await fetch("/api/todos/important", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id,
+        isImportant: value,
+      }),
+    });
+
+    await loadTodos();
+  }
+
+  async function toggleStatus(id: string, value: boolean) {
+    await fetch("/api/todos/status", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id,
+        status: value,
+      }),
+    });
+
+    await loadTodos();
+  }
+
   const addTodo = async (title: string, item: ListItemProps) => {
     await createTodo({
       title,
@@ -170,89 +214,38 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     await addTodo(inputValue, item);
   };
 
-  const handleDelete = (index: string) => {
-    setTodo((list: any) => {
-      return list.filter((l: any) => l.id !== index);
+  const handleNewChange = async (id: string, title: string) => {
+    await fetch("/api/todos/title", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id,
+        title,
+      }),
     });
-  };
 
-  const changeTaskState = (index: string) => {
-    setTodo((prev: any) =>
-      prev.map((item: any) =>
-        item.id === index ? { ...item, status: !item.status } : item,
-      ),
-    );
-  };
-
-  const handleNewChange = (index: string) => {
-    const newList = todo.map((l: any) => {
-      if (index === l._id) {
-        l.title = editedTask;
-        return l;
-      }
-      return l;
-    });
-    setTodo(newList);
-    handleIsEdit(index);
+    await loadTodos();
   };
 
   const handleEditedTask = (e: any) => {
     setEditedTask(e.target.value);
   };
 
-  const handleIsEdit = (index: string) => {
-    setTodo((prev: TodoListType) =>
-      prev.map((item: any) =>
-        item._id === index ? { ...item, isEdit: !item.isEdit } : item,
+  const handleIsEdit = (id: string) => {
+    setTodo((prev) =>
+      prev.map((item) =>
+        item._id === id
+          ? {
+              ...item,
+              isEdit: true,
+            }
+          : item,
       ),
     );
-  };
-
-  const updateFocused = (list: TodoListType) => {
-    let newItem = {
-      title: sidebar.important,
-      state: false,
-      id: crypto.randomUUID(),
-      icon: "Star1",
-      todos: [],
-      color: "important",
-      isEdit: false,
-      editable: false,
-      filter: (todo: TodoType) => todo.isImportant,
-    };
-    const exists = focused.find(
-      (focus: ListItemProps) => focus.title == sidebar.important,
-    );
-
-    const importantCount = list.filter((l: any) => l.isImportant).length;
-    const open = focused.find((f: ListItemProps) => f.state);
-    setFocused((prev: any) => {
-      let old = [...prev];
-      if (exists) {
-        if (importantCount == 0) {
-          old.splice(1, 1);
-          let today = old[0];
-          if (open?.title == sidebar.important) {
-            today = { ...today, state: true };
-          }
-          old.splice(0, 1, today);
-          return old;
-        } else {
-          return old;
-        }
-      } else {
-        old.splice(1, 0, newItem);
-        return old;
-      }
-    });
-  };
-
-  const handleImportant = (index: string) => {
-    const newTodos = todo.map((item: any) =>
-      item._id === index ? { ...item, isImportant: !item.isImportant } : item,
-    );
-    setTodo(newTodos);
-    updateFocused(newTodos);
+    const todo1 = todo.find((t) => t._id === id);
+    todo1 && setEditedTask(todo1.title); // 👈 مهم
   };
 
   const handleBoardInput = (e: any) => {
@@ -358,6 +351,10 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
 
   const value = useMemo(
     () => ({
+      loading,
+      toggleStatus,
+      toggleImportant,
+      deleteTodo,
       activeBoard,
       selectBoard,
       createBoard,
@@ -369,14 +366,10 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       inputValue,
       addTodo,
       handleChange,
-      handleDelete,
-      changeTaskState,
       handleSubmit,
       handleNewChange,
-      setEditedTask,
       handleEditedTask,
       handleIsEdit,
-      handleImportant,
       focused,
       setFocused,
       handleBoardSubmit,
@@ -390,6 +383,10 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       moveToMyDay,
     }),
     [
+      loading,
+      toggleStatus,
+      toggleImportant,
+      deleteTodo,
       activeBoard,
       selectBoard,
       createBoard,
@@ -401,14 +398,10 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       inputValue,
       addTodo,
       handleChange,
-      handleDelete,
-      changeTaskState,
       handleSubmit,
       handleNewChange,
-      setEditedTask,
       handleEditedTask,
       handleIsEdit,
-      handleImportant,
       focused,
       setFocused,
       handleBoardSubmit,

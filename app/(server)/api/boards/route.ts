@@ -2,10 +2,30 @@ import clientPromise from "@/app/lib/mongodb";
 import { NextResponse } from "next/server";
 
 export async function GET() {
-  const client = await clientPromise;
-  const boards = await client.db().collection("boards").find({}).toArray();
+  try {
+    const client = await clientPromise;
 
-  return NextResponse.json(boards);
+    console.log("CONNECTED");
+
+    const db = client.db("todo-app");
+
+    console.log("DB OK");
+
+    const boards = await db.collection("boards").find({}).toArray();
+
+    console.log(boards);
+
+    return Response.json(boards);
+  } catch (error) {
+    console.log("ERR", error);
+
+    return Response.json(
+      { error },
+      {
+        status: 500,
+      },
+    );
+  }
 }
 
 export async function POST(req: Request) {
@@ -13,9 +33,9 @@ export async function POST(req: Request) {
   const client = await clientPromise;
 
   if (Array.isArray(body)) {
-    await client.db().collection("boards").insertMany(body);
+    await client.db("todo-app").collection("boards").insertMany(body);
   } else {
-    await client.db().collection("boards").insertOne(body);
+    await client.db("todo-app").collection("boards").insertOne(body);
   }
 
   return Response.json({
