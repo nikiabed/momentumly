@@ -5,4 +5,5 @@ export const fa = {
   complete: "انجام شده",
   progress: "پیشرفت",
   work: "کار",
+  search: "جست و جو"
 };

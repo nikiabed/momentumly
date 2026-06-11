@@ -116,36 +116,6 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     return boards;
   }, [boardList, todo]);
 
-  // const importantView = {
-  //   _id: "important",
-  //   title: "Important",
-  //   boardKey: "important",
-  //   icon: "Star1",
-  //   color: "important",
-  //   state: activeBoard === "important",
-  //   order: 2,
-  //   filter: (todo: any) => todo.isImportant,
-  // };
-  // const searchView = {
-  //   _id: "search",
-  //   title: "Search",
-  //   boardKey: "search",
-  //   icon: "SearchNormal1",
-  //   color: "search",
-  //   state: activeBoard === "search",
-  //   order: 0,
-  //   filter: (todo: any) =>
-  //     todo.title?.toLowerCase().includes(searchText.toLowerCase()),
-  // };
-  // const hasImportant = todo.some((t) => t.isImportant);
-  // const finalBoard = [...boardList];
-  // if (hasImportant && !exists) {
-  //   const index = finalBoard.findIndex((b) => b.order === 2);
-  //   finalBoard.splice(index, 0, importantView);
-  // }
-  // if (searchText.trim()) {
-  //   finalBoard.unshift(searchView);
-  // }
 
   useEffect(() => {
     loadBoards();

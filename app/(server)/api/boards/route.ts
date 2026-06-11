@@ -4,21 +4,10 @@ import { NextResponse } from "next/server";
 export async function GET() {
   try {
     const client = await clientPromise;
-
-    console.log("CONNECTED");
-
     const db = client.db("todo-app");
-
-    console.log("DB OK");
-
     const boards = await db.collection("boards").find({}).sort({ order: 1 }).toArray();
-
-    console.log(boards);
-
     return Response.json(boards);
   } catch (error) {
-    console.log("ERR", error);
-
     return Response.json(
       { error },
       {

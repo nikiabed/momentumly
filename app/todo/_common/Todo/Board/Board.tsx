@@ -7,11 +7,9 @@ import { useTodoContext } from "@/app/_utils";
 import { Header } from "../../Header";
 import { gradiants, sidebar } from "../../Sidebar/Sidebar.const";
 import { Lists } from "../Lists";
-import { useMemo } from "react";
-import { titleToKey } from "../../Sidebar";
 
 export const Board = ({ item }: any) => {
-  const { todo, setTodo, boardList } = useTodoContext();
+  const { todo, setTodo, boardList, searchText } = useTodoContext();
   const currentBoard = item;
 
   const filteredTodos = todo.filter((t) => {
@@ -37,7 +35,12 @@ export const Board = ({ item }: any) => {
 
   const activeTodos = filteredTodos.filter((t) => !t.status);
   const completedTodos = filteredTodos.filter((t) => t.status);
-  console.log(completedTodos);
+  const searchTodos = todo
+    .filter((t) => !t.status)
+    .filter(
+      (t) =>
+        searchText && t.title.toLowerCase().includes(searchText.toLowerCase()),
+    );
   return (
     <div
       className={` ${gradiants[currentBoard.color]} overflow-hidden flex-4 h-screen w-full py-5`}
@@ -46,7 +49,8 @@ export const Board = ({ item }: any) => {
         <div className="shrink-0 px-15 flex flex-col gap-4 ">
           <Header item={currentBoard} />
           {currentBoard?.boardKey !== "progress" &&
-            currentBoard?.boardKey !== "complete" && (
+            currentBoard?.boardKey !== "complete" &&
+            currentBoard?.boardKey !== "search" && (
               <TodoInput item={currentBoard} />
             )}
         </div>
@@ -109,6 +113,8 @@ export const Board = ({ item }: any) => {
                 )}
               </>
             )}
+
+            {searchText && <TodoList todo={searchTodos} setTodo={setTodo} />}
 
             {currentBoard?.title === sidebar.All &&
               boardList

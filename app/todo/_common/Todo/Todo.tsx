@@ -19,9 +19,6 @@ export const Todo = () => {
     ? searchView
     : uiBoard?.find((b) => b.boardKey === activeBoard);
 
-    console.log("active",active)
-    console.log(activeBoard)
-
   if (loading)
     return (
       <div

@@ -1,5 +1,4 @@
 "use client";
-import { ListItemProps } from "../../Todo";
 import { useTodoContext } from "@/app/_utils/hooks";
 import { ItemIcon } from "../../Header";
 import { sidebar } from "../Sidebar.const";
@@ -14,6 +13,7 @@ export const titleToKey: Record<string, string> = {
   "Complete": "complete",
   "Progress": "progress",
   "Work": "work",
+  "Search": "search"
 };
 
 export const ListItem = ({ focused }: { focused: any }) => {

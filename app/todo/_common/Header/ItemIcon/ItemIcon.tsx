@@ -1,4 +1,4 @@
-import { IconProps } from "iconsax-reactjs";
+import { IconProps, SearchNormal1 } from "iconsax-reactjs";
 import { ListItemProps } from "../../Todo";
 import { FC, memo } from "react";
 import {
@@ -27,6 +27,8 @@ export const ItemIcon: FC<ItemIcon> = ({ item, ...props }) => {
       return <Chart {...props} />;
     case "HamburgerMenu":
       return <HamburgerMenu {...props} />;
+    case "SearchNormal1":
+      return <SearchNormal1 {...props} />;
     default:
       break;
   }
