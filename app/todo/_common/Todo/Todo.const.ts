@@ -72,6 +72,7 @@ export type Context = {
   setSearchText?: Dispatch<SetStateAction<string>>;
   uiBoard?: ListItemProps[];
   saveBoard?: (id: string) => Promise<void>;
+  handleUpdateTodo?: (id: string, title: string) => Promise<void>
 };
 
 export const header = {

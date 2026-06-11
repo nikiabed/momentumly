@@ -12,7 +12,7 @@ type itemProps = DetailedHTMLProps<
 };
 export const TodoListItems: FC<itemProps> = ({ list, ...props }: any) => {
   const [localTitle, setLocalTitle] = useState(list.title);
-  const { handleNewChange, handleIsEdit } = useTodoContext();
+  const { handleUpdateTodo, handleIsEdit } = useTodoContext();
 
   return (
     <div
@@ -29,7 +29,7 @@ export const TodoListItems: FC<itemProps> = ({ list, ...props }: any) => {
           }}
           onSubmit={(e) => {
             e.preventDefault();
-            handleNewChange?.(list._id, localTitle);
+            handleUpdateTodo?.(list._id, localTitle);
           }}
           className="flex items-center justify-center w-full"
         >

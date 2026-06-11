@@ -189,20 +189,20 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     setTodo(data);
   }
 
-  async function saveBoard(id: string) {
+  const saveBoard = async (id: string) => {
+    const newTitle = editedBoard;
+    setFocused((prev: any[]) =>
+      prev.map((b) =>
+        b._id === id ? { ...b, title: newTitle, isEdit: false } : b,
+      ),
+    );
     await fetch("/api/boards/title", {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        id,
-        title: editedBoard,
-      }),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, title: newTitle }),
     });
-
     await loadBoards();
-  }
+  };
 
   async function createTodo(todo: {
     title: string;
@@ -301,28 +301,26 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     await addTodo(inputValue, item);
   };
 
- const handleNewChange = async (id: string) => {
-  const newTitle = editedBoard;
-  setTodo((prev) =>
-    prev.map((t) =>
-      t._id === id
-        ? { ...t, title: newTitle, isEdit: false }
-        : t
-    )
-  );
+  const handleUpdateBoard = async (id: string) => {
+    const newTitle = editedBoard;
+    setTodo((prev) =>
+      prev.map((t) =>
+        t._id === id ? { ...t, title: newTitle, isEdit: false } : t,
+      ),
+    );
+  };
 
-  await fetch("/api/todos/title", {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      id,
-      title: newTitle,
-    }),
-  });
-};
+  const handleUpdateTodo = async (id: string, title: string) => {
+    setTodo((prev) =>
+      prev.map((t) => (t._id === id ? { ...t, title, isEdit: false } : t)),
+    );
 
+    await fetch("/api/todos/title", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, title }),
+    });
+  };
   const handleIsEdit = (id: string) => {
     setTodo((prev) =>
       prev.map((item) =>
@@ -353,24 +351,6 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     );
   };
 
-  const handleBoardSubmit = (index: string, text: string) => {
-    const newList = focused.map((l: ListItemProps) => {
-      if (index === l._id) {
-        l.title = text;
-        l.filter = (todo: TodoType) => todo.itemId === index;
-        return l;
-      }
-      return l;
-    });
-    setFocused(newList);
-    handleBoardIsEdit(index);
-    const newBoard = text;
-    setBoardList((prev: any) => {
-      const old = [...prev];
-      return [...old, newBoard];
-    });
-  };
-
   const handleBoardClick = (index: string) => {
     setFocused &&
       setFocused((prev: any) =>
@@ -392,6 +372,26 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
 
   async function handleNewList() {
     const last = Math.max(...boardList.map((b) => b.order), 0);
+    const key = `board-${Date.now()}`;
+
+    const newBoard = {
+      _id: key, // مهم برای UI
+      title: "untitled",
+      boardKey: key,
+      state: false,
+      icon: "HamburgerMenu",
+      color: "newList",
+      editable: true,
+      isEdit: true,
+      order: last + 1,
+    };
+
+    // 1. اول UI آپدیت
+    setFocused((prev) => {
+      const updated = prev.map((b) => ({ ...b, state: false }));
+      return [...updated, newBoard];
+    });
+
     await fetch("/api/boards", {
       method: "POST",
       headers: {
@@ -400,7 +400,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
 
       body: JSON.stringify({
         title: "untitled",
-        boardKey: `board-${Date.now()}`,
+        boardKey: key,
         state: false,
         icon: "HamburgerMenu",
         color: "newList",
@@ -410,6 +410,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       }),
     });
 
+    setActiveBoard(key);
     await loadBoards();
   }
 
@@ -447,6 +448,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
 
   const value = useMemo(
     () => ({
+      handleUpdateTodo,
       saveBoard,
       uiBoard,
       setActiveBoard,
@@ -468,11 +470,10 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       addTodo,
       handleChange,
       handleSubmit,
-      handleNewChange,
+      handleUpdateBoard,
       handleIsEdit,
       focused,
       setFocused,
-      handleBoardSubmit,
       handleBoardInput,
       handleBoardClick,
       handleNewList,
@@ -482,6 +483,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       moveToMyDay,
     }),
     [
+      handleUpdateTodo,
       saveBoard,
       uiBoard,
       setActiveBoard,
@@ -503,11 +505,10 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       addTodo,
       handleChange,
       handleSubmit,
-      handleNewChange,
+      handleUpdateBoard,
       handleIsEdit,
       focused,
       setFocused,
-      handleBoardSubmit,
       handleBoardInput,
       handleBoardClick,
       handleNewList,
