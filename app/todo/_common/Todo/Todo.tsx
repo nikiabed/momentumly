@@ -4,8 +4,23 @@ import { useTodoContext } from "@/app/_utils/hooks/useTodoContext";
 import { Board } from "./Board";
 
 export const Todo = () => {
-  const { loading, finalBoard } = useTodoContext();
-  const selectedBoard = finalBoard?.find((b) => b.state);
+  const { loading, uiBoard, searchText, activeBoard } = useTodoContext();
+  const searchView = {
+    _id: "search",
+    title: "Search",
+    boardKey: "search",
+    icon: "SearchNormal1",
+    color: "search",
+    editable: false,
+    isEdit: false,
+    order: 0,
+  };
+  const active = searchText
+    ? searchView
+    : uiBoard?.find((b) => b.boardKey === activeBoard);
+
+    console.log("active",active)
+    console.log(activeBoard)
 
   if (loading)
     return (
@@ -13,5 +28,5 @@ export const Todo = () => {
         className={`bg-gray-300 overflow-hidden flex-4 h-screen w-full py-5`}
       ></div>
     );
-  return selectedBoard ? <Board item={selectedBoard} /> : null;
+  return active ? <Board item={active} /> : null;
 };

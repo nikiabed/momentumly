@@ -14,7 +14,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
   const [todo, setTodo] = useState<TodoListType>([]);
   const [inputValue, setInputValue] = useState<string>("");
   const [focused, setFocused] = useState(items);
-  const [boardValue, setBoardValue] = useState("");
+  const [editedBoard, setEditedBoard] = useState("");
   const [boardList, setBoardList] = useState<Board[]>([]);
   const [activeBoard, setActiveBoard] = useState<string>("myDay");
   const [loading, setLoading] = useState(true);
@@ -28,6 +28,8 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     color: string;
     boardKey: string;
     order: number;
+    editable: boolean;
+    isEdit: boolean;
     filter: (todo: any) => any;
   };
 
@@ -89,43 +91,70 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
   //   localStorage.setItem("boardList", JSON.stringify(boardList));
   // }, [boardList]);
 
-  const importantView = {
-    _id: "important",
-    title: "Important",
-    boardKey: "important",
-    icon: "Star1",
-    color: "important",
-    state: activeBoard === "important",
-    order: 2,
-    filter: (todo: any) => todo.isImportant,
-  };
-  const searchView = {
-    _id: "search",
-    title: "Search",
-    boardKey: "search",
-    icon: "SearchNormal1",
-    color: "search",
-    state: activeBoard === "search",
-    order: 0,
-    filter: (todo: any) =>
-      todo.title?.toLowerCase().includes(searchText.toLowerCase()),
-  };
-  const hasImportant = todo.some((t) => t.isImportant);
-  const exists = boardList?.some((f) => f.title === "Important");
-  const finalBoard = [...boardList];
-  if (hasImportant && !exists) {
-    const index = finalBoard.findIndex((b) => b.order === 2);
-    finalBoard.splice(index, 0, importantView);
-  }
-  if (searchText.trim()) {
-    finalBoard.unshift(searchView);
-  }
+  const uiBoard = useMemo(() => {
+    const boards = [...boardList];
+    const hasImportant = todo.some((t) => t.isImportant);
+    const importantView = {
+      _id: "important",
+      title: "Important",
+      boardKey: "important",
+      icon: "Star1",
+      color: "important",
+      order: 2,
+      state: activeBoard === "important",
+      editable: false,
+      isEdit: false,
+      filter: (todo: any) => todo.isImportant,
+    };
+
+    const exists = boardList?.some((f) => f.title === "Important");
+    if (hasImportant && !exists) {
+      const index = boards.findIndex((b) => b.order === 2);
+      boards.splice(index, 0, importantView);
+    }
+
+    return boards;
+  }, [boardList, todo]);
+
+  // const importantView = {
+  //   _id: "important",
+  //   title: "Important",
+  //   boardKey: "important",
+  //   icon: "Star1",
+  //   color: "important",
+  //   state: activeBoard === "important",
+  //   order: 2,
+  //   filter: (todo: any) => todo.isImportant,
+  // };
+  // const searchView = {
+  //   _id: "search",
+  //   title: "Search",
+  //   boardKey: "search",
+  //   icon: "SearchNormal1",
+  //   color: "search",
+  //   state: activeBoard === "search",
+  //   order: 0,
+  //   filter: (todo: any) =>
+  //     todo.title?.toLowerCase().includes(searchText.toLowerCase()),
+  // };
+  // const hasImportant = todo.some((t) => t.isImportant);
+  // const finalBoard = [...boardList];
+  // if (hasImportant && !exists) {
+  //   const index = finalBoard.findIndex((b) => b.order === 2);
+  //   finalBoard.splice(index, 0, importantView);
+  // }
+  // if (searchText.trim()) {
+  //   finalBoard.unshift(searchView);
+  // }
 
   useEffect(() => {
     loadBoards();
   }, []);
 
   function selectBoard(board: Board, id: string) {
+    if (searchText) {
+      setActiveBoard("search");
+    }
     setActiveBoard(board.boardKey);
     setBoardList((prev) =>
       prev.map((board) => ({
@@ -158,6 +187,21 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     const res = await fetch("/api/todos");
     const data = await res.json();
     setTodo(data);
+  }
+
+  async function saveBoard(id: string) {
+    await fetch("/api/boards/title", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id,
+        title: editedBoard,
+      }),
+    });
+
+    await loadBoards();
   }
 
   async function createTodo(todo: {
@@ -257,20 +301,27 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     await addTodo(inputValue, item);
   };
 
-  const handleNewChange = async (id: string, title: string) => {
-    await fetch("/api/todos/title", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        id,
-        title,
-      }),
-    });
+ const handleNewChange = async (id: string) => {
+  const newTitle = editedBoard;
+  setTodo((prev) =>
+    prev.map((t) =>
+      t._id === id
+        ? { ...t, title: newTitle, isEdit: false }
+        : t
+    )
+  );
 
-    await loadTodos();
-  };
+  await fetch("/api/todos/title", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      id,
+      title: newTitle,
+    }),
+  });
+};
 
   const handleIsEdit = (id: string) => {
     setTodo((prev) =>
@@ -286,18 +337,20 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
   };
 
   const handleBoardInput = (e: any) => {
-    setBoardValue(e.target.value);
+    setEditedBoard(e.target.value);
   };
 
-  const handleBoardEditable = (index: string) => {
-    setFocused((prev: ListItemProps[]) => {
-      return prev.map((item: ListItemProps) => {
-        if (item._id === index && item.editable && !item.isEdit) {
-          return { ...item, isEdit: true };
-        }
-        return item;
-      });
-    });
+  const handleBoardEditable = (id: string) => {
+    setBoardList((prev) =>
+      prev.map((board) =>
+        board._id === id && board.editable
+          ? {
+              ...board,
+              isEdit: true,
+            }
+          : board,
+      ),
+    );
   };
 
   const handleBoardSubmit = (index: string, text: string) => {
@@ -337,41 +390,47 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     );
   };
 
-  const handleNewList = () => {
-    const newItem = {
-      title: sidebar.untitled,
-      state: true,
-      id: crypto.randomUUID(),
-      icon: "HamburgerMenu",
-      color: "newList",
-      isEdit: true,
-      editable: true,
-      filter: (todo: TodoType) => todo.item === sidebar.untitled,
-    };
-    setFocused &&
-      setFocused((prev: any) => {
-        let old = [...prev];
-        const newList = old.map((item: any) => {
-          return { ...item, state: false };
-        });
-        return [...newList, newItem];
-      });
-  };
+  async function handleNewList() {
+    const last = Math.max(...boardList.map((b) => b.order), 0);
+    await fetch("/api/boards", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
 
-  const removeList = (index: string) => {
-    setFocused((items: ListItems) => {
-      const old = [...items];
-      const removeIndex = old.findIndex(
-        (item: ListItemProps) => item.id === index,
-      );
-      old.splice(removeIndex, 1);
-      old[removeIndex - 1] = {
-        ...old[removeIndex - 1],
-        state: true,
-      };
-      return old;
+      body: JSON.stringify({
+        title: "untitled",
+        boardKey: `board-${Date.now()}`,
+        state: false,
+        icon: "HamburgerMenu",
+        color: "newList",
+        editable: true,
+        isEdit: true,
+        order: last + 1,
+      }),
     });
-  };
+
+    await loadBoards();
+  }
+
+  async function removeList(id: string) {
+    await fetch("/api/boards/delete", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+
+      body: JSON.stringify({
+        id,
+      }),
+    });
+
+    await loadBoards();
+
+    if (activeBoard === id) {
+      setActiveBoard("myDay");
+    }
+  }
 
   const moveToMyDay = (index: string) => {
     setTodo((prev: TodoListType) => {
@@ -388,10 +447,11 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
 
   const value = useMemo(
     () => ({
+      saveBoard,
+      uiBoard,
       setActiveBoard,
       searchText,
       setSearchText,
-      finalBoard,
       loading,
       toggleStatus,
       toggleImportant,
@@ -414,7 +474,6 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       setFocused,
       handleBoardSubmit,
       handleBoardInput,
-      boardValue,
       handleBoardClick,
       handleNewList,
       handleBoardIsEdit,
@@ -423,10 +482,11 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       moveToMyDay,
     }),
     [
+      saveBoard,
+      uiBoard,
       setActiveBoard,
       searchText,
       setSearchText,
-      finalBoard,
       loading,
       toggleStatus,
       toggleImportant,
@@ -449,7 +509,6 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       setFocused,
       handleBoardSubmit,
       handleBoardInput,
-      boardValue,
       handleBoardClick,
       handleNewList,
       handleBoardIsEdit,

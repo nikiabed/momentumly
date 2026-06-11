@@ -9,26 +9,24 @@ import { t } from "@/app/i18n/t";
 
 export const titleToKey: Record<string, string> = {
   "My Day": "myDay",
-  "Important": "important",
-  "All": "all",
-  "Complete": "complete",
-  "Progress": "progress",
-  "Work": "work",
+  Important: "important",
+  All: "all",
+  Complete: "complete",
+  Progress: "progress",
+  Work: "work",
 };
 
 export const ListItem = ({ focused }: { focused: any }) => {
   const {
-    handleBoardSubmit,
     handleBoardInput,
-    boardValue,
     handleBoardEditable,
     removeList,
     selectBoard,
     activeBoard,
+    saveBoard,
   } = useTodoContext();
 
   const [isOpen, setIsOpen] = useState(false);
-
 
   return (
     <li className=" relative flex items-center justify-between">
@@ -46,18 +44,18 @@ export const ListItem = ({ focused }: { focused: any }) => {
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
-                  boardValue && handleBoardSubmit?.(focused._id, boardValue);
+                  saveBoard?.(focused._id);
                 }}
               >
                 <input
                   autoFocus
                   type="text"
-                  defaultValue={t(titleToKey[focused.title])}
+                  defaultValue={t(titleToKey[focused.title] ?? focused.title)}
                   onChange={handleBoardInput}
                 />
               </form>
             ) : (
-              <span>{t(titleToKey[focused.title])}</span>
+              <span>{t(titleToKey[focused.title] ?? focused.title)}</span>
             )}
           </div>
         </div>

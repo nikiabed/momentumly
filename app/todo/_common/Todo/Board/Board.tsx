@@ -7,28 +7,20 @@ import { useTodoContext } from "@/app/_utils";
 import { Header } from "../../Header";
 import { gradiants, sidebar } from "../../Sidebar/Sidebar.const";
 import { Lists } from "../Lists";
+import { useMemo } from "react";
 
 export const Board = ({ item }: any) => {
   const { todo, setTodo, boardList, searchText } = useTodoContext();
   const currentBoard = item;
-
-  if (!currentBoard) return null;
-  const boardFilters = {
-    myDay: (todo: any) => todo.item === "My Day",
-    all: () => true,
-    important: (todo: any) => todo.isImportant,
-    complete: (todo: any) => todo.status,
-    progress: () => true,
-    work: (todo: any) => todo.item === "Work",
-    search: (todo: any) =>
-      searchText && todo.title?.toLowerCase().includes(searchText.toLowerCase()),
-  };
-
-  const filter =
-    boardFilters[
-      (currentBoard?.boardKey as keyof typeof boardFilters) || "All"
-    ];
-  const filteredTodos = todo.filter(filter);
+  console.log("ITEM FULL:", item);
+  console.log("title:", item?.title);
+  console.log("boardKey:", item?.boardKey);
+  const filteredTodos = todo.filter((t) => {
+    if (!currentBoard) return false;
+    if (currentBoard.boardKey === "all") return true;
+    if (currentBoard.boardKey === "important") return t.isImportant;
+    return t.boardKey === currentBoard.boardKey;
+  });
 
   // const completedTodo = todo.filter(
   //   (todo: any) =>

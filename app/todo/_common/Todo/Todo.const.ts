@@ -23,8 +23,6 @@ export type ListItemProps = {
   _id: string;
   icon: string;
   color: GradientsKey;
-  isEdit: boolean;
-  editable: boolean;
   boardKey: string;
   filter: (todo: TodoType) => any;
 };
@@ -72,6 +70,8 @@ export type Context = {
   finalBoard?: ListItemProps[];
   searchText?: string;
   setSearchText?: Dispatch<SetStateAction<string>>;
+  uiBoard?: ListItemProps[];
+  saveBoard?: (id: string) => Promise<void>;
 };
 
 export const header = {
