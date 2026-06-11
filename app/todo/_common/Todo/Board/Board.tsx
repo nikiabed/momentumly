@@ -98,12 +98,16 @@ export const Board = ({ item }: any) => {
                     <Lists key={board._id} todo={grouped} list={board.title} />
                   );
                 })}
-                
               </>
             )}
 
             {!["myDay", "all", "complete"].includes(currentBoard.boardKey) && (
-              <TodoList todo={filteredTodos} setTodo={setTodo} />
+              <>
+                <TodoList todo={activeTodos} setTodo={setTodo} />
+                {completedTodos.length > 0 && (
+                  <Lists todo={completedTodos} list="انجام شده" />
+                )}
+              </>
             )}
 
             {currentBoard?.title === sidebar.All &&
