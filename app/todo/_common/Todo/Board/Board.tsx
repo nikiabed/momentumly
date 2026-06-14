@@ -1,16 +1,46 @@
 "use client";
-import { ListItemProps, todoDate } from "../Todo.const";
 import { TodoList } from "../TodoList";
 import { Progress } from "../Progress";
 import { TodoInput } from "../TodoInput";
-import { useTodoContext } from "@/app/_utils";
-import { Header } from "../../Header";
-import { gradiants, sidebar } from "../../Sidebar/Sidebar.const";
+import {  Boards, useTodoContext } from "@/app/_utils";
+import { colors, Header } from "../../Header";
+import { sidebar } from "../../Sidebar/Sidebar.const";
 import { Lists } from "../Lists";
 
 export const Board = ({ item }: any) => {
-  const { todo, setTodo, boardList, searchText } = useTodoContext();
-  const currentBoard = item;
+  const { todo, setTodo, boardList, searchText} = useTodoContext();
+  // const currentBoard = item;
+  
+  const systemBoards: Record<string, Boards> = {
+  important: {
+      _id: "important",
+      title: "Important",
+      boardKey: "important",
+      icon: "Star1",
+      color: "important",
+      order: 2,
+      editable: false,
+      isEdit: false,
+      filter: (todo: any) => todo.isImportant,
+      theme: "fire",
+      state: false,
+  },
+  search: {
+    _id: "search",
+    title: "Search",
+    boardKey: "search",
+    icon: "SearchNormal1",
+    color: "search",
+    editable: false,
+    isEdit: false,
+    order: 0,
+    theme: "purple",
+    filter: (todo: any) => searchText && todo.title.toLowerCase().includes(searchText.toLowerCase()),
+    state: false,
+  }
+}
+
+  const currentBoard = boardList.find((b) => b.boardKey === item.boardKey) ?? systemBoards[item.boardKey];
 
   const filteredTodos = todo.filter((t) => {
     if (!currentBoard) return false;
@@ -41,9 +71,10 @@ export const Board = ({ item }: any) => {
       (t) =>
         searchText && t.title.toLowerCase().includes(searchText.toLowerCase()),
     );
+  const theme = colors.find((c) => c.key === item.theme);
   return (
     <div
-      className={` ${gradiants[currentBoard.color]} overflow-hidden flex-4 h-screen w-full py-5`}
+      className={` ${theme?.className ?? "bg-linear-45 from-purple-300 to-rose-400"} overflow-hidden flex-4 h-screen w-full py-5`}
     >
       <div className="flex gap-4 flex-col h-screen py-5">
         <div className="shrink-0 px-15 flex flex-col gap-4 ">
@@ -68,7 +99,6 @@ export const Board = ({ item }: any) => {
                 )}
               </>
             )}
-
             {currentBoard.boardKey === "all" && (
               <>
                 {boardList?.map((board) => {
@@ -88,7 +118,6 @@ export const Board = ({ item }: any) => {
                 )}
               </>
             )}
-
             {currentBoard.boardKey === "complete" && (
               <>
                 {boardList?.map((board) => {
@@ -104,7 +133,6 @@ export const Board = ({ item }: any) => {
                 })}
               </>
             )}
-
             {!["myDay", "all", "complete"].includes(currentBoard.boardKey) && (
               <>
                 <TodoList todo={activeTodos} setTodo={setTodo} />
@@ -113,9 +141,7 @@ export const Board = ({ item }: any) => {
                 )}
               </>
             )}
-
             {searchText && <TodoList todo={searchTodos} setTodo={setTodo} />}
-
             {currentBoard?.title === sidebar.All &&
               boardList
                 ?.slice(sliceIndex())

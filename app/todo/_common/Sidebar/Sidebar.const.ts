@@ -32,9 +32,9 @@ export const items = [
   {
     title: sidebar.myDay,
     state: true,
-    id: uuidv4(),
     icon: "Sun1",
     color: "myDay",
+    boardKey: "myDay",
     isEdit: false,
     editable: false,
     filter: (todo: any) =>  todo.item === sidebar.myDay && !todo.status && todo.date === todoDate
@@ -42,9 +42,9 @@ export const items = [
   {
     title: sidebar.All,
     state: false,
-    id: uuidv4(),
     icon: "Card",
     color: "all",
+    boardKey: "all",
     isEdit: false,
     editable: false,
     filter: (todo: any) => todo && !todo.status
@@ -52,9 +52,9 @@ export const items = [
   {
     title: sidebar.complete,
     state: false,
-    id: uuidv4(),
     icon: "TickCircle",
     color: "complete",
+    boardKey: "complete",
     isEdit: false,
     editable: false,
     filter: (todo: any) => todo.status
@@ -62,9 +62,9 @@ export const items = [
   {
     title: sidebar.progress,
     state: false,
-    id: uuidv4(),
     icon: "Chart",
     color: "progress",
+    boardKey: "progress",
     isEdit: false,
     editable: false,
     filter: (todo: any) => todo
@@ -72,9 +72,9 @@ export const items = [
   {
     title: sidebar.work,
     state: false,
-    id: uuidv4(),
     icon: "HamburgerMenu",
     color: "newList",
+    boardKey: "newList",
     isEdit: false,
     editable: true,
     filter: (todo: any) => todo.item === sidebar.work

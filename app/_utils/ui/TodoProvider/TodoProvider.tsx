@@ -10,17 +10,7 @@ import { useEffect, useMemo, useState } from "react";
 import { TodoContext } from "../../hooks";
 import { items, sidebar } from "@/app/todo/_common/Sidebar/Sidebar.const";
 
-export function TodoProvider({ children }: { children: React.ReactNode }) {
-  const [todo, setTodo] = useState<TodoListType>([]);
-  const [inputValue, setInputValue] = useState<string>("");
-  const [focused, setFocused] = useState(items);
-  const [editedBoard, setEditedBoard] = useState("");
-  const [boardList, setBoardList] = useState<Board[]>([]);
-  const [activeBoard, setActiveBoard] = useState<string>("myDay");
-  const [loading, setLoading] = useState(true);
-  const [searchText, setSearchText] = useState("");
-
-  type Board = {
+  export type Boards = {
     title: string;
     state: boolean;
     _id: string;
@@ -31,7 +21,20 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     editable: boolean;
     isEdit: boolean;
     filter: (todo: any) => any;
+    theme: string;
   };
+
+export function TodoProvider({ children }: { children: React.ReactNode }) {
+  const [todo, setTodo] = useState<TodoListType>([]);
+  const [inputValue, setInputValue] = useState<string>("");
+  const [focused, setFocused] = useState(items);
+  const [editedBoard, setEditedBoard] = useState("");
+  const [boardList, setBoardList] = useState<Boards[]>([]);
+  const [activeBoard, setActiveBoard] = useState<string>("myDay");
+  const [loading, setLoading] = useState(true);
+  const [searchText, setSearchText] = useState("");
+
+
 
   // useEffect(() => {
   //   if (typeof window === "undefined") return;
@@ -105,6 +108,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       editable: false,
       isEdit: false,
       filter: (todo: any) => todo.isImportant,
+      theme: "fire"
     };
 
     const exists = boardList?.some((f) => f.title === "Important");
@@ -120,6 +124,9 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     loadBoards();
   }, []);
+
+
+  
 
   function selectBoard(board: Board, id: string) {
     if (searchText) {

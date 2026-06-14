@@ -24,6 +24,7 @@ export type ListItemProps = {
   icon: string;
   color: GradientsKey;
   boardKey: string;
+  theme: string;
   filter: (todo: TodoType) => any;
 };
 

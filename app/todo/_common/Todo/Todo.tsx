@@ -14,6 +14,7 @@ export const Todo = () => {
     editable: false,
     isEdit: false,
     order: 0,
+    theme: "purple"
   };
   const active = searchText
     ? searchView
