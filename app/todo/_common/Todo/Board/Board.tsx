@@ -2,45 +2,21 @@
 import { TodoList } from "../TodoList";
 import { Progress } from "../Progress";
 import { TodoInput } from "../TodoInput";
-import {  Boards, useTodoContext } from "@/app/_utils";
+import { Boards, useTodoContext } from "@/app/_utils";
 import { colors, Header } from "../../Header";
 import { sidebar } from "../../Sidebar/Sidebar.const";
 import { Lists } from "../Lists";
 
 export const Board = ({ item }: any) => {
-  const { todo, setTodo, boardList, searchText} = useTodoContext();
+  const { todo, setTodo, boardList, searchText, systemBoardsState } =
+    useTodoContext();
   // const currentBoard = item;
-  
-  const systemBoards: Record<string, Boards> = {
-  important: {
-      _id: "important",
-      title: "Important",
-      boardKey: "important",
-      icon: "Star1",
-      color: "important",
-      order: 2,
-      editable: false,
-      isEdit: false,
-      filter: (todo: any) => todo.isImportant,
-      theme: "fire",
-      state: false,
-  },
-  search: {
-    _id: "search",
-    title: "Search",
-    boardKey: "search",
-    icon: "SearchNormal1",
-    color: "search",
-    editable: false,
-    isEdit: false,
-    order: 0,
-    theme: "purple",
-    filter: (todo: any) => searchText && todo.title.toLowerCase().includes(searchText.toLowerCase()),
-    state: false,
-  }
-}
 
-  const currentBoard = boardList.find((b) => b.boardKey === item.boardKey) ?? systemBoards[item.boardKey];
+  const currentBoard =
+    boardList.find((b) => b.boardKey === item.boardKey) ??
+    systemBoardsState?.[item.boardKey];
+
+  console.log(systemBoardsState?.[item.boardKey])
 
   const filteredTodos = todo.filter((t) => {
     if (!currentBoard) return false;
@@ -71,7 +47,9 @@ export const Board = ({ item }: any) => {
       (t) =>
         searchText && t.title.toLowerCase().includes(searchText.toLowerCase()),
     );
-  const theme = colors.find((c) => c.key === item.theme);
+  const theme = colors.find((c) => c.key === currentBoard?.theme);
+
+  console.log("SAVE ID:", currentBoard?._id);
   return (
     <div
       className={` ${theme?.className ?? "bg-linear-45 from-purple-300 to-rose-400"} overflow-hidden flex-4 h-screen w-full py-5`}

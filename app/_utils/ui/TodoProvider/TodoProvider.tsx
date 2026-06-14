@@ -120,6 +120,38 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     return boards;
   }, [boardList, todo]);
 
+   const systemBoards: Record<string, Boards> = {
+    important: {
+      _id: "important",
+      title: "Important",
+      boardKey: "important",
+      icon: "Star1",
+      color: "important",
+      order: 2,
+      editable: false,
+      isEdit: false,
+      filter: (todo: any) => todo.isImportant,
+      theme: "fire",
+      state: false,
+    },
+    search: {
+      _id: "search",
+      title: "Search",
+      boardKey: "search",
+      icon: "SearchNormal1",
+      color: "search",
+      editable: false,
+      isEdit: false,
+      order: 0,
+      theme: "purple",
+      filter: (todo: any) =>
+        searchText &&
+        todo.title.toLowerCase().includes(searchText.toLowerCase()),
+      state: false,
+    },
+  };
+
+  const [systemBoardsState, setSystemBoardsState] = useState(systemBoards);
 
   useEffect(() => {
     loadBoards();
@@ -128,7 +160,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
 
   
 
-  function selectBoard(board: Board, id: string) {
+  function selectBoard(board: Boards, id: string) {
     if (searchText) {
       setActiveBoard("search");
     }
@@ -425,6 +457,8 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
 
   const value = useMemo(
     () => ({
+      setSystemBoardsState,
+      systemBoardsState,
       handleUpdateTodo,
       saveBoard,
       uiBoard,
@@ -460,6 +494,8 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       moveToMyDay,
     }),
     [
+      setSystemBoardsState,
+      systemBoardsState,
       handleUpdateTodo,
       saveBoard,
       uiBoard,

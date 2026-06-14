@@ -64,35 +64,44 @@ export const colors = [
   },
 ];
 
-type BoardTheme = {
-  type: "gradient" | "image";
-  value: string;
-};
-
 export const Palette = ({ item }: { item: ListItemProps }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { setBoardList } = useTodoContext();
+  const { setBoardList, setSystemBoardsState } = useTodoContext();
   const [selectedColor, setSelectedColor] = useState(item.theme ?? "sunset");
 
   const handleColorChange = async (key: string) => {
-    setBoardList?.((prev: any) =>
-      prev.map((board: any) =>
-        board._id === item._id ? { ...board, theme: key } : board,
-      ),
-    );
     setSelectedColor(key);
 
-    await fetch("/api/boards/theme", {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
+    const isMongoBoard = /^[a-f\d]{24}$/i.test(item._id);
 
-      body: JSON.stringify({
-        boardId: item._id,
-        theme: key,
-      }),
-    });
+    if (isMongoBoard) {
+      setBoardList?.((prev: any) =>
+        prev.map((b: any) => (b._id === item._id ? { ...b, theme: key } : b)),
+      );
+    } else {
+      setSystemBoardsState?.((prev: any) => ({
+        ...prev,
+        [item.boardKey]: {
+          ...prev[item.boardKey],
+          theme: key,
+        },
+      }));
+    }
+
+    if (isMongoBoard) {
+      const res = await fetch("/api/boards/theme", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          boardId: item._id,
+          theme: key,
+        }),
+      });
+
+      if (!res.ok) {
+        console.error("SAVE FAILED");
+      }
+    }
   };
 
   const togglePalette = () => {

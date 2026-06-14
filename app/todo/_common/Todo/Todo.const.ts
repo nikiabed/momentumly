@@ -74,6 +74,8 @@ export type Context = {
   uiBoard?: ListItemProps[];
   saveBoard?: (id: string) => Promise<void>;
   handleUpdateTodo?: (id: string, title: string) => Promise<void>
+  systemBoardsState?: Record<string, ListItemProps>
+  setSystemBoardsState?: Dispatch<SetStateAction<Record<string, ListItemProps>>>
 };
 
 export const header = {
