@@ -26,7 +26,7 @@ export const Board = ({ item }: any) => {
     if (currentBoard.boardKey === "important") return t.isImportant;
     if (currentBoard.boardKey === "complete") return t.status;
     if (currentBoard.boardKey === "myDay") {
-      return getDateKey(t.createdAt) === todayKey;
+      return getDateKey(t.createdAt) === todayKey && t.boardKey === "myDay";
     }
     return t.boardKey === currentBoard.boardKey;
   });
