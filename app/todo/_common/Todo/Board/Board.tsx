@@ -2,7 +2,7 @@
 import { TodoList } from "../TodoList";
 import { Progress } from "../Progress";
 import { TodoInput } from "../TodoInput";
-import { Boards, useTodoContext } from "@/app/_utils";
+import { Boards, getDateKey, useTodoContext } from "@/app/_utils";
 import { colors, Header } from "../../Header";
 import { sidebar } from "../../Sidebar/Sidebar.const";
 import { Lists } from "../Lists";
@@ -16,28 +16,20 @@ export const Board = ({ item }: any) => {
     boardList.find((b) => b.boardKey === item.boardKey) ??
     systemBoardsState?.[item.boardKey];
 
-  console.log(systemBoardsState?.[item.boardKey])
+  console.log(systemBoardsState?.[item.boardKey]);
+
+  const todayKey = getDateKey(new Date());
 
   const filteredTodos = todo.filter((t) => {
     if (!currentBoard) return false;
     if (currentBoard.boardKey === "all") return true;
     if (currentBoard.boardKey === "important") return t.isImportant;
     if (currentBoard.boardKey === "complete") return t.status;
+    if (currentBoard.boardKey === "myDay") {
+      return getDateKey(t.createdAt) === todayKey;
+    }
     return t.boardKey === currentBoard.boardKey;
   });
-
-  // const completedTodo = todo.filter(
-  //   (todo: any) =>
-  //     todo.item === sidebar.myDay && todo.status && todo.date === todoDate,
-  // );
-  // const importantTodo = todo.filter((todo: any) => todo.isImportant);
-  const sliceIndex = () => {
-    if (importantTodo.length > 0) {
-      return 5;
-    } else {
-      return 4;
-    }
-  };
 
   const activeTodos = filteredTodos.filter((t) => !t.status);
   const completedTodos = filteredTodos.filter((t) => t.status);
