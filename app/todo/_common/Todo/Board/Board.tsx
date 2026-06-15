@@ -12,6 +12,8 @@ export const Board = ({ item }: any) => {
     useTodoContext();
   // const currentBoard = item;
 
+  
+
   const currentBoard =
     boardList.find((b) => b.boardKey === item.boardKey) ??
     systemBoardsState?.[item.boardKey];
@@ -60,7 +62,7 @@ export const Board = ({ item }: any) => {
         ) : (
           <div className=" overflow-y-auto grow flex flex-col gap-5 px-15 pb-5 w-full">
             {/* MY DAY */}
-            {currentBoard.boardKey === "myDay" && (
+            {currentBoard?.boardKey === "myDay" && (
               <>
                 <TodoList todo={activeTodos} setTodo={setTodo} />
                 {completedTodos.length > 0 && (
@@ -68,7 +70,7 @@ export const Board = ({ item }: any) => {
                 )}
               </>
             )}
-            {currentBoard.boardKey === "all" && (
+            {currentBoard?.boardKey === "all" && (
               <>
                 {boardList?.map((board) => {
                   const grouped = activeTodos.filter((t) => {

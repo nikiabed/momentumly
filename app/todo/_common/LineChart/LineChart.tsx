@@ -23,28 +23,44 @@ export const LineChart: FC<Props> = ({ data, width, height }) => {
 
     ctx.clearRect(0, 0, width, height);
 
-    // 🎯 convert to percentage
-    const values = data.map((d) =>
-      d.total === 0 ? 0 : (d.done / d.total) * 100
-    );
+    if (data.length < 2) return;
 
-    const min = 0;
-    const max = 100;
+    const values = data.map((d) => (d.total ? (d.done / d.total) * 100 : 0));
 
     const padding = 30;
-    const chartWidth = width - padding * 2;
+
+    const leftAxis = 80;
+
+    const chartWidth = width - leftAxis - padding;
     const chartHeight = height - padding * 2;
 
     const stepX = chartWidth / (data.length - 1);
+    const mapX = (i: number) => leftAxis + i * stepX;
+    const mapY = (v: number) => padding + chartHeight - (v / 100) * chartHeight;
 
-    const mapY = (v: number) =>
-      padding + (chartHeight - (v / 100) * chartHeight);
+    // GRID
+    ctx.strokeStyle = "#f1f5f9";
+    ctx.lineWidth = 1;
 
+    for (let i = 0; i <= 4; i++) {
+      const y = padding + (chartHeight / 4) * i;
+
+      ctx.beginPath();
+      ctx.moveTo(leftAxis, y);
+      ctx.lineTo(width - padding, y);
+      ctx.stroke();
+
+      ctx.fillStyle = "#94a3b8";
+      ctx.font = "12px sans-serif";
+
+      ctx.fillText(`${100 - i * 25}%`, 5, y + 4);
+    }
+
+    // LINE
     ctx.beginPath();
     ctx.strokeStyle = "#8b5cf6";
-    ctx.lineWidth = 3;
+    ctx.lineWidth = 4;
 
-    // line
     data.forEach((_, i) => {
       const x = padding + i * stepX;
       const y = mapY(values[i]);
@@ -55,15 +71,45 @@ export const LineChart: FC<Props> = ({ data, width, height }) => {
 
     ctx.stroke();
 
-    // points
-    data.forEach((_, i) => {
+    // FILL
+    const gradient = ctx.createLinearGradient(0, padding, 0, height);
+
+    gradient.addColorStop(0, "rgba(168,85,247,.35)");
+    gradient.addColorStop(1, "rgba(168,85,247,0)");
+
+    ctx.lineTo(padding + stepX * (data.length - 1), height - padding);
+
+    ctx.lineTo(padding, height - padding);
+
+    ctx.closePath();
+
+    ctx.fillStyle = gradient;
+    ctx.fill();
+
+    // POINTS
+    data.forEach((d, i) => {
       const x = padding + i * stepX;
       const y = mapY(values[i]);
 
       ctx.beginPath();
-      ctx.fillStyle = "#ffffff";
-      ctx.arc(x, y, 4, 0, Math.PI * 2);
+      ctx.fillStyle = "#fff";
+
+      ctx.arc(x, y, 5, 0, Math.PI * 2);
+
       ctx.fill();
+
+      ctx.strokeStyle = "#8b5cf6";
+      ctx.lineWidth = 3;
+      ctx.stroke();
+
+      // LABELS
+      ctx.fillStyle = "#64748b";
+      ctx.font = "12px IRANSansX";
+
+      ctx.textAlign = "center";
+      ctx.direction = "rtl";
+
+      ctx.fillText(d.label, x, height - 12);
     });
   }, [data, width, height]);
 
@@ -72,7 +118,7 @@ export const LineChart: FC<Props> = ({ data, width, height }) => {
       ref={canvasRef}
       width={width}
       height={height}
-      className="w-full h-full"
+      className="rounded-4xl bg-white p-4"
     />
   );
 };
