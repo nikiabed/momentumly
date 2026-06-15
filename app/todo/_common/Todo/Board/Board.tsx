@@ -41,7 +41,6 @@ export const Board = ({ item }: any) => {
     );
   const theme = colors.find((c) => c.key === currentBoard?.theme);
 
-  console.log("SAVE ID:", currentBoard?._id);
   return (
     <div
       className={` ${theme?.className ?? "bg-linear-45 from-purple-300 to-rose-400"} overflow-hidden flex-4 h-screen w-full py-5`}

@@ -10,19 +10,19 @@ import { useEffect, useMemo, useState } from "react";
 import { TodoContext } from "../../hooks";
 import { items, sidebar } from "@/app/todo/_common/Sidebar/Sidebar.const";
 
-  export type Boards = {
-    title: string;
-    state: boolean;
-    _id: string;
-    icon: string;
-    color: string;
-    boardKey: string;
-    order: number;
-    editable: boolean;
-    isEdit: boolean;
-    filter: (todo: any) => any;
-    theme: string;
-  };
+export type Boards = {
+  title: string;
+  state: boolean;
+  _id: string;
+  icon: string;
+  color: string;
+  boardKey: string;
+  order: number;
+  editable: boolean;
+  isEdit: boolean;
+  filter: (todo: any) => any;
+  theme: string;
+};
 
 export function TodoProvider({ children }: { children: React.ReactNode }) {
   const [todo, setTodo] = useState<TodoListType>([]);
@@ -33,8 +33,6 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
   const [activeBoard, setActiveBoard] = useState<string>("myDay");
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState("");
-
-
 
   // useEffect(() => {
   //   if (typeof window === "undefined") return;
@@ -108,7 +106,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       editable: false,
       isEdit: false,
       filter: (todo: any) => todo.isImportant,
-      theme: "fire"
+      theme: "fire",
     };
 
     const exists = boardList?.some((f) => f.title === "Important");
@@ -120,7 +118,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     return boards;
   }, [boardList, todo]);
 
-   const systemBoards: Record<string, Boards> = {
+  const systemBoards: Record<string, Boards> = {
     important: {
       _id: "important",
       title: "Important",
@@ -156,9 +154,6 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     loadBoards();
   }, []);
-
-
-  
 
   function selectBoard(board: Boards, id: string) {
     if (searchText) {
@@ -384,7 +379,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     const key = `board-${Date.now()}`;
 
     const newBoard = {
-      _id: key, // مهم برای UI
+      _id: key,
       title: "untitled",
       boardKey: key,
       state: false,
@@ -395,9 +390,8 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       order: last + 1,
     };
 
-    // 1. اول UI آپدیت
-    setFocused((prev) => {
-      const updated = prev.map((b) => ({ ...b, state: false }));
+    setFocused((prev: any) => {
+      const updated = prev.map((b: any) => ({ ...b, state: false }));
       return [...updated, newBoard];
     });
 
@@ -416,6 +410,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
         editable: true,
         isEdit: true,
         order: last + 1,
+        theme: "lavender",
       }),
     });
 
@@ -424,6 +419,11 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
   }
 
   async function removeList(id: string) {
+    const index = boardList.findIndex((b) => b._id === id);
+
+    const nextBoard =
+      boardList[index - 1] || boardList[0];
+
     await fetch("/api/boards/delete", {
       method: "DELETE",
       headers: {
@@ -436,9 +436,10 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     });
 
     await loadBoards();
+    
 
-    if (activeBoard === id) {
-      setActiveBoard("myDay");
+    if (activeBoard === boardList[index].boardKey) {
+      setActiveBoard(nextBoard?.boardKey || "myDay");
     }
   }
 
