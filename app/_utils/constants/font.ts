@@ -3,62 +3,47 @@ import localFont from 'next/font/local';
 export const iranSansX = localFont({
   src: [
     {
-      path: '../../../public/fonts/IranSansx/IRANSansXFaNum-Black.woff',
-      style: 'normal',
-      weight: '400',
+      path: "../../../public/fonts/IranSansx/IRANSansXFaNum-Thin.woff",
+      weight: "100",
     },
     {
-      path: '../../../public/fonts/IranSansx/IRANSansXFaNum-Bold.woff',
-      style: 'normal',
-      weight: '700',
+      path: "../../../public/fonts/IranSansx/IRANSansXFaNum-UltraLight.woff",
+      weight: "200",
     },
     {
-      path: '../../../public/fonts/IranSansx/IRANSansXFaNum-DemiBold.woff',
-      style: 'normal',
-      weight: '600',
+      path: "../../../public/fonts/IranSansx/IRANSansXFaNum-Light.woff",
+      weight: "300",
     },
     {
-      path: '../../../public/fonts/IranSansx/IRANSansXFaNum-ExtraBold.woff',
-      style: 'normal',
-      weight: '800',
+      path: "../../../public/fonts/IranSansx/IRANSansXFaNum-Regular.woff",
+      weight: "400",
     },
     {
-      path: '../../../public/fonts/IranSansx/IRANSansXFaNum-ExtraBlack.woff',
-      style: 'normal',
-      weight: '950',
+      path: "../../../public/fonts/IranSansx/IRANSansXFaNum-Medium.woff",
+      weight: "500",
     },
     {
-      path: '../../../public/fonts/IranSansx/IRANSansXFaNum-Heavy.woff',
-      style: 'normal',
-      weight: '900',
+      path: "../../../public/fonts/IranSansx/IRANSansXFaNum-DemiBold.woff",
+      weight: "600",
     },
     {
-      path: '../../../public/fonts/IranSansx/IRANSansXFaNum-Light.woff',
-      style: 'normal',
-      weight: '300',
+      path: "../../../public/fonts/IranSansx/IRANSansXFaNum-Bold.woff",
+      weight: "700",
     },
     {
-      path: '../../../public/fonts/IranSansx/IRANSansXFaNum-Medium.woff',
-      style: 'normal',
-      weight: '500',
+      path: "../../../public/fonts/IranSansx/IRANSansXFaNum-ExtraBold.woff",
+      weight: "800",
     },
     {
-      path: '../../../public/fonts/IranSansx/IRANSansXFaNum-Regular.woff',
-      style: 'normal',
-      weight: '400',
+      path: "../../../public/fonts/IranSansx/IRANSansXFaNum-Heavy.woff",
+      weight: "900",
     },
     {
-      path: '../../../public/fonts/IranSansx/IRANSansXFaNum-Thin.woff',
-      style: 'normal',
-      weight: '100',
-    },
-    {
-      path: '../../../public/fonts/IranSansx/IRANSansXFaNum-UltraLight.woff',
-      style: 'normal',
-      weight: '200',
+      path: "../../../public/fonts/IranSansx/IRANSansXFaNum-Black.woff",
+      weight: "950",
     },
   ],
-  variable: '--font-sansx',
+  variable: "--font-sansx",
 });
 export const dana = localFont({
   src: [

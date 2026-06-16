@@ -15,8 +15,8 @@ export default function RootLayout({
   const locale = 'fa'
   return (
     <html lang={locale} dir="rtl">
-      <body>
-        <main className={`min-h-screen overflow-y-auto ${iranSansX.className}`}>
+      <body className={iranSansX.variable}>
+        <main className={`min-h-screen overflow-y-auto`}>
           <TodoProvider>{children}</TodoProvider>
         </main>
       </body>

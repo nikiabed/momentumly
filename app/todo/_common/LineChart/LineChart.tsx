@@ -1,4 +1,5 @@
 "use client";
+import { iranSansX } from "@/app/_utils";
 import React, { FC, useEffect, useRef } from "react";
 
 type Props = {
@@ -27,19 +28,25 @@ export const LineChart: FC<Props> = ({ data, width, height }) => {
 
     const values = data.map((d) => (d.total ? (d.done / d.total) * 100 : 0));
 
-    const padding = 30;
+    const padding = 50;
+    const leftAxis = 70;
+    const rightPadding = 50;
 
-    const leftAxis = 80;
-
-    const chartWidth = width - leftAxis - padding;
+    const chartWidth = width - leftAxis - rightPadding;
     const chartHeight = height - padding * 2;
 
     const stepX = chartWidth / (data.length - 1);
-    const mapX = (i: number) => leftAxis + i * stepX;
+
+    const mapX = (i: number) => width - rightPadding - i * stepX;
+
     const mapY = (v: number) => padding + chartHeight - (v / 100) * chartHeight;
 
+    // BG
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, width, height);
+
     // GRID
-    ctx.strokeStyle = "#f1f5f9";
+    ctx.strokeStyle = "#e5e7eb";
     ctx.lineWidth = 1;
 
     for (let i = 0; i <= 4; i++) {
@@ -52,64 +59,116 @@ export const LineChart: FC<Props> = ({ data, width, height }) => {
 
       ctx.fillStyle = "#94a3b8";
       ctx.font = "12px sans-serif";
+      ctx.textAlign = "left";
 
-      ctx.fillText(`${100 - i * 25}%`, 5, y + 4);
+      ctx.fillText(`${100 - i * 25}%`, 8, y + 4);
     }
 
     // LINE
-    ctx.beginPath();
-    ctx.strokeStyle = "#8b5cf6";
-    ctx.lineWidth = 4;
+    const curveStrength = 0.25; // 👈 اینو کم و زیاد کن (0 تا 1)
 
-    data.forEach((_, i) => {
-      const x = padding + i * stepX;
+    ctx.beginPath();
+
+    ctx.moveTo(mapX(0), mapY(values[0]));
+
+    for (let i = 1; i < values.length; i++) {
+      const x = mapX(i);
       const y = mapY(values[i]);
 
-      if (i === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
-    });
+      const prevX = mapX(i - 1);
+      const prevY = mapY(values[i - 1]);
+
+      const nextX = mapX(i + 1) ?? x;
+      const nextY = mapY(values[i + 1]) ?? y;
+
+      // کنترل شدت curve
+      const cp1X = prevX + (x - prevX) * curveStrength;
+
+      const cp2X = x - (nextX - x) * curveStrength;
+
+      ctx.bezierCurveTo(cp1X, prevY, cp2X, y, x, y);
+    }
+
+    ctx.strokeStyle = "#8b5cf6";
+    ctx.lineWidth = 3;
+    ctx.lineJoin = "round";
+    ctx.lineCap = "round";
 
     ctx.stroke();
-
     // FILL
-    const gradient = ctx.createLinearGradient(0, padding, 0, height);
+    ctx.beginPath();
 
-    gradient.addColorStop(0, "rgba(168,85,247,.35)");
-    gradient.addColorStop(1, "rgba(168,85,247,0)");
+    // move to first point
+    ctx.moveTo(mapX(0), mapY(values[0]));
 
-    ctx.lineTo(padding + stepX * (data.length - 1), height - padding);
+    // CURVE (همون الگوریتم line)
+    for (let i = 1; i < values.length; i++) {
+      const x = mapX(i);
+      const y = mapY(values[i]);
 
-    ctx.lineTo(padding, height - padding);
+      const prevX = mapX(i - 1);
+      const prevY = mapY(values[i - 1]);
+
+      const nextX = mapX(i + 1) ?? x;
+      const nextY = mapY(values[i + 1]) ?? y;
+
+      const curveStrength = 0.3;
+
+      const cp1X = prevX + (x - prevX) * curveStrength;
+      const cp2X = x - (nextX - x) * curveStrength;
+
+      ctx.bezierCurveTo(cp1X, prevY, cp2X, y, x, y);
+    }
+
+    // ⬇️ بستن فقط برای fill
+    ctx.lineTo(mapX(values.length - 1), height - padding);
+    ctx.lineTo(mapX(0), height - padding);
 
     ctx.closePath();
+
+    // gradient
+    const gradient = ctx.createLinearGradient(0, padding, 0, height);
+
+    gradient.addColorStop(0, "rgba(139,92,246,0)");
+    gradient.addColorStop(1, "rgba(139,92,246,0.25)");
 
     ctx.fillStyle = gradient;
     ctx.fill();
 
-    // POINTS
-    data.forEach((d, i) => {
-      const x = padding + i * stepX;
-      const y = mapY(values[i]);
+    // POINTS + LABELS
+    values.forEach((v, i) => {
+      const x = mapX(i);
+      const y = mapY(v);
 
       ctx.beginPath();
-      ctx.fillStyle = "#fff";
 
       ctx.arc(x, y, 5, 0, Math.PI * 2);
 
+      ctx.fillStyle = "#8b5cf6";
       ctx.fill();
-
-      ctx.strokeStyle = "#8b5cf6";
+      const purple = "#8b5cf6";
+      ctx.strokeStyle = purple;
       ctx.lineWidth = 3;
+
       ctx.stroke();
 
-      // LABELS
-      ctx.fillStyle = "#64748b";
-      ctx.font = "12px IRANSansX";
+      // value above point
+      ctx.fillStyle = purple;
+      ctx.strokeStyle = "#ffffff";
+      ctx.lineWidth = 2;
+      const font = getComputedStyle(document.body).getPropertyValue(
+        "--font-sansx",
+      );
 
+      ctx.font = `700 13px ${font}`;
       ctx.textAlign = "center";
-      ctx.direction = "rtl";
 
-      ctx.fillText(d.label, x, height - 12);
+      ctx.fillText(`${Math.round(v)}%`, x, y - 12);
+
+      // bottom label
+      ctx.fillStyle = "#94a3b8";
+
+      ctx.fillText(data[i].label, x, height - 8);
     });
   }, [data, width, height]);
 
@@ -118,7 +177,6 @@ export const LineChart: FC<Props> = ({ data, width, height }) => {
       ref={canvasRef}
       width={width}
       height={height}
-      className="rounded-4xl bg-white p-4"
     />
   );
 };
