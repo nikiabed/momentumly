@@ -49,7 +49,7 @@ export const Board = ({ item }: any) => {
     >
       <div className="flex gap-4 flex-col h-screen py-5">
         <div className="shrink-0 px-15 flex flex-col gap-4 ">
-          <Header item={currentBoard} />
+          <Header item={currentBoard} todo={filteredTodos}/>
           {currentBoard?.boardKey !== "progress" &&
             currentBoard?.boardKey !== "complete" &&
             currentBoard?.boardKey !== "search" && (
@@ -89,7 +89,7 @@ export const Board = ({ item }: any) => {
                 )}
               </>
             )}
-            {currentBoard.boardKey === "complete" && (
+            {currentBoard?.boardKey === "complete" && (
               <>
                 {boardList?.map((board) => {
                   const grouped = completedTodos.filter((t) => {
