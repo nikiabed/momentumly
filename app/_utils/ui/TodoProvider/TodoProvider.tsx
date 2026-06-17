@@ -34,64 +34,6 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState("");
 
-  // useEffect(() => {
-  //   if (typeof window === "undefined") return;
-  //   const saveTodo = localStorage.getItem("todo");
-  //   // const saveFocused = localStorage.getItem("focused");
-  //   // const saveBoardList = localStorage.getItem("boardList");
-  //   if (saveTodo) {
-  //     setTodo(JSON.parse(saveTodo));
-  //   }
-
-  //   // if (saveBoardList) {
-  //   //   setBoardList(JSON.parse(saveBoardList));
-  //   // }
-
-  //   // if (saveFocused) {
-  //   //   const parsedFocused = JSON.parse(saveFocused);
-  //   //   const rehydrateFocused = parsedFocused.map((item: ListItemProps) => ({
-  //   //     ...item,
-  //   //     filter: (todo: TodoType) => {
-  //   //       if (item.title === sidebar.All)
-  //   //         return (
-  //   //           (todo.item === item.title ||
-  //   //             todo.item === sidebar.myDay ||
-  //   //             todo.item === sidebar.important) &&
-  //   //           !todo.status
-  //   //         );
-  //   //       if (item.title === sidebar.complete) return todo.status;
-  //   //       if (item.title === sidebar.important) return todo.isImportant;
-  //   //       if (item.title === sidebar.myDay)
-  //   //         return (
-  //   //           todo.item === sidebar.myDay &&
-  //   //           !todo.status &&
-  //   //           todo.date === todoDate
-  //   //         );
-
-  //   //       return todo.itemId === item.id;
-  //   //     },
-  //   //   }));
-  //   //   setFocused(() => rehydrateFocused);
-  //   // } else {
-  //   //   setFocused(() => items);
-  //   // }
-  // }, []);
-
-  // useEffect(() => {
-  //   if (typeof window === "undefined") return;
-  //   localStorage.setItem("todo", JSON.stringify(todo));
-  // }, [todo]);
-
-  // useEffect(() => {
-  //   if (typeof window === "undefined") return;
-  //   localStorage.setItem("focused", JSON.stringify(focused));
-  // }, [focused]);
-
-  // useEffect(() => {
-  //   if (typeof window === "undefined") return;
-  //   localStorage.setItem("boardList", JSON.stringify(boardList));
-  // }, [boardList]);
-
   const uiBoard = useMemo(() => {
     const boards = [...boardList];
     const hasImportant = todo.some((t) => t.isImportant);

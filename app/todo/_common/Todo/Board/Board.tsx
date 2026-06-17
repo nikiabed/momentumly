@@ -2,35 +2,40 @@
 import { TodoList } from "../TodoList";
 import { Progress } from "../Progress";
 import { TodoInput } from "../TodoInput";
-import { Boards, getDateKey, useTodoContext } from "@/app/_utils";
+import {
+  BOARD_KEYS,
+  BOARD_LABELS,
+  Boards,
+  getDateKey,
+  useTodoContext,
+} from "@/app/_utils";
 import { colors, Header } from "../../Header";
-import { sidebar } from "../../Sidebar/Sidebar.const";
 import { Lists } from "../Lists";
+import { ListItemProps } from "../Todo.const";
 
 export const Board = ({ item }: any) => {
   const { todo, setTodo, boardList, searchText, systemBoardsState } =
     useTodoContext();
-  // const currentBoard = item;
 
-  
+  const normalize = (key?: string) => key?.toLowerCase().replace(/\s/g, "");
 
   const currentBoard =
     boardList.find((b) => b.boardKey === item.boardKey) ??
     systemBoardsState?.[item.boardKey];
 
-  console.log(systemBoardsState?.[item.boardKey]);
-
   const todayKey = getDateKey(new Date());
 
   const filteredTodos = todo.filter((t) => {
     if (!currentBoard) return false;
-    if (currentBoard.boardKey === "all") return true;
-    if (currentBoard.boardKey === "important") return t.isImportant;
-    if (currentBoard.boardKey === "complete") return t.status;
-    if (currentBoard.boardKey === "myDay") {
-      return getDateKey(t.createdAt) === todayKey && t.boardKey === "myDay";
+    if (currentBoard.boardKey === BOARD_KEYS.ALL) return true;
+    if (currentBoard.boardKey === BOARD_KEYS.IMPORTANT) return t.isImportant;
+    if (currentBoard.boardKey === BOARD_KEYS.COMPLETE) return t.status;
+    if (currentBoard.boardKey === BOARD_KEYS.MY_DAY) {
+      return (
+        getDateKey(t.createdAt) === todayKey && t.boardKey === BOARD_KEYS.MY_DAY
+      );
     }
-    return t.boardKey === currentBoard.boardKey;
+    return normalize(t.boardKey) === currentBoard.boardKey;
   });
 
   const activeTodos = filteredTodos.filter((t) => !t.status);
@@ -45,24 +50,24 @@ export const Board = ({ item }: any) => {
 
   return (
     <div
-      className={` ${theme?.className ?? "bg-linear-45 from-purple-300 to-rose-400"} overflow-hidden flex-4 h-screen w-full py-5`}
+      className={` ${theme?.className ?? "bg-linear-45 from-purple-300 to-rose-400"} overflow-y-auto flex-4 h-screen w-full py-5`}
     >
       <div className="flex gap-4 flex-col h-screen py-5">
         <div className="shrink-0 px-15 flex flex-col gap-4 ">
-          <Header item={currentBoard} todo={filteredTodos}/>
-          {currentBoard?.boardKey !== "progress" &&
-            currentBoard?.boardKey !== "complete" &&
-            currentBoard?.boardKey !== "search" && (
+          <Header item={currentBoard} todo={filteredTodos} />
+          {currentBoard?.boardKey !== BOARD_KEYS.PROGRESS &&
+            currentBoard?.boardKey !== BOARD_KEYS.COMPLETE &&
+            currentBoard?.boardKey !== BOARD_KEYS.SEARCH && (
               <TodoInput item={currentBoard} />
             )}
         </div>
 
-        {currentBoard?.title === "Progress" ? (
+        {currentBoard?.boardKey === BOARD_KEYS.PROGRESS ? (
           <Progress item={currentBoard} />
         ) : (
           <div className=" overflow-y-auto grow flex flex-col gap-5 px-15 pb-5 w-full">
             {/* MY DAY */}
-            {currentBoard?.boardKey === "myDay" && (
+            {currentBoard?.boardKey === BOARD_KEYS.MY_DAY && (
               <>
                 <TodoList todo={activeTodos} setTodo={setTodo} />
                 {completedTodos.length > 0 && (
@@ -70,17 +75,19 @@ export const Board = ({ item }: any) => {
                 )}
               </>
             )}
-            {currentBoard?.boardKey === "all" && (
+            {currentBoard?.boardKey === BOARD_KEYS.ALL && (
               <>
-                {boardList?.map((board) => {
+                {boardList?.map((board: ListItemProps) => {
                   const grouped = activeTodos.filter((t) => {
-                    return t.item === board.title;
+                    return normalize(t.boardKey) === normalize(board.boardKey);
                   });
-
-                  if (!grouped.length) return null;
-
+                  if (!grouped.length) return null
                   return (
-                    <Lists key={board._id} todo={grouped} list={board.title} />
+                    <Lists
+                      key={board._id}
+                      todo={grouped}
+                      list={BOARD_LABELS[board.boardKey] ?? board.title}
+                    />
                   );
                 })}
 
@@ -89,35 +96,42 @@ export const Board = ({ item }: any) => {
                 )}
               </>
             )}
-            {currentBoard?.boardKey === "complete" && (
+            {currentBoard?.boardKey === BOARD_KEYS.COMPLETE && (
               <>
                 {boardList?.map((board) => {
                   const grouped = completedTodos.filter((t) => {
-                    return t.item === board.title;
+                    return normalize(t.boardKey) === board.boardKey;
                   });
-
                   if (!grouped.length) return null;
-
                   return (
-                    <Lists key={board._id} todo={grouped} list={board.title} />
+                    <Lists
+                      key={board._id}
+                      todo={grouped}
+                      list={BOARD_LABELS[board.boardKey] ?? board.title}
+                    />
                   );
                 })}
               </>
             )}
-            {!["myDay", "all", "complete"].includes(currentBoard.boardKey) && (
-              <>
-                <TodoList todo={activeTodos} setTodo={setTodo} />
-                {completedTodos.length > 0 && (
-                  <Lists todo={completedTodos} list="انجام شده" />
-                )}
-              </>
-            )}
+            {currentBoard &&
+              !["myDay", "all", "complete"].includes(currentBoard.boardKey) && (
+                <>
+                  <TodoList todo={activeTodos} setTodo={setTodo} />
+                  {completedTodos.length > 0 && (
+                    <Lists todo={completedTodos} list="انجام شده" />
+                  )}
+                </>
+              )}
             {searchText && <TodoList todo={searchTodos} setTodo={setTodo} />}
-            {currentBoard?.title === sidebar.All &&
+            {currentBoard?.boardKey === BOARD_LABELS[BOARD_KEYS.ALL] &&
               boardList
                 ?.slice(sliceIndex())
                 .map((board: any) => (
-                  <Lists key={board._id} todo={todo} list={board.title} />
+                  <Lists
+                    key={board._id}
+                    todo={todo}
+                    list={BOARD_LABELS[board.boardKey] ?? board.title}
+                  />
                 ))}
           </div>
         )}

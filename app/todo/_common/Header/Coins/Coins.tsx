@@ -1,13 +1,12 @@
-import { calculateCoins } from "@/app/_utils/coins";
 import { useTodoContext } from "@/app/_utils";
-import { ListItemProps, TodoListType } from "../../Todo";
+import { ListItemProps, TodoType } from "../../Todo";
 
 const Coins = ({
   item,
   filterTodo,
 }: {
   item: ListItemProps;
-  filterTodo: TodoListType;
+  filterTodo:  TodoType[];
 }) => {
   const { todo } = useTodoContext();
   const globalCoins = todo.filter((t) => t.status).length * 10;

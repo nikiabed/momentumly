@@ -120,7 +120,6 @@ export const LineChart: FC<Props> = ({ data, width, height }) => {
       ctx.bezierCurveTo(cp1X, prevY, cp2X, y, x, y);
     }
 
-    // ⬇️ بستن فقط برای fill
     ctx.lineTo(mapX(values.length - 1), height - padding);
     ctx.lineTo(mapX(0), height - padding);
 
@@ -166,7 +165,7 @@ export const LineChart: FC<Props> = ({ data, width, height }) => {
       ctx.fillText(`${Math.round(v)}%`, x, y - 12);
 
       // bottom label
-      ctx.fillStyle = "#94a3b8";
+      ctx.fillStyle = "#64748b";
 
       ctx.fillText(data[i].label, x, height - 8);
     });

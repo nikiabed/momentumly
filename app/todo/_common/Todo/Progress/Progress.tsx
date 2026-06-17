@@ -4,6 +4,9 @@ import { buildWeeklyProgress } from "@/app/_utils/progress";
 import { LineChart } from "../../LineChart";
 import { useTodoContext } from "@/app/_utils";
 import { ChartHeader } from "../../ChartHeader";
+import CoinSect from "./CoinSect/CoinSect";
+import FunctionSect from "./FunctionSect/FunctionSect";
+import MonthSect from "./MonthSect/MonthSect";
 
 type Props = {
   progress: number;
@@ -23,14 +26,20 @@ export const Progress = ({ progress = 0, xp = 0, streak = 0 }: Props) => {
 
   const weeklyData = buildWeeklyProgress(todo);
   return (
-    <div
-      className="mx-auto bg-white
-p-5
-mt-5
-shadow rounded-4xl"
-    >
-      <ChartHeader />
-      <LineChart data={weeklyData} width={960} height={260} />
+    <div className=" mx-auto max-w-980 flex flex-col gap-5">
+      <CoinSect />
+        <FunctionSect/>
+      <div
+        className="mx-auto bg-white
+      p-5
+      mt-5
+      mb-5
+      shadow rounded-4xl"
+      >
+        <ChartHeader />
+        <LineChart data={weeklyData} width={960} height={260} />
+      </div>
+      <MonthSect/>
     </div>
   );
 };

@@ -4,6 +4,8 @@ import { TodoContext } from "@/app/_utils/hooks";
 import { ArrowDown2 } from "iconsax-reactjs";
 import { useContext, useState } from "react";
 import { TodoList } from "../TodoList";
+import { t } from "@/app/i18n/t";
+import { titleToKey } from "../../Sidebar";
 
 export const Lists = ({ todo, list }: any) => {
   const [isOpen, setOpen] = useState(false);
@@ -20,7 +22,6 @@ export const Lists = ({ todo, list }: any) => {
             className={`${isOpen ? "rotate-0" : "rotate-90"} transition-all`}
             size={15}
           />
-
           <span>{list}</span>
         </div>
         <span className="text-sm bg-rose-400 text-pink-50 rounded-lg px-2">
