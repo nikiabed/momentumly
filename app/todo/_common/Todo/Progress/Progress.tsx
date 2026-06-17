@@ -7,6 +7,7 @@ import { ChartHeader } from "../../ChartHeader";
 import CoinSect from "./CoinSect/CoinSect";
 import FunctionSect from "./FunctionSect/FunctionSect";
 import MonthSect from "./MonthSect/MonthSect";
+import WeekSect from "./WeekSect/WeekSect";
 
 type Props = {
   progress: number;
@@ -40,6 +41,7 @@ export const Progress = ({ progress = 0, xp = 0, streak = 0 }: Props) => {
         <LineChart data={weeklyData} width={960} height={260} />
       </div>
       <MonthSect/>
+      <WeekSect/>
     </div>
   );
 };
