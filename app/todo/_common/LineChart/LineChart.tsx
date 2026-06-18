@@ -57,8 +57,8 @@ export const LineChart: FC<Props> = ({ data, width, height }) => {
       ctx.lineTo(width - padding, y);
       ctx.stroke();
 
-      ctx.fillStyle = "#94a3b8";
-      ctx.font = "12px sans-serif";
+      ctx.fillStyle = "#475569";
+      ctx.font = "16px dana";
       ctx.textAlign = "left";
 
       ctx.fillText(`${100 - i * 25}%`, 8, y + 4);
@@ -165,17 +165,11 @@ export const LineChart: FC<Props> = ({ data, width, height }) => {
       ctx.fillText(`${Math.round(v)}%`, x, y - 12);
 
       // bottom label
-      ctx.fillStyle = "#64748b";
-
+      ctx.font = "16px dana";
+      ctx.fillStyle = "#475569";
       ctx.fillText(data[i].label, x, height - 8);
     });
   }, [data, width, height]);
 
-  return (
-    <canvas
-      ref={canvasRef}
-      width={width}
-      height={height}
-    />
-  );
+  return <canvas ref={canvasRef} width={width} height={height} />;
 };

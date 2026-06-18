@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { iranSansX, TodoProvider } from "./_utils";
+import { dana, iranSansX, TodoProvider } from "./_utils";
 
 export const metadata: Metadata = {
   title: "Niki Portfolio",
@@ -12,10 +12,10 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const locale = 'fa'
+  const locale = "fa";
   return (
     <html lang={locale} dir="rtl">
-      <body className={iranSansX.variable}>
+      <body className={dana.className}>
         <main className={`min-h-screen overflow-y-auto`}>
           <TodoProvider>{children}</TodoProvider>
         </main>

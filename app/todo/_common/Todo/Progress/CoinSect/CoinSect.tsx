@@ -63,7 +63,7 @@ const CoinSect = () => {
       <Image
         width={250}
         height={180}
-        src="/images/piggy-bank-purple.png"
+        src="/images/piggy.png"
         alt="piggy bank"
         className="object-contain"
       />
