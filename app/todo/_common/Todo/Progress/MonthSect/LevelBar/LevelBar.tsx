@@ -1,6 +1,6 @@
 export default function LevelBar({ percent, remaining }: { percent: number; remaining: number }) {
   return (
-    <div>
+    <div className="mt-5">
 
       <div style={{ display: "flex", justifyContent: "space-between" }}>
       </div>

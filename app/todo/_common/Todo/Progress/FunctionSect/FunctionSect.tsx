@@ -1,7 +1,6 @@
 import { useTodoContext } from "@/app/_utils";
 import { buildWeeklyProgress } from "@/app/_utils/progress";
 import FaceIcon from "./FaceIcon/FaceIcon";
-import { Record } from "iconsax-reactjs";
 import RecordSect from "./RecordSect/RecordSect";
 
 const FunctionSect = () => {

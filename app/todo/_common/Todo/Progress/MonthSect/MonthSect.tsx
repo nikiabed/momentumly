@@ -1,6 +1,7 @@
 import { useTodoContext } from "@/app/_utils";
 import LevelBar from "./LevelBar/LevelBar";
 import Summary from "./Summary/Summary";
+import Image from "next/image";
 
 function getLevelProgress(
   coins: number,
@@ -43,14 +44,25 @@ const MonthSect = () => {
   );
 
   return (
-    <div className="flex gap-5 justify-center">
+    <div className="flex gap-6 justify-center">
       <div className="bg-white rounded-3xl shadow p-5 flex flex-col gap-2 flex-1">
         <h2 className="text-xl font-semibold">سطح رشدت</h2>
-        <div className="flex flex-col gap-2">
-          <h1 className="text-4xl font-bold text-[#34d399] ">جوانه</h1>
-          <h2 className="text-gray-400 font-semibold ">
-            سطح {getCurrentLevel(coins, thresholds) + 1}
-          </h2>
+        <div className="flex items-center justify-between">
+          <div className="flex flex-col gap-2 ">
+            <h1 className="text-4xl font-bold text-[#34d399] ">جوانه</h1>
+            <h2 className="text-gray-400 font-semibold ">
+              سطح {getCurrentLevel(coins, thresholds) + 1}
+            </h2>
+          </div>
+          <div>
+            <Image
+              alt="plant"
+              src="/images/plant0.png"
+              width={200}
+              height={100}
+              className="object-contain pl-20"
+            />
+          </div>
         </div>
         <LevelBar percent={percent} remaining={remaining} />
         <div className="text-gray-400 font-semibold">
@@ -62,7 +74,7 @@ const MonthSect = () => {
         </div>
       </div>
 
-      <Summary/>
+      <Summary />
     </div>
   );
 };
