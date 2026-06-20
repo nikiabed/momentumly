@@ -35,8 +35,36 @@ function getCurrentLevel(coins: number, thresholds: number[]) {
 const MonthSect = () => {
   const { todo } = useTodoContext();
   const coins = todo.filter((t) => t.status).length * 10;
-  const currentLevel = 0;
   const thresholds = [0, 1000, 3000, 6000, 9000, 12000];
+  const currentLevel = getCurrentLevel(coins, thresholds);
+  const levels = [
+    {
+      name: "جوانه",
+      image: "/images/plant0.png",
+    },
+    {
+      name: "نهال",
+      image: "/images/plant1.png",
+    },
+    {
+      name: "گیاه کوچک",
+      image: "/images/plant2.png",
+    },
+    {
+      name: "گیاه بالغ",
+      image: "/images/plant3.png",
+    },
+    {
+      name: "درختچه",
+      image: "/images/plant4.png",
+    },
+    {
+      name: "درخت کامل",
+      image: "/images/plant5.png",
+    },
+  ];
+
+  const currentPlant = levels[currentLevel] ?? levels[levels.length - 1];
   const { percent, remaining } = getLevelProgress(
     coins,
     thresholds[currentLevel],
@@ -49,15 +77,17 @@ const MonthSect = () => {
         <h2 className="text-xl font-semibold">سطح رشدت</h2>
         <div className="flex items-center justify-between">
           <div className="flex flex-col gap-2 ">
-            <h1 className="text-4xl font-bold text-[#34d399] ">جوانه</h1>
+            <h1 className="text-4xl font-bold text-[#34d399] ">
+              {currentPlant.name}
+            </h1>
             <h2 className="text-gray-400 font-semibold ">
               سطح {getCurrentLevel(coins, thresholds) + 1}
             </h2>
           </div>
           <div>
             <Image
-              alt="plant"
-              src="/images/plant0.png"
+              alt={currentPlant.name}
+              src={currentPlant.image}
               width={200}
               height={100}
               className="object-contain pl-20"

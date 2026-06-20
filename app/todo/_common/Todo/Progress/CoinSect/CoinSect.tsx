@@ -40,22 +40,22 @@ const CoinSect = () => {
       {/* Left */}
       <div className="flex flex-col justify-between">
         <div>
-          <div className="flex items-center gap-2 text-gray-500">
+          <div className="flex items-center gap-2 text-gray-700">
             <span>🪙</span>
-            <p>کل سکه‌هات</p>
+            <p className="text-2xl font-bold">کل سکه‌هات</p>
           </div>
 
-          <h1 className="text-5xl font-bold text-violet-700">{globalCoins}</h1>
+          <h1 className="text-5xl font-bold text-violet-700 text-center">
+            {globalCoins}
+          </h1>
         </div>
 
-        <div className="mt-5">
-          <p className="text-sm text-gray-400">این هفته</p>
-
-          <div className="flex items-center gap-2">
-            <span>✨</span>
-
-            <h2 className="text-2xl font-semibold">+{weekCoins}</h2>
-          </div>
+        <div className="mt-5 flex items-center gap-2">
+          <span className="text-center">✨</span>
+          <p className="text-lg text-gray-700 font-semibold" >این هفته</p>
+        </div>
+        <div>
+          <h2 className="text-2xl font-semibold text-center">{weekCoins} +</h2>
         </div>
       </div>
 
@@ -79,6 +79,7 @@ const CoinSect = () => {
         </div>
         <button
           className="
+    cursor-pointer
     px-5 py-3
     rounded-full
     bg-yellow-400

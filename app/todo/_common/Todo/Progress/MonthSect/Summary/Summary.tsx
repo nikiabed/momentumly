@@ -31,7 +31,6 @@ const Summary = () => {
   return (
     <div className="bg-white rounded-3xl shadow p-6 flex-1">
       <h1 className="text-2xl font-bold mb-6">خلاصه این ماه</h1>
-
       <div className="grid grid-cols-2 gap-4">
         {/* Card 1 */}
         <div className="bg-[#f8fafc] rounded-2xl p-5 flex items-center gap-3">
@@ -70,13 +69,13 @@ const Summary = () => {
           </span>
 
           <div className="text-center">
-            <h2 className="text-gray-500 text-sm">بیشترین سکه در روز</h2>
+            <h2 className="text-gray-500 text-sm font-semibold">بیشترین سکه در روز</h2>
             <h1 className="text-3xl font-semibold">{toFa(maxCoins)}</h1>
           </div>
         </div>
 
         {/* Card 2 */}
-        <div className="bg-[#f8fafc] rounded-2xl p-5  text-center">
+        <div className="bg-[#f8fafc] rounded-2xl p-5 text-center">
           <div className="text-center font-semibold">
             <h2 className="text-gray-500 text-sm">روزهای فعال</h2>
             <h1 className="text-3xl">{toFa(activeDays)}</h1>
