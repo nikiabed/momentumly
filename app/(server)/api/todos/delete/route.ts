@@ -1,13 +1,31 @@
-import clientPromise from "@/app/lib/mongodb";
-import { ObjectId } from "mongodb";
+import { NextResponse } from "next/server";
+import { connectDB } from "@/app/lib/mongodb";
+import { auth } from "@/app/lib/auth";
+import Todo from "@/app/models/Todo";
 
 export async function DELETE(req: Request) {
-  const { id } = await req.json();
-  const client = await clientPromise;
-  const db = client.db("todo-app");
-  await db.collection("todos").deleteOne({
-    _id: new ObjectId(id),
-  });
+  try {
+    await connectDB();
+    const session = await auth();
+    if (!session) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
+    const { id } = await req.json();
+    if (!id) {
+      return NextResponse.json({ message: "Missing id" }, { status: 400 });
+    }
+    const deleted = await Todo.findOneAndDelete({
+      _id: id,
+      // userId: session.user.id,
+    });
 
-  return Response.json({ ok: true });
+    if (!deleted) {
+      return NextResponse.json({ message: "Todo not found" }, { status: 404 });
+    }
+    return NextResponse.json({
+      ok: true,
+    });
+  } catch (err) {
+    return NextResponse.json({ message: "Server error" }, { status: 500 });
+  }
 }

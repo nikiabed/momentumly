@@ -1,32 +1,39 @@
-import clientPromise from "@/app/lib/mongodb";
+import { NextResponse } from "next/server";
+import { connectDB } from "@/app/lib/mongodb";
+import Board from "@/app/models/Board";
 
 export async function GET() {
   try {
-    const client = await clientPromise;
-    const db = client.db("todo-app");
-    const boards = await db.collection("boards").find({}).sort({ order: 1 }).toArray();
-    return Response.json(boards);
+    await connectDB();
+    const boards = await Board.find({}).sort({ order: 1 });
+    return NextResponse.json(boards);
   } catch (error) {
-    return Response.json(
-      { error },
-      {
-        status: 500,
-      },
+    return NextResponse.json(
+      { error: "Failed to fetch boards" },
+      { status: 500 },
     );
   }
 }
 
 export async function POST(req: Request) {
-  const body = await req.json();
-  const client = await clientPromise;
+  try {
+    await connectDB();
+    const body = await req.json();
+    let result;
+    if (Array.isArray(body)) {
+      result = await Board.insertMany(body);
+    } else {
+      result = await Board.create(body);
+    }
 
-  if (Array.isArray(body)) {
-    await client.db("todo-app").collection("boards").insertMany(body);
-  } else {
-    await client.db("todo-app").collection("boards").insertOne(body);
+    return NextResponse.json({
+      ok: true,
+      data: result,
+    });
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Failed to create board" },
+      { status: 500 },
+    );
   }
-
-  return Response.json({
-    ok: true,
-  });
 }

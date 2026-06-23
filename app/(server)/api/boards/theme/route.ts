@@ -1,50 +1,43 @@
-import clientPromise from "@/app/lib/mongodb";
-import { ObjectId } from "mongodb";
 import { NextResponse } from "next/server";
+import { auth } from "@/app/lib/auth";
+import { connectDB } from "@/app/lib/mongodb";
+import Board from "@/app/models/Board";
 
 export async function PATCH(req: Request) {
-  const client = await clientPromise;
-  const db = client.db("todo-app");
-
-  const { boardId, theme } = await req.json();
-
-  if (!boardId || !theme) {
-    return NextResponse.json(
-      { message: "Missing data" },
-      { status: 400 }
-    );
-  }
-
-  if (!ObjectId.isValid(boardId)) {
-    return NextResponse.json(
-      { message: "Invalid boardId" },
-      { status: 400 }
-    );
-  }
-
   try {
-    const result = await db.collection("boards").updateOne(
-      { _id: new ObjectId(boardId) },
+    await connectDB();
+    const session = await auth();
+    if (!session) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
+    const { boardId, theme } = await req.json();
+    if (!boardId || !theme) {
+      return NextResponse.json({ message: "Missing data" }, { status: 400 });
+    }
+    const board = await Board.findOneAndUpdate(
       {
-        $set: { theme },
-      }
+        _id: boardId,
+        // userId: session.user.id,
+      },
+      {
+        theme,
+      },
+      {
+        new: true,
+      },
     );
 
-    if (result.matchedCount === 0) {
-      return NextResponse.json(
-        { message: "Board not found" },
-        { status: 404 }
-      );
+    if (!board) {
+      return NextResponse.json({ message: "Board not found" }, { status: 404 });
     }
 
     return NextResponse.json({
-      message: "Theme updated",
       success: true,
+      board,
     });
   } catch (err) {
-    return NextResponse.json(
-      { message: "Server error" },
-      { status: 500 }
-    );
+    console.error(err);
+
+    return NextResponse.json({ message: "Server error" }, { status: 500 });
   }
 }

@@ -1,23 +1,15 @@
-import clientPromise from "@/app/lib/mongodb";
+import { connectDB } from "@/app/lib/mongodb";
+import Todo from "@/app/models/Todo";
 
 export async function GET() {
-  const client = await clientPromise;
-  const db = client.db("todo-app");
-  const todos = await db.collection("todos").find({}).toArray();
+  await connectDB();
+  const todos = await Todo.find();
   return Response.json(todos);
 }
 
 export async function POST(req: Request) {
+  await connectDB();
   const body = await req.json();
-  const client = await clientPromise;
-  const db = client.db("todo-app");
-  const result = await db.collection("todos").insertOne({
-    ...body,
-    createdAt: new Date(),
-  });
+  const result = await Todo.create(body);
   return Response.json(result);
 }
-
-
-
-

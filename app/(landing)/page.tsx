@@ -3,21 +3,34 @@ import { ROUTES } from "../_utils/constants";
 
 export default function Home() {
   return (
-    <div className="">
-      <h1>Home Page</h1>
-      <div className=" p-5 bg-purple-200 w-full">
+    <div>
+      <h1 className="text-center text-2xl font-bold mt-6">Home Page</h1>
+
+      <div className="p-5 bg-purple-200 w-full mt-10">
         <div className="container mx-auto">
-          <div className="flex gap-10 justify-center">
-            <div className="bg-linear-90 from-blue-300 to-pink-400 flex-1 text-center hover:cursor-pointer rounded-lg shadow-sm shadow-gray-400group hover:from-20% transition duration-5000 ease-in">
-              <Link href={`${ROUTES.PRODUCTS}`} className="w-full block text-blue-900 font-bold group-hover:text-blue-950">
+          <div className="flex gap-6 justify-center">
+            {/* Products */}
+            <div className="flex-1 text-center rounded-lg shadow-sm shadow-gray-400 bg-linear-to-r from-blue-300 to-pink-400 hover:opacity-90 transition">
+              <Link
+                href={ROUTES.PRODUCTS}
+                className="block p-6 font-bold text-blue-900"
+              >
                 محصولات
               </Link>
             </div>
-            <div className="bg-linear-90 from-pink-300 to-red-400 flex-1 text-center">
-              <Link href={`${ROUTES.DASHBOARD}`}>داشبورد</Link>
+
+            {/* Dashboard */}
+            <div className="flex-1 text-center rounded-lg shadow-sm shadow-gray-400 bg-linear-to-r from-pink-300 to-red-400 hover:opacity-90 transition">
+              <Link href={ROUTES.DASHBOARD} className="block p-6 font-bold">
+                داشبورد
+              </Link>
             </div>
-            <div className="bg-linear-90 from-pink-300 to-red-400 flex-1 text-center">
-              <Link href={`${ROUTES.TODO}`}>اپلیکیشن TODO</Link>
+
+            {/* Todo */}
+            <div className="flex-1 text-center rounded-lg shadow-sm shadow-gray-400 bg-linear-to-r from-green-300 to-blue-400 hover:opacity-90 transition">
+              <Link href={ROUTES.TODO} className="block p-6 font-bold">
+                اپلیکیشن TODO
+              </Link>
             </div>
           </div>
         </div>

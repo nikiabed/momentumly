@@ -1,20 +1,46 @@
-import clientPromise from "@/app/lib/mongodb"
-import { ObjectId } from "mongodb"
+import { NextResponse } from "next/server";
+import { connectDB } from "@/app/lib/mongodb";
+import { auth } from "@/app/lib/auth";
+import Todo from "@/app/models/Todo";
 
 export async function PUT(req: Request) {
- const { id, title } = await req.json()
+  try {
+    await connectDB();
 
- const client = await clientPromise
- const db = client.db("todo-app")
+    const session = await auth();
 
- await db.collection("todos").updateOne(
-  { _id: new ObjectId(id) },
-  {
-   $set: {
-    title
-   }
+    if (!session) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
+
+    const { id, title } = await req.json();
+
+    if (!id || !title?.trim()) {
+      return NextResponse.json({ message: "Invalid data" }, { status: 400 });
+    }
+
+    const updated = await Todo.findOneAndUpdate(
+      {
+        _id: id,
+        // userId: session.user.id
+      },
+      {
+        title: title.trim(),
+      },
+      {
+        new: true,
+      },
+    );
+
+    if (!updated) {
+      return NextResponse.json({ message: "Todo not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({
+      ok: true,
+      todo: updated,
+    });
+  } catch (err) {
+    return NextResponse.json({ message: "Server error" }, { status: 500 });
   }
- )
-
- return Response.json({ ok: true })
 }
