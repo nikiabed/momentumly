@@ -17,13 +17,15 @@ export const Sidebar = () => {
     <div className="overflow-y-hidden h-screen pt-5 px-3 bg-pink-50 flex flex-1 flex-col gap-2 justify-between">
       <div className="shrink-0">
         <div className="flex gap-2 items-center">
-          {data?.user?.image && <Image
-            src={data.user.image}
-            className="max-h-15 max-w-15 rounded-full"
-            width={80}
-            height={80}
-            alt="niki abed"
-          />}
+          {data?.user?.image && (
+            <Image
+              src={data.user.image}
+              className="max-h-15 max-w-15 rounded-full"
+              width={80}
+              height={80}
+              alt="niki abed"
+            />
+          )}
           <div>
             <div className="font-semibold">{data?.user?.name}</div>
             <div className="text-gray-500 text-sm">{data?.user?.email}</div>
@@ -34,7 +36,13 @@ export const Sidebar = () => {
 
       <div className="overflow-auto grow flex flex-col gap-2 text-gray-800 text-md pb-1.5 shadow-gray-600">
         {uiBoard?.map((list: ListItemProps) => {
-          return <ListItem key={list._id} focused={list} />;
+          const isProgress = list.boardKey === "progress";
+          return (
+            <div key={list._id}>
+              <ListItem key={list._id} focused={list} />
+              {isProgress && <div className=" mt-2 border-t border-gray-200" />}
+            </div>
+          );
         })}
       </div>
       <button

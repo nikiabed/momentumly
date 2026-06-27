@@ -8,18 +8,17 @@ import { t } from "@/app/i18n/t";
 
 export const titleToKey: Record<string, string> = {
   "My Day": "myDay",
-  "Important": "important",
-  "All": "all",
-  "Complete": "complete",
-  "Progress": "progress",
-  "Work": "work",
-  "Search": "search"
+  Important: "important",
+  All: "all",
+  Complete: "complete",
+  Progress: "progress",
+  Work: "work",
+  Search: "search",
 };
 
 export const ListItem = ({ focused }: { focused: any }) => {
   const {
     handleBoardInput,
-    handleBoardEditable,
     removeList,
     selectBoard,
     activeBoard,
@@ -27,6 +26,17 @@ export const ListItem = ({ focused }: { focused: any }) => {
   } = useTodoContext();
 
   const [isOpen, setIsOpen] = useState(false);
+
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const isEditing = editingId === focused._id;
+  const handleBoardEditable = (id: string) => {
+    setEditingId(id);
+  };
+
+  const isSystemBoard =
+  ["myDay", "all", "important", "complete", "progress"].includes(
+    focused.boardKey
+  );
 
   return (
     <li className=" relative flex items-center justify-between">
@@ -40,7 +50,7 @@ export const ListItem = ({ focused }: { focused: any }) => {
         >
           <div className="flex gap-2">
             <ItemIcon item={focused} size={20} className="text-rose-400" />
-            {focused.isEdit ? (
+            {isEditing ? (
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
@@ -69,7 +79,7 @@ export const ListItem = ({ focused }: { focused: any }) => {
           <div className="border-b border-gray-300 p absolute -bottom-1 w-full"></div>
         )}
       </div>
-      {focused.editable && (
+      {!isSystemBoard && (
         <div>
           <More
             color="transparent"

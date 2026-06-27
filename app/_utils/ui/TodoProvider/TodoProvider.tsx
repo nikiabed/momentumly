@@ -9,6 +9,8 @@ import {
 import { useEffect, useMemo, useState } from "react";
 import { TodoContext } from "../../hooks";
 import { items, sidebar } from "@/app/todo/_common/Sidebar/Sidebar.const";
+import { auth } from "@/app/lib/auth";
+import { useSession } from "next-auth/react";
 
 export type Boards = {
   title: string;
@@ -33,6 +35,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
   const [activeBoard, setActiveBoard] = useState<string>("myDay");
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState("");
+  const { data: session } = useSession();
 
   const uiBoard = useMemo(() => {
     const boards = [...boardList];
@@ -319,7 +322,6 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
   async function handleNewList() {
     const last = Math.max(...boardList.map((b) => b.order), 0);
     const key = `board-${Date.now()}`;
-
     const newBoard = {
       _id: key,
       title: "untitled",
@@ -344,7 +346,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       },
 
       body: JSON.stringify({
-        title: "untitled",
+        title: "بدون عنوان",
         boardKey: key,
         state: false,
         icon: "HamburgerMenu",
@@ -353,6 +355,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
         isEdit: true,
         order: last + 1,
         theme: "lavender",
+        userId: session?.user?.id,
       }),
     });
 
@@ -363,8 +366,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
   async function removeList(id: string) {
     const index = boardList.findIndex((b) => b._id === id);
 
-    const nextBoard =
-      boardList[index - 1] || boardList[0];
+    const nextBoard = boardList[index - 1] || boardList[0];
 
     await fetch("/api/boards/delete", {
       method: "DELETE",
@@ -378,7 +380,6 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     });
 
     await loadBoards();
-    
 
     if (activeBoard === boardList[index].boardKey) {
       setActiveBoard(nextBoard?.boardKey || "myDay");

@@ -33,7 +33,7 @@ export async function PUT(req: Request) {
       },
       {
         title,
-        isEdit: false,
+        isEdit: true,
       },
       {
         new: true,
