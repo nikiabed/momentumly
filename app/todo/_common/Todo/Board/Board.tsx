@@ -27,13 +27,19 @@ export const Board = ({ item }: any) => {
   const isComplete = currentBoard?.boardKey === BOARD_KEYS.COMPLETE;
   const isMyDay = currentBoard?.boardKey === BOARD_KEYS.MY_DAY;
 
+  console.log(
+    todo.map((t) => ({
+      title: t.title,
+      myDayDate: t.myDayDate,
+    })),
+  );
   const filteredTodos = todo.filter((t) => {
     if (!currentBoard) return false;
     if (isAll) return true;
     if (isImportant) return t.isImportant;
     if (isComplete) return t.status;
     if (isMyDay) {
-      return t.boardKey === BOARD_KEYS.MY_DAY && getDateKey(t.createdAt) === todayKey ;
+      return t.myDayDate === todayKey;
     }
     return t.boardKey === currentBoard.boardKey;
   });

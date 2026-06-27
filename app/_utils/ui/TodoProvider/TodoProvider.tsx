@@ -11,6 +11,8 @@ import { TodoContext } from "../../hooks";
 import { items, sidebar } from "@/app/todo/_common/Sidebar/Sidebar.const";
 import { auth } from "@/app/lib/auth";
 import { useSession } from "next-auth/react";
+import { BOARD_KEYS } from "../../constants";
+import { getDateKey } from "../../date";
 
 export type Boards = {
   title: string;
@@ -386,17 +388,20 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  const moveToMyDay = (index: string) => {
-    setTodo((prev: TodoListType) => {
-      const old = [...prev];
-      old.map((todo: TodoType) => {
-        if (todo.id === index) {
-          todo.date = todoDate;
-          todo.item = items[0].title;
-        }
-      });
-      return old;
+  const moveToMyDay = async (id: string) => {
+    const todayKey = getDateKey(new Date());
+
+    await fetch(`/api/todos/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        myDayDate: todayKey,
+      }),
     });
+
+    setTodo((prev) =>
+      prev.map((t) => (t._id === id ? { ...t, myDayDate: todayKey } : t)),
+    );
   };
 
   const value = useMemo(

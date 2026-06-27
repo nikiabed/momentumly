@@ -11,6 +11,7 @@ export type TodoType = {
   item: string;
   boardKey?: string;
   createdAt: string;
+  myDayDate?: string | null;
 };
 
 export type TodoListType = TodoType[];
@@ -73,9 +74,11 @@ export type Context = {
   setSearchText?: Dispatch<SetStateAction<string>>;
   uiBoard?: ListItemProps[];
   saveBoard?: (id: string) => Promise<void>;
-  handleUpdateTodo?: (id: string, title: string) => Promise<void>
-  systemBoardsState?: Record<string, ListItemProps>
-  setSystemBoardsState?: Dispatch<SetStateAction<Record<string, ListItemProps>>>
+  handleUpdateTodo?: (id: string, title: string) => Promise<void>;
+  systemBoardsState?: Record<string, ListItemProps>;
+  setSystemBoardsState?: Dispatch<
+    SetStateAction<Record<string, ListItemProps>>
+  >;
 };
 
 export const header = {

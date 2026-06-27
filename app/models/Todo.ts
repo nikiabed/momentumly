@@ -15,6 +15,10 @@ const TodoSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  myDayDate: {
+    type: String,
+    default: null
+  },
 });
 
 export default mongoose.models.Todo || mongoose.model("Todo", TodoSchema);

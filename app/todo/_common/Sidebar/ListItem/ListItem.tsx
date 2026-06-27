@@ -17,13 +17,8 @@ export const titleToKey: Record<string, string> = {
 };
 
 export const ListItem = ({ focused }: { focused: any }) => {
-  const {
-    handleBoardInput,
-    removeList,
-    selectBoard,
-    activeBoard,
-    saveBoard,
-  } = useTodoContext();
+  const { handleBoardInput, removeList, selectBoard, activeBoard, saveBoard } =
+    useTodoContext();
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -33,10 +28,15 @@ export const ListItem = ({ focused }: { focused: any }) => {
     setEditingId(id);
   };
 
-  const isSystemBoard =
-  ["myDay", "all", "important", "complete", "progress"].includes(
-    focused.boardKey
-  );
+  const isSystemBoard = [
+    "myDay",
+    "all",
+    "important",
+    "complete",
+    "progress",
+  ].includes(focused.boardKey);
+
+  const value = t(titleToKey[focused.title] ?? focused.title);
 
   return (
     <li className=" relative flex items-center justify-between">
@@ -50,7 +50,7 @@ export const ListItem = ({ focused }: { focused: any }) => {
         >
           <div className="flex gap-2">
             <ItemIcon item={focused} size={20} className="text-rose-400" />
-            {isEditing ? (
+            {isEditing && !isSystemBoard ? (
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
@@ -60,8 +60,9 @@ export const ListItem = ({ focused }: { focused: any }) => {
                 <input
                   autoFocus
                   type="text"
-                  defaultValue={t(titleToKey[focused.title] ?? focused.title)}
+                  defaultValue={value}
                   onChange={handleBoardInput}
+                  size={value.length}
                 />
               </form>
             ) : (
