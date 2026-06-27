@@ -22,7 +22,7 @@ export async function PUT(req: Request) {
     const updated = await Todo.findOneAndUpdate(
       {
         _id: id,
-        // userId: session.user.id
+        userId: session?.user?.id
       },
       {
         title: title.trim(),

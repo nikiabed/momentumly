@@ -17,7 +17,7 @@ export async function PATCH(req: Request) {
     const board = await Board.findOneAndUpdate(
       {
         _id: boardId,
-        // userId: session.user.id,
+        userId: session?.user?.id,
       },
       {
         theme,

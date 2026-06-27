@@ -5,7 +5,7 @@ import { useTodoContext } from "@/app/_utils";
 export const Search = () => {
   const { setSearchText, searchText, setActiveBoard } = useTodoContext();
   return (
-    <div className="relative w-full flex justify-center">
+    <div className="relative w-full flex justify-center mt-2">
       <input
         className="shadow-sm border-b-gray-500 focus:bg-white focus:border-b-blue-800 bg-gray-50 border w-[97%] border-gray-200 rounded-lg h-9.5 px-3 text-sm focus:outline-none"
         placeholder={sidebar.placeholder}

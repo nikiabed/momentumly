@@ -21,7 +21,7 @@ export async function DELETE(req: Request) {
 
     const deleted = await Board.findOneAndDelete({
       _id: id,
-      // userId: session.user.id,
+      userId: session?.user?.id,
     });
 
     if (!deleted) {

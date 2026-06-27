@@ -4,6 +4,7 @@ const BoardSchema = new mongoose.Schema(
   {
     userId: {
       type: String,
+      default: null,
     },
     title: {
       type: String,

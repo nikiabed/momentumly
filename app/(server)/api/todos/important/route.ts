@@ -22,7 +22,7 @@ export async function PUT(req: Request) {
     const updated = await Todo.findOneAndUpdate(
       {
         _id: id,
-        // userId: session.user.id,
+        userId: session?.user?.id,
       },
       {
         isImportant,
@@ -35,6 +35,11 @@ export async function PUT(req: Request) {
     if (!updated) {
       return NextResponse.json({ message: "Todo not found" }, { status: 404 });
     }
+
+    const client = await clientPromise;
+    const db = client.db("todo-app");
+
+    console.log(await db.collection("todos").countDocuments());
 
     return NextResponse.json({
       ok: true,

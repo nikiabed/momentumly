@@ -1,7 +1,10 @@
 import mongoose from "mongoose";
 
 const TodoSchema = new mongoose.Schema({
-  userId: String,
+   userId: {
+    type: String,
+    default: null,
+  },
   title: String,
   status: Boolean,
   isImportant: Boolean,

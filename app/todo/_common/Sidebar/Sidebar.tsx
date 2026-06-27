@@ -6,21 +6,28 @@ import { useTodoContext } from "@/app/_utils/hooks/useTodoContext";
 import { Search } from "./Search";
 import { ListItem } from "./ListItem";
 import { sidebar } from "./Sidebar.const";
-
+import { signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 
 export const Sidebar = () => {
-  const { handleNewList, uiBoard } = useTodoContext()
+  const { handleNewList, uiBoard } = useTodoContext();
+  const { data } = useSession();
+
   return (
     <div className="overflow-y-hidden h-screen pt-5 px-3 bg-pink-50 flex flex-1 flex-col gap-2 justify-between">
       <div className="shrink-0">
-        <div className="flex ">
-          <Image
-            src={"/images/niki-abedzade.jpg"}
+        <div className="flex gap-2 items-center">
+          {data?.user?.image && <Image
+            src={data.user.image}
             className="max-h-15 max-w-15 rounded-full"
             width={80}
             height={80}
             alt="niki abed"
-          />
+          />}
+          <div>
+            <div className="font-semibold">{data?.user?.name}</div>
+            <div className="text-gray-500 text-sm">{data?.user?.email}</div>
+          </div>
         </div>
         <Search />
       </div>
@@ -30,6 +37,16 @@ export const Sidebar = () => {
           return <ListItem key={list._id} focused={list} />;
         })}
       </div>
+      <button
+        onClick={() =>
+          signOut({
+            callbackUrl: "/login",
+          })
+        }
+        className="px-4 py-2 bg-rose-400 text-rose-50 rounded-lg cursor-pointer"
+      >
+        خارج شدن
+      </button>
 
       <button
         onClick={handleNewList}
@@ -40,4 +57,4 @@ export const Sidebar = () => {
       </button>
     </div>
   );
-}
+};

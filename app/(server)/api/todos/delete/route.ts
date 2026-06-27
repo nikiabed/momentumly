@@ -16,7 +16,7 @@ export async function DELETE(req: Request) {
     }
     const deleted = await Todo.findOneAndDelete({
       _id: id,
-      // userId: session.user.id,
+      userId: session?.user?.id,
     });
 
     if (!deleted) {

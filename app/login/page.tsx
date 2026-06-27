@@ -8,12 +8,20 @@ export default function LoginPage() {
       <div className="bg-white p-6 rounded-xl shadow-md text-center">
         <h1 className="mb-4 text-xl font-bold">Welcome</h1>
 
-        <button
-          onClick={() => signIn("google", { callbackUrl: "/todo" })}
-          className="px-4 py-2 bg-black text-white rounded-lg cursor-pointer"
-        >
-          Continue with Google
-        </button>
+        <div className="flex gap-3">
+          <button
+            onClick={() =>
+              signIn("google", {
+                callbackUrl: "/todo",
+              })
+            }
+            className="px-4 py-2 bg-black text-white rounded-lg cursor-pointer"
+          >
+            Continue with Google
+          </button>
+
+          
+        </div>
       </div>
     </div>
   );
