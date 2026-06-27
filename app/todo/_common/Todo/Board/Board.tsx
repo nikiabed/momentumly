@@ -56,7 +56,7 @@ export const Board = ({ item }: any) => {
 
   return (
     <div
-      className={` ${theme?.className ?? "bg-linear-45 from-purple-300 to-rose-400"} overflow-y-auto flex-4 h-screen w-full py-5`}
+      className={` ${theme?.className ?? "bg-linear-45 from-purple-300 to-rose-400"}  flex-4 h-screen w-full `}
     >
       <div className="flex gap-4 flex-col h-screen py-5">
         <div className="shrink-0 px-15 flex flex-col gap-4 ">

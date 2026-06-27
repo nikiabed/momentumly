@@ -25,8 +25,8 @@ export async function PUT(req: Request) {
         userId: session?.user?.id,
       },
       {
-        status: true,
-        completedAt: new Date(),
+        status,
+        completedAt: status ? new Date() : null,
       },
       {
         new: true,

@@ -20,7 +20,7 @@ export const Progress = ({ progress = 0, xp = 0, streak = 0 }: Props) => {
 
   const weeklyData = buildWeeklyProgress(todo);
   return (
-    <div className=" mx-auto max-w-980 flex flex-col gap-5">
+    <div className=" px-20 w-full flex flex-col gap-5 overflow-y-auto">
       <CoinSect />
         <FunctionSect/>
       <div
@@ -31,7 +31,7 @@ export const Progress = ({ progress = 0, xp = 0, streak = 0 }: Props) => {
       shadow rounded-4xl"
       >
         <ChartHeader />
-        <LineChart data={weeklyData} width={960} height={260} />
+        <LineChart data={weeklyData} width={990} height={260} />
       </div>
       <MonthSect/>
       <WeekSect/>

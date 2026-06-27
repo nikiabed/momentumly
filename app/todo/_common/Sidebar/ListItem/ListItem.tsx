@@ -5,6 +5,7 @@ import { sidebar } from "../Sidebar.const";
 import { More } from "iconsax-reactjs";
 import { useState } from "react";
 import { t } from "@/app/i18n/t";
+import { BOARD_KEYS, getDateKey } from "@/app/_utils";
 
 export const titleToKey: Record<string, string> = {
   "My Day": "myDay",
@@ -17,8 +18,17 @@ export const titleToKey: Record<string, string> = {
 };
 
 export const ListItem = ({ focused }: { focused: any }) => {
-  const { handleBoardInput, removeList, selectBoard, activeBoard, saveBoard } =
-    useTodoContext();
+  const {
+    handleBoardInput,
+    removeList,
+    selectBoard,
+    activeBoard,
+    saveBoard,
+    todo,
+    boardList,
+    systemBoardsState,
+
+  } = useTodoContext();
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -37,6 +47,27 @@ export const ListItem = ({ focused }: { focused: any }) => {
   ].includes(focused.boardKey);
 
   const value = t(titleToKey[focused.title] ?? focused.title);
+   const currentBoard =
+      boardList.find((b) => b.boardKey === focused.boardKey) ??
+      systemBoardsState?.[focused.boardKey];
+    const todayKey = getDateKey(new Date());
+    const isAll = currentBoard?.boardKey === BOARD_KEYS.ALL;
+    const isImportant = currentBoard?.boardKey === BOARD_KEYS.IMPORTANT;
+    const isComplete = currentBoard?.boardKey === BOARD_KEYS.COMPLETE;
+    const isMyDay = currentBoard?.boardKey === BOARD_KEYS.MY_DAY;
+  
+  const filteredTodos = todo.filter((t) => {
+      if (!currentBoard) return false;
+      if (isAll) return true;
+      if (isImportant) return t.isImportant;
+      if (isComplete) return t.status;
+      if (isMyDay) {
+        return getDateKey(t.createdAt) === todayKey;
+      }
+      return t.boardKey === currentBoard.boardKey;
+    });
+
+    const notCompletedTodos = filteredTodos.filter((t) => !t.status).length;
 
   return (
     <li className=" relative flex items-center justify-between">
@@ -70,12 +101,11 @@ export const ListItem = ({ focused }: { focused: any }) => {
             )}
           </div>
         </div>
-        {/* {todo.filter(focused.filter).length > 0 &&
-          focused.title !== sidebar.progress && (
-            <span className="bg-rose-400 h-5 px-1 rounded-md text-pink-50 text-sm">
-              {todo.filter(focused.filter).length}
-            </span>
-          )} */}
+        {notCompletedTodos > 0 && (
+          <span className="bg-rose-400 h-5 px-1 rounded-md text-pink-50 text-sm">
+            {notCompletedTodos}
+          </span>
+        )}
         {focused.title == sidebar.progress && (
           <div className="border-b border-gray-300 p absolute -bottom-1 w-full"></div>
         )}

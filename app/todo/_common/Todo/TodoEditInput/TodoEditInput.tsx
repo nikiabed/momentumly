@@ -77,10 +77,10 @@ export const TodoEditInput = ({ list }: any) => {
 
       {/* Details Panel */}
       {isOpen && (
-        <div className=" overflow-hidden rounded-2xl border border-black/5 bg-white shadow-sm flex justify-evenly">
+        <div className=" rounded-2xl border border-black/5 bg-white shadow-sm flex justify-evenly">
           <button
             onClick={() => handleIsEdit?.(list._id)}
-            className="flex w-full items-center gap-3 px-4 py-3 text-sm text-center justify-center hover:bg-black/5 transition"
+            className="flex w-full items-center gap-3 px-4 py-3 cursor-pointer text-sm text-center justify-center hover:bg-black/5 transition"
           >
             <Edit size={18} />
             <span>ویرایش</span>
@@ -88,23 +88,23 @@ export const TodoEditInput = ({ list }: any) => {
 
           <button
             onClick={() => moveToMyDay?.(list._id)}
-            className="flex w-full items-center gap-3 px-4 py-3 text-sm text-center justify-center hover:bg-black/5 transition"
+            className="flex w-full items-center gap-3 px-4 py-3 cursor-pointer text-sm text-center justify-center hover:bg-black/5 transition"
           >
             <Calendar size={18} />
             <span>انتقال به امروز</span>
           </button>
 
-          <button className="flex w-full items-center gap-3 px-4 py-3 text-sm text-center justify-center hover:bg-black/5 transition">
+          <button className="flex w-full items-center gap-3 px-4 py-3 cursor-pointer text-sm text-center justify-center hover:bg-black/5 transition">
             <Folder size={18} />
             <span>انتقال به لیست دیگر</span>
           </button>
 
-          <button className="flex w-full items-center gap-3 px-4 py-3 text-sm text-center justify-center hover:bg-black/5 transition">
+          <button className="flex w-full items-center gap-3 px-4 py-3 cursor-pointer text-sm text-center justify-center hover:bg-black/5 transition">
             <Clock size={18} />
             <span>تعیین ددلاین</span>
           </button>
 
-          <button className="flex w-full items-center gap-3 px-4 py-3 text-sm text-center justify-center hover:bg-black/5 transition">
+          <button className="flex w-full items-center gap-3 px-4 py-3 cursor-pointer text-sm text-center justify-center hover:bg-black/5 transition">
             <Link21 size={18} />
             <span>افزودن لینک</span>
           </button>
@@ -113,7 +113,7 @@ export const TodoEditInput = ({ list }: any) => {
 
           <button
             onClick={() => deleteTodo?.(list._id)}
-            className="flex w-full items-center gap-3 px-4 py-3 text-sm text-center justify-center text-red-500 hover:bg-red-50 transition"
+            className="flex w-full items-center gap-3 px-4 py-3 cursor-pointer text-sm text-center justify-center text-red-500 hover:bg-red-50 transition"
           >
             <Trash size={18} />
             <span>حذف</span>
