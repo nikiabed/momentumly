@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const TodoSchema = new mongoose.Schema({
-   userId: {
+  userId: {
     type: String,
     default: null,
   },
@@ -11,7 +11,10 @@ const TodoSchema = new mongoose.Schema({
   item: String,
   boardKey: String,
   isEdit: Boolean,
-  createdAt: Date,
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 export default mongoose.models.Todo || mongoose.model("Todo", TodoSchema);

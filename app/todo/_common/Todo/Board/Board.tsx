@@ -18,24 +18,24 @@ export const Board = ({ item }: any) => {
     useTodoContext();
 
   const normalize = (key?: string) => key?.toLowerCase().replace(/\s/g, "");
-
   const currentBoard =
     boardList.find((b) => b.boardKey === item.boardKey) ??
     systemBoardsState?.[item.boardKey];
-
   const todayKey = getDateKey(new Date());
+  const isAll = currentBoard?.boardKey === BOARD_KEYS.ALL;
+  const isImportant = currentBoard?.boardKey === BOARD_KEYS.IMPORTANT;
+  const isComplete = currentBoard?.boardKey === BOARD_KEYS.COMPLETE;
+  const isMyDay = currentBoard?.boardKey === BOARD_KEYS.MY_DAY;
 
   const filteredTodos = todo.filter((t) => {
     if (!currentBoard) return false;
-    if (currentBoard.boardKey === BOARD_KEYS.ALL) return true;
-    if (currentBoard.boardKey === BOARD_KEYS.IMPORTANT) return t.isImportant;
-    if (currentBoard.boardKey === BOARD_KEYS.COMPLETE) return t.status;
-    if (currentBoard.boardKey === BOARD_KEYS.MY_DAY) {
-      return (
-        getDateKey(t.createdAt) === todayKey && t.boardKey === BOARD_KEYS.MY_DAY
-      );
+    if (isAll) return true;
+    if (isImportant) return t.isImportant;
+    if (isComplete) return t.status;
+    if (isMyDay) {
+      return getDateKey(t.createdAt) === todayKey;
     }
-    return normalize(t.boardKey) === currentBoard.boardKey;
+    return t.boardKey === currentBoard.boardKey;
   });
 
   const activeTodos = filteredTodos.filter((t) => !t.status);
@@ -81,7 +81,7 @@ export const Board = ({ item }: any) => {
                   const grouped = activeTodos.filter((t) => {
                     return normalize(t.boardKey) === normalize(board.boardKey);
                   });
-                  if (!grouped.length) return null
+                  if (!grouped.length) return null;
                   return (
                     <Lists
                       key={board._id}
@@ -100,7 +100,7 @@ export const Board = ({ item }: any) => {
               <>
                 {boardList?.map((board) => {
                   const grouped = completedTodos.filter((t) => {
-                    return normalize(t.boardKey) === board.boardKey;
+                    return normalize(t.boardKey) === normalize(board.boardKey);
                   });
                   if (!grouped.length) return null;
                   return (

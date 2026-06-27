@@ -21,6 +21,7 @@ export async function POST(req: Request) {
   const result = await Todo.create({
     ...body,
     userId: session?.user?.id,
+    createdAt: new Date(),
   });
 
   console.log("CREATED TODO:", result);
