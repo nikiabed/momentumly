@@ -27,7 +27,7 @@ export const ListItem = ({ focused }: { focused: any }) => {
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(focused._id);
   const isEditing = editingId === focused._id;
   const handleBoardEditable = (id: string) => {
     setEditingId(id);
