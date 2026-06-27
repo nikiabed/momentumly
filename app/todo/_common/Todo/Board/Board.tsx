@@ -39,7 +39,7 @@ export const Board = ({ item }: any) => {
     if (isImportant) return t.isImportant;
     if (isComplete) return t.status;
     if (isMyDay) {
-      return t.myDayDate === todayKey;
+      return getDateKey(t.createdAt) === todayKey;
     }
     return t.boardKey === currentBoard.boardKey;
   });
