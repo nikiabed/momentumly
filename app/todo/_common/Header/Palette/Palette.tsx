@@ -3,6 +3,7 @@ import { More } from "iconsax-reactjs";
 import { useState } from "react";
 import { ListItemProps } from "../..";
 import { useTodoContext } from "@/app/_utils/hooks/useTodoContext";
+import { themeTextColor } from "../Header";
 
 export const colors = [
   {
@@ -107,15 +108,16 @@ export const Palette = ({ item }: { item: ListItemProps }) => {
   const togglePalette = () => {
     setIsOpen(!isOpen);
   };
+
+  const iconFill = themeTextColor[item.theme] ?? "#000";
+
   return (
     <div className="relative" onClick={togglePalette}>
       <More
         size={24}
-        className="cursor-pointer "
         color="transparent"
-        style={{
-          fill: "#fff",
-        }}
+        style={{ fill: iconFill }}
+        className="cursor-pointer"
       />
       {isOpen && (
         <div className="absolute left-0 w-70 z-50 bg-rose-50 text-gray-600 rounded shadow flex flex-col flex-wrap gap-4 p-4">

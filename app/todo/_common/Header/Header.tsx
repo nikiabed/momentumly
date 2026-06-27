@@ -6,8 +6,27 @@ import { ItemIcon } from "./ItemIcon";
 import { Palette } from "./Palette";
 import Coins from "./Coins/Coins";
 
+export const themeTextColor: Record<string, string> = {
+  fire: "text-white",
+  sunset: "text-white",
+  lavender: "text-white",
+  ocean: "text-white",
+  mint: "text-white",
+  purple: "text-white",
+  "pink-soft": "text-gray-700",
+  "blue-soft": "text-gray-700",
+  "purple-soft": "text-gray-700",
+  "green-soft": "text-gray-700",
+  "red-soft": "text-gray-700",
+};
 
-export const Header = ({ item, todo }: { item: ListItemProps, todo: TodoListType }) => {
+export const Header = ({
+  item,
+  todo,
+}: {
+  item: ListItemProps;
+  todo: TodoListType;
+}) => {
   const formatPersianDate = (date: Date) => {
     return new Intl.DateTimeFormat("fa-IR", {
       weekday: "long",
@@ -17,21 +36,6 @@ export const Header = ({ item, todo }: { item: ListItemProps, todo: TodoListType
       .format(date)
       .replace(" ", "، ");
   };
-
-  const themeTextColor: Record<string, string> = {
-    fire: "text-white",
-    sunset: "text-white",
-    lavender: "text-white",
-    ocean: "text-white",
-    mint: "text-white",
-    purple: "text-white",
-    "pink-soft": "text-gray-700",
-    "blue-soft": "text-gray-700",
-    "purple-soft": "text-gray-700",
-    "green-soft": "text-gray-700",
-    "red-soft": "text-gray-700",
-  };
-
 
   return (
     <header
@@ -54,7 +58,7 @@ export const Header = ({ item, todo }: { item: ListItemProps, todo: TodoListType
       </div>
 
       <div className="flex gap-2 items-center">
-        <Coins item={item} filterTodo={todo}/>
+        <Coins item={item} filterTodo={todo} />
         <Palette item={item} />
       </div>
     </header>

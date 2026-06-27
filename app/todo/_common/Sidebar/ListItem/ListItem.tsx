@@ -69,6 +69,7 @@ export const ListItem = ({ focused }: { focused: any }) => {
 
     const notCompletedTodos = filteredTodos.filter((t) => !t.status).length;
 
+
   return (
     <li className=" relative flex items-center justify-between">
       <div
