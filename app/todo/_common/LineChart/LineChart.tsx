@@ -1,6 +1,5 @@
 "use client";
-import { iranSansX } from "@/app/_utils";
-import React, { FC, useEffect, useRef } from "react";
+import { FC, useEffect, useRef } from "react";
 
 type Props = {
   data: {
@@ -26,7 +25,10 @@ export const LineChart: FC<Props> = ({ data, width, height }) => {
 
     if (data.length < 2) return;
 
-    const values = data.map((d) => (d.total ? (d.done / d.total) * 100 : 0));
+    const values = data.map((d) => {
+      if (!d.total || d.total === 0) return 0;
+      return (d.done / d.total) * 100;
+    });
 
     const padding = 50;
     const leftAxis = 70;
@@ -162,12 +164,15 @@ export const LineChart: FC<Props> = ({ data, width, height }) => {
       ctx.font = `700 13px ${font}`;
       ctx.textAlign = "center";
 
-      ctx.fillText(`${Math.round(v)}%`, x, y - 12);
+      const d = data[i];
+      const percent = Math.round(v);
+
+      ctx.fillText(`${d.done}/${d.total} (${percent}%)`, x, y - 12);
 
       // bottom label
       ctx.font = "16px dana";
       ctx.fillStyle = "#475569";
-      ctx.fillText(data[i].label, x, height - 8);
+      ctx.fillText(data[i].label, x, height - 15);
     });
   }, [data, width, height]);
 

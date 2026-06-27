@@ -223,6 +223,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       body: JSON.stringify({
         id,
         status: value,
+        completedAt: value ? new Date() : null,
       }),
     });
 

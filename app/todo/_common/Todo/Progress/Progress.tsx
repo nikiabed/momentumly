@@ -18,13 +18,6 @@ type Props = {
 export const Progress = ({ progress = 0, xp = 0, streak = 0 }: Props) => {
   const { todo } = useTodoContext();
 
-  const moodText =
-    progress < 40
-      ? "آرام شروع شده"
-      : progress < 80
-        ? "در حال رشد"
-        : "روز پُررونق";
-
   const weeklyData = buildWeeklyProgress(todo);
   return (
     <div className=" mx-auto max-w-980 flex flex-col gap-5">

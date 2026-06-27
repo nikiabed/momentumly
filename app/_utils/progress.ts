@@ -1,10 +1,7 @@
 import { BOARD_KEYS } from "./constants";
 import { getDateKey } from "./date";
 
-const getScore = (
-  done: number,
-  total: number
-) => {
+const getScore = (done: number, total: number) => {
   if (!total) return 0;
 
   const ratio = done / total;
@@ -17,67 +14,34 @@ const getScore = (
   return 4;
 };
 
-export const buildWeeklyProgress = (
-  todos: any[]
-) => {
+export const buildWeeklyProgress = (todos: any[]) => {
   const days = [];
-
   const today = new Date();
-
-  const diff =
-    (today.getDay() + 1) % 7;
-
+  const diff = (today.getDay() + 1) % 7;
   const startOfWeek = new Date(today);
-
-  startOfWeek.setDate(
-    today.getDate() - diff
-  );
-
+  startOfWeek.setDate(today.getDate() - diff);
   for (let i = 0; i < 7; i++) {
     const day = new Date(startOfWeek);
-
-    day.setDate(
-      startOfWeek.getDate() + i
+    day.setDate(startOfWeek.getDate() + i);
+    const dateKey = getDateKey(day);
+    const createdTasks = todos.filter(
+      (t) => getDateKey(t.createdAt) === dateKey,
     );
 
-    const dateKey =
-      getDateKey(day);
+    const dayTodos = todos.filter((t) => {
+      return getDateKey(t.createdAt) === dateKey;
+    });
 
-    const dayTodos =
-      todos.filter(
-        (t) =>
-          t.boardKey ===
-            BOARD_KEYS.MY_DAY &&
-          getDateKey(
-            t.createdAt
-          ) === dateKey
-      );
-
-    const done =
-      dayTodos.filter(
-        (t) => t.status
-      ).length;
-
-    const total =
-      dayTodos.length;
-
+    const done = dayTodos.filter((t) => t.status).length;
+    const total = createdTasks.length;
     days.push({
-      label:
-        day.toLocaleDateString(
-          "fa-IR",
-          {
-            weekday:
-              "short",
-          }
-        ),
+      label: day.toLocaleDateString("fa-IR", {
+        weekday: "short",
+      }),
 
       done,
       total,
-
-      score: getScore(
-        done,
-        total
-      ),
+      score: getScore(done, total),
     });
   }
 

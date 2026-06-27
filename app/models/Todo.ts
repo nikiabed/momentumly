@@ -17,7 +17,11 @@ const TodoSchema = new mongoose.Schema({
   },
   myDayDate: {
     type: String,
-    default: null
+    default: null,
+  },
+  completedAt: {
+    type: Date,
+    default: Date.now,
   },
 });
 
