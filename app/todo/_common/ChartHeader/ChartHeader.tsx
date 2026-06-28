@@ -1,9 +1,20 @@
 "use client";
-import { ArrowDown, ArrowDown2 } from "iconsax-reactjs";
-import { useState } from "react";
+import { ArrowDown2 } from "iconsax-reactjs";
+import { FC, useState } from "react";
+type ChartHeaderProps = {
+  onChangeWeek: (offset: number) => void;
+  active: number;
+};
 
-export const ChartHeader = () => {
+export const ChartHeader: FC<ChartHeaderProps> = ({
+  onChangeWeek,
+  active,
+}: any) => {
   const [open, setOpen] = useState(false);
+  const selectWeek = (offset: number) => {
+    onChangeWeek(offset);
+    setOpen(false);
+  };
 
   return (
     <div className="flex items-center justify-between mb-1 px-10 text-gray-700 font-bold text-lg">
@@ -19,10 +30,16 @@ export const ChartHeader = () => {
             hover:bg-slate-200
             transition
             cursor-pointer"
-            onClick={() => setOpen(!open)} 
+        onClick={() => setOpen(!open)}
       >
         <ArrowDown2 size={16} />
-        <button >این هفته</button>
+        <button>
+          {active === 0
+            ? "این هفته"
+            : active === 1
+              ? "هفته قبل"
+              : `${active} هفته قبل`}
+        </button>
 
         {open && (
           <div
@@ -37,14 +54,23 @@ export const ChartHeader = () => {
             
           "
           >
-            <button className="w-full px-3 py-2 text-sm hover:bg-slate-50 text-right cursor-pointer">
+            <button
+              className="w-full px-3 py-2 text-sm hover:bg-slate-50 text-right cursor-pointer"
+              onClick={() => selectWeek(1)}
+            >
               هفته قبل
             </button>
-            <button className="w-full px-3 py-2 text-sm hover:bg-slate-50 text-right cursor-pointer">
-              هفته پیش تر
+            <button
+              className="w-full px-3 py-2 text-sm hover:bg-slate-50 text-right cursor-pointer"
+              onClick={() => selectWeek(2)}
+            >
+              2 هفته قبل
             </button>
-            <button className="w-full px-3 py-2 text-sm hover:bg-slate-50 text-right cursor-pointer">
-              هفته انتخابی
+            <button
+              className="w-full px-3 py-2 text-sm hover:bg-slate-50 text-right cursor-pointer"
+              onClick={() => selectWeek(0)}
+            >
+              این هفته
             </button>
           </div>
         )}

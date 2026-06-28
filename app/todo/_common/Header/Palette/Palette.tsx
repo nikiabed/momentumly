@@ -12,11 +12,11 @@ export const themeIconFill: Record<string, string> = {
   mint: "#ffffff",
   purple: "#ffffff",
 
-  "pink-soft": "#374151",
-  "blue-soft": "#374151",
-  "purple-soft": "#374151",
-  "green-soft": "#374151",
-  "red-soft": "#374151",
+  "pink-soft": "#364153",
+  "blue-soft": "#364153",
+  "purple-soft": "#364153",
+  "green-soft": "#364153",
+  "red-soft": "#364153",
 };
 export const colors = [
   {
@@ -160,19 +160,10 @@ export const Palette = ({ item }: { item: ListItemProps }) => {
               />
             ))}
 
+            
             <div
               className=" cursor-pointer h-10 w-10 "
-              onClick={() => handleImageChange("images/background1.jpg")}
-            >
-              <img
-                src="images/background1.jpg"
-                alt="Image"
-                className="rounded h-full w-full object-cover"
-              />
-            </div>
-            <div
-              className=" cursor-pointer h-10 w-10 "
-              onClick={() => handleImageChange("images/background1.jpg")}
+              onClick={() => handleImageChange("images/background2.jpg")}
             >
               <img
                 src="images/background2.jpg"
@@ -182,7 +173,7 @@ export const Palette = ({ item }: { item: ListItemProps }) => {
             </div>
             <div
               className=" cursor-pointer  h-10 w-10 "
-              onClick={() => handleImageChange("images/background1.jpg")}
+              onClick={() => handleImageChange("images/background3.jpg")}
             >
               <img
                 src="images/background3.jpg"
@@ -192,7 +183,7 @@ export const Palette = ({ item }: { item: ListItemProps }) => {
             </div>
             <div
               className=" cursor-pointer  h-10 w-10 "
-              onClick={() => handleImageChange("images/background1.jpg")}
+              onClick={() => handleImageChange("images/background4.jpg")}
             >
               <img
                 src="images/background4.jpg"
@@ -202,7 +193,7 @@ export const Palette = ({ item }: { item: ListItemProps }) => {
             </div>
             <div
               className=" cursor-pointer  h-10 w-10 "
-              onClick={() => handleImageChange("images/background1.jpg")}
+              onClick={() => handleImageChange("images/background5.jpg")}
             >
               <img
                 src="images/background5.jpg"
@@ -212,7 +203,7 @@ export const Palette = ({ item }: { item: ListItemProps }) => {
             </div>
             <div
               className=" cursor-pointer  h-10 w-10 "
-              onClick={() => handleImageChange("images/background1.jpg")}
+              onClick={() => handleImageChange("images/background6.jpg")}
             >
               <img
                 src="images/background6.jpg"
@@ -222,7 +213,7 @@ export const Palette = ({ item }: { item: ListItemProps }) => {
             </div>
             <div
               className=" cursor-pointer  h-10 w-10 "
-              onClick={() => handleImageChange("images/background1.jpg")}
+              onClick={() => handleImageChange("images/background7.jpg")}
             >
               <img
                 src="images/background7.jpg"
@@ -230,16 +221,7 @@ export const Palette = ({ item }: { item: ListItemProps }) => {
                 className="rounded h-full w-full object-cover"
               />
             </div>
-            <div
-              className=" cursor-pointer  h-10 w-10 "
-              onClick={() => handleImageChange("images/background1.jpg")}
-            >
-              <img
-                src="images/background8.jpg"
-                alt="Image"
-                className="rounded h-full w-full object-cover"
-              />
-            </div>
+            
           </div>
         </div>
       )}

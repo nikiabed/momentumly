@@ -18,8 +18,8 @@ type Props = {
 
 export const Progress = ({ progress = 0, xp = 0, streak = 0 }: Props) => {
   const { todo } = useTodoContext();
-
-  const weeklyData = buildWeeklyProgress(todo);
+  const [weekOffset, setWeekOffset] = useState(0);
+  const weeklyData = buildWeeklyProgress(todo, weekOffset);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [chartWidth, setChartWidth] = useState(0);
@@ -37,6 +37,8 @@ export const Progress = ({ progress = 0, xp = 0, streak = 0 }: Props) => {
     return () => window.removeEventListener("resize", resize);
   }, []);
 
+
+
   return (
     <div className=" flex flex-col gap-5 w-full px-6 md:px-15">
       <CoinSect />
@@ -46,10 +48,10 @@ export const Progress = ({ progress = 0, xp = 0, streak = 0 }: Props) => {
         ref={containerRef}
         className="w-full overflow-hidden bg-white p-5 mt-5 mb-5 shadow rounded-4xl"
       >
-        <ChartHeader />
+        <ChartHeader onChangeWeek={setWeekOffset} active={weekOffset} />
 
         {chartWidth > 0 && (
-          <LineChart data={weeklyData} width={chartWidth-40} height={260} />
+          <LineChart data={weeklyData} width={chartWidth - 40} height={260} />
         )}
       </div>
       <MonthSect />

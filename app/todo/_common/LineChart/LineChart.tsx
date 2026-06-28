@@ -35,8 +35,8 @@ export const LineChart: FC<Props> = ({ data, width, height }) => {
     });
 
     const padding = 50;
-    const leftAxis = 100;
-    const rightPadding = 100;
+    const leftAxis = 70;
+    const rightPadding = 50;
 
     const chartWidth = width - leftAxis - rightPadding;
     const chartHeight = height - padding * 2;
