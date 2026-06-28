@@ -56,11 +56,24 @@ export const Board = ({ item }: any) => {
       (t) =>
         searchText && t.title.toLowerCase().includes(searchText.toLowerCase()),
     );
-  const theme = colors.find((c) => c.key === currentBoard?.theme);
+  
+  const isImage = currentBoard?.theme?.startsWith("img:");
+
+  const bgStyle = isImage
+    ? {
+        backgroundImage: `url(${currentBoard?.theme.replace("img:", "")})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }
+    : undefined;
+
+  const bgClass = !isImage
+    ? colors.find((c) => c.key === currentBoard?.theme)?.className
+    : "";
 
   return (
     <div
-      className={` ${theme?.className ?? "bg-linear-45 from-purple-300 to-rose-400"}  flex-4 h-screen w-full `}
+      className={` flex-4 h-screen justify-center overflow-y-auto  w-full ${bgClass}`} style={bgStyle}
     >
       <div className="flex gap-4 flex-col h-screen py-5">
         <div className="shrink-0 px-15 flex flex-col gap-4 ">

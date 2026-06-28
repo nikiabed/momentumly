@@ -3,7 +3,6 @@ import { More } from "iconsax-reactjs";
 import { useState } from "react";
 import { ListItemProps } from "../..";
 import { useTodoContext } from "@/app/_utils/hooks/useTodoContext";
-import { themeTextColor } from "../Header";
 
 export const themeIconFill: Record<string, string> = {
   fire: "#ffffff",
@@ -123,15 +122,25 @@ export const Palette = ({ item }: { item: ListItemProps }) => {
     setIsOpen(!isOpen);
   };
 
+  const isImage = item.theme?.startsWith("img:");
+
+
+  const handleImageChange = (src: string) => {
+    handleColorChange(`img:${src}`);
+  };
+
+  const iconFill = isImage ? "#374151" : themeIconFill[item.theme];
+
   return (
-    <div className="relative" onClick={togglePalette}>
+    <div className="relative">
       <More
         size={24}
         color="transparent"
         style={{
-          fill: themeIconFill[item.theme],
+          fill: iconFill,
         }}
         className="cursor-pointer"
+        onClick={togglePalette}
       />
       {isOpen && (
         <div className="absolute left-0 w-70 z-50 bg-rose-50 text-gray-600 rounded shadow flex flex-col flex-wrap gap-4 p-4">
@@ -151,56 +160,80 @@ export const Palette = ({ item }: { item: ListItemProps }) => {
               />
             ))}
 
-            <div className=" cursor-pointer h-10 w-10 ">
+            <div
+              className=" cursor-pointer h-10 w-10 "
+              onClick={() => handleImageChange("images/background1.jpg")}
+            >
               <img
                 src="images/background1.jpg"
                 alt="Image"
                 className="rounded h-full w-full object-cover"
               />
             </div>
-            <div className=" cursor-pointer h-10 w-10 ">
+            <div
+              className=" cursor-pointer h-10 w-10 "
+              onClick={() => handleImageChange("images/background1.jpg")}
+            >
               <img
                 src="images/background2.jpg"
                 alt="Image"
                 className="rounded h-full w-full object-cover"
               />
             </div>
-            <div className=" cursor-pointer  h-10 w-10 ">
+            <div
+              className=" cursor-pointer  h-10 w-10 "
+              onClick={() => handleImageChange("images/background1.jpg")}
+            >
               <img
                 src="images/background3.jpg"
                 alt="Image"
                 className="rounded h-full w-full object-cover"
               />
             </div>
-            <div className=" cursor-pointer  h-10 w-10 ">
+            <div
+              className=" cursor-pointer  h-10 w-10 "
+              onClick={() => handleImageChange("images/background1.jpg")}
+            >
               <img
                 src="images/background4.jpg"
                 alt="Image"
                 className="rounded h-full w-full object-cover"
               />
             </div>
-            <div className=" cursor-pointer  h-10 w-10 ">
+            <div
+              className=" cursor-pointer  h-10 w-10 "
+              onClick={() => handleImageChange("images/background1.jpg")}
+            >
               <img
                 src="images/background5.jpg"
                 alt="Image"
                 className="rounded h-full w-full object-cover"
               />
             </div>
-            <div className=" cursor-pointer  h-10 w-10 ">
+            <div
+              className=" cursor-pointer  h-10 w-10 "
+              onClick={() => handleImageChange("images/background1.jpg")}
+            >
               <img
                 src="images/background6.jpg"
                 alt="Image"
                 className="rounded h-full w-full object-cover"
               />
             </div>
-            <div className=" cursor-pointer  h-10 w-10 ">
+            <div
+              className=" cursor-pointer  h-10 w-10 "
+              onClick={() => handleImageChange("images/background1.jpg")}
+            >
               <img
                 src="images/background7.jpg"
                 alt="Image"
                 className="rounded h-full w-full object-cover"
               />
             </div>
-            <div className=" cursor-pointer  h-10 w-10 ">
+            <div
+              className=" cursor-pointer  h-10 w-10 "
+              onClick={() => handleImageChange("images/background1.jpg")}
+            >
               <img
                 src="images/background8.jpg"
                 alt="Image"

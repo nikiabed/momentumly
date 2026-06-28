@@ -20,7 +20,32 @@ const BoardSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    theme: String,
+    theme: {
+      type: {
+        type: String,
+        enum: ["color", "image"],
+        default: "color",
+      },
+      value: {
+        type: String,
+        default: "sunset",
+      },
+    },
+    appearance: {
+      bg: {
+        type: {
+          type: String,
+          enum: ["color", "image"],
+          default: "color",
+        },
+        value: String,
+      },
+      textColor: {
+        type: String,
+        enum: ["light", "dark"],
+        default: "dark",
+      },
+    },
   },
   {
     timestamps: true,

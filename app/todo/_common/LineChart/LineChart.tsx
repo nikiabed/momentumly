@@ -20,6 +20,12 @@ export const LineChart: FC<Props> = ({ data, width, height }) => {
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${height}px`;
+    ctx.scale(dpr, dpr);
     ctx.clearRect(0, 0, width, height);
     if (data.length < 2) return;
 
@@ -29,12 +35,11 @@ export const LineChart: FC<Props> = ({ data, width, height }) => {
     });
 
     const padding = 50;
-    const leftAxis = 70;
-    const rightPadding = 50;
+    const leftAxis = 100;
+    const rightPadding = 100;
 
     const chartWidth = width - leftAxis - rightPadding;
     const chartHeight = height - padding * 2;
-
     const stepX = chartWidth / (data.length - 1);
 
     const mapX = (i: number) => width - rightPadding - i * stepX;

@@ -11,13 +11,12 @@ export const buildWeeklyProgress = (todos: any[]) => {
     day.setDate(startOfWeek.getDate() + i);
 
     const dateKey = getDateKey(day);
-    const dayTodos = todos.filter((t) => t.myDayDate === dateKey );
+    const dayTodos = todos.filter((t) => t.myDayDate === dateKey);
     const done = dayTodos.filter(
       (t) => t.status && t.completedAt && getDateKey(t.completedAt) === dateKey,
     ).length;
     const planned = dayTodos.length;
-    const ratio = planned === 0 ? 0 : done / planned;
-    const score = Math.round(ratio * 80) + Math.min(planned, 10) * 2;
+    const score = Math.round((done / Math.max(planned, 1)) * 100);
 
     days.push({
       label: day.toLocaleDateString("fa-IR", {

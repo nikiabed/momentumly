@@ -8,6 +8,7 @@ import CoinSect from "./CoinSect/CoinSect";
 import FunctionSect from "./FunctionSect/FunctionSect";
 import MonthSect from "./MonthSect/MonthSect";
 import WeekSect from "./WeekSect/WeekSect";
+import { useEffect, useRef, useState } from "react";
 
 type Props = {
   progress: number;
@@ -19,22 +20,40 @@ export const Progress = ({ progress = 0, xp = 0, streak = 0 }: Props) => {
   const { todo } = useTodoContext();
 
   const weeklyData = buildWeeklyProgress(todo);
+
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const [chartWidth, setChartWidth] = useState(0);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const resize = () => {
+      setChartWidth(containerRef.current!.offsetWidth);
+    };
+
+    resize();
+    window.addEventListener("resize", resize);
+
+    return () => window.removeEventListener("resize", resize);
+  }, []);
+
   return (
-    <div className=" px-20 w-full flex flex-col gap-5 overflow-y-auto">
+    <div className=" flex flex-col gap-5 w-full px-6 md:px-15">
       <CoinSect />
-        <FunctionSect/>
+      <FunctionSect />
+
       <div
-        className="mx-auto bg-white
-      p-5
-      mt-5
-      mb-5
-      shadow rounded-4xl"
+        ref={containerRef}
+        className="w-full overflow-hidden bg-white p-5 mt-5 mb-5 shadow rounded-4xl"
       >
         <ChartHeader />
-        <LineChart data={weeklyData} width={990} height={260} />
+
+        {chartWidth > 0 && (
+          <LineChart data={weeklyData} width={chartWidth-40} height={260} />
+        )}
       </div>
-      <MonthSect/>
-      <WeekSect/>
+      <MonthSect />
+      <WeekSect />
     </div>
   );
 };
