@@ -37,7 +37,10 @@ export const Progress = ({ progress = 0, xp = 0, streak = 0 }: Props) => {
     return () => window.removeEventListener("resize", resize);
   }, []);
 
-
+  type Props = {
+    onChangeWeek: (offset: number) => void;
+    active: number;
+  };
 
   return (
     <div className=" flex flex-col gap-5 w-full px-6 md:px-15">

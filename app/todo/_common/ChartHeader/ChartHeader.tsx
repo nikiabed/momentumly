@@ -56,6 +56,12 @@ export const ChartHeader: FC<ChartHeaderProps> = ({
           >
             <button
               className="w-full px-3 py-2 text-sm hover:bg-slate-50 text-right cursor-pointer"
+              onClick={() => selectWeek(0)}
+            >
+              این هفته{" "}
+            </button>
+            <button
+              className="w-full px-3 py-2 text-sm hover:bg-slate-50 text-right cursor-pointer"
               onClick={() => selectWeek(1)}
             >
               هفته قبل
@@ -65,12 +71,6 @@ export const ChartHeader: FC<ChartHeaderProps> = ({
               onClick={() => selectWeek(2)}
             >
               2 هفته قبل
-            </button>
-            <button
-              className="w-full px-3 py-2 text-sm hover:bg-slate-50 text-right cursor-pointer"
-              onClick={() => selectWeek(0)}
-            >
-              این هفته
             </button>
           </div>
         )}

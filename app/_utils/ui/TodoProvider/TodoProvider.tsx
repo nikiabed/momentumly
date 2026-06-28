@@ -423,10 +423,31 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     );
   };
 
-  
+  const moveTodo = async (todoId: string, boardKey: string) => {
+    const body =
+      boardKey === BOARD_KEYS.MY_DAY
+        ? {
+            myDayDate: getDateKey(new Date()),
+          }
+        : {
+            boardKey,
+            myDayDate: null,
+          };
+
+    await fetch(`/api/todos/${todoId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
+
+    await loadTodos();
+  };
 
   const value = useMemo(
     () => ({
+      moveTodo,
       removeFromMyDay,
       newBoardKey,
       setNewBoardKey,
@@ -467,6 +488,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       moveToMyDay,
     }),
     [
+      moveTodo,
       removeFromMyDay,
       newBoardKey,
       setNewBoardKey,

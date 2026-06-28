@@ -15,6 +15,9 @@ import {
   Clock,
 } from "iconsax-reactjs";
 import { useState } from "react";
+import { titleToKey } from "../../Sidebar";
+import { t } from "@/app/i18n/t";
+import { BOARD_KEYS } from "@/app/_utils";
 
 export const TodoEditInput = ({ list }: any) => {
   const {
@@ -24,9 +27,26 @@ export const TodoEditInput = ({ list }: any) => {
     deleteTodo,
     moveToMyDay,
     removeFromMyDay,
+    boardList,
+    moveTodo,
+    systemBoardsState,
   } = useTodoContext();
 
   const [isOpen, setOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const systemBoards = [
+    BOARD_KEYS.ALL,
+    BOARD_KEYS.IMPORTANT,
+    BOARD_KEYS.COMPLETE,
+    BOARD_KEYS.PROGRESS,
+    BOARD_KEYS.SEARCH,
+    BOARD_KEYS.MY_DAY,
+  ];
+
+  const moveTargets = [
+    ...boardList.filter((b) => !systemBoards.includes(b.boardKey as any)),
+  ];
 
   return (
     <div className="w-full">
@@ -95,9 +115,24 @@ export const TodoEditInput = ({ list }: any) => {
             <span>انتقال به امروز</span>
           </button>
 
-          <button className="flex w-full items-center gap-3 px-4 py-3 cursor-pointer text-sm text-center justify-center hover:bg-black/5 transition">
+          <button className="flex w-full items-center relative gap-3 px-4 py-3 cursor-pointer text-sm text-center justify-center hover:bg-black/5 transition">
             <Folder size={18} />
-            <span>انتقال به لیست دیگر</span>
+            <span onClick={() => setIsMenuOpen(!isMenuOpen)}>
+              انتقال به لیست دیگر
+            </span>
+            {isMenuOpen && (
+              <div className="absolute right-0 top-full bg-white shadow rounded-xl ">
+                {moveTargets?.map((board) => (
+                  <button
+                    key={board._id}
+                    onClick={() => moveTodo(list._id, board.boardKey)}
+                    className="block w-full text-right px-3 py-2 hover:bg-slate-50 cursor-pointer"
+                  >
+                    {t(titleToKey[board.title]) || board.title}
+                  </button>
+                ))}
+              </div>
+            )}
           </button>
 
           <button className="flex w-full items-center gap-3 px-4 py-3 cursor-pointer text-sm text-center justify-center hover:bg-black/5 transition">
