@@ -26,13 +26,13 @@ const FunctionSect = () => {
               <FaceIcon score={day.score} />
 
               <span>
-                {day.total ? Math.round((day.done / day.total) * 100) : 0}%
+                {day.score}%
               </span>
             </div>
           ))}
         </div>
       </div>
-      <RecordSect/>
+      <RecordSect />
     </div>
   );
 };

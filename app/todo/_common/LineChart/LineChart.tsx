@@ -6,6 +6,7 @@ type Props = {
     label: string;
     done: number;
     total: number;
+    score: number;
   }[];
   width: number;
   height: number;
@@ -17,17 +18,14 @@ export const LineChart: FC<Props> = ({ data, width, height }) => {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
-
     ctx.clearRect(0, 0, width, height);
-
     if (data.length < 2) return;
 
     const values = data.map((d) => {
       if (!d.total || d.total === 0) return 0;
-      return (d.done / d.total) * 100;
+      return d.score;
     });
 
     const padding = 50;

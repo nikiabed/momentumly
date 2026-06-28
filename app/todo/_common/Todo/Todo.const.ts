@@ -79,6 +79,8 @@ export type Context = {
   setSystemBoardsState?: Dispatch<
     SetStateAction<Record<string, ListItemProps>>
   >;
+  newBoardKey?: string;
+  setNewBoardKey?: React.Dispatch<React.SetStateAction<string | null>>;
 };
 
 export const header = {

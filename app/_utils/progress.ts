@@ -1,18 +1,4 @@
-import { BOARD_KEYS } from "./constants";
 import { getDateKey } from "./date";
-
-const getScore = (done: number, total: number) => {
-  if (!total) return 0;
-
-  const ratio = done / total;
-
-  if (ratio < 0.2) return 0;
-  if (ratio < 0.4) return 1;
-  if (ratio < 0.6) return 2;
-  if (ratio < 0.8) return 3;
-
-  return 4;
-};
 
 export const buildWeeklyProgress = (todos: any[]) => {
   const days = [];
@@ -34,6 +20,8 @@ export const buildWeeklyProgress = (todos: any[]) => {
 
     const done = dayTodos.filter((t) => t.status).length;
     const total = createdTasks.length;
+    const ratio = done / Math.max(total, 1);
+    const volumeBonus = Math.min(done * 2, 40);
     days.push({
       label: day.toLocaleDateString("fa-IR", {
         weekday: "short",
@@ -41,7 +29,7 @@ export const buildWeeklyProgress = (todos: any[]) => {
 
       done,
       total,
-      score: getScore(done, total),
+      score: Math.round(ratio * 60 + volumeBonus),
     });
   }
 

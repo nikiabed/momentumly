@@ -3,7 +3,7 @@ import { useTodoContext } from "@/app/_utils/hooks";
 import { ItemIcon } from "../../Header";
 import { sidebar } from "../Sidebar.const";
 import { More } from "iconsax-reactjs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { t } from "@/app/i18n/t";
 import { BOARD_KEYS, getDateKey } from "@/app/_utils";
 
@@ -27,16 +27,24 @@ export const ListItem = ({ focused }: { focused: any }) => {
     todo,
     boardList,
     systemBoardsState,
-
+    setNewBoardKey,
+    newBoardKey,
   } = useTodoContext();
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const [editingId, setEditingId] = useState<string | null>(focused._id);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const isEditing = editingId === focused._id;
   const handleBoardEditable = (id: string) => {
     setEditingId(id);
   };
+
+  useEffect(() => {
+    if (newBoardKey === focused.boardKey) {
+      setEditingId(focused._id);
+      setNewBoardKey?.(null);
+    }
+  }, [newBoardKey, focused]);
 
   const isSystemBoard = [
     "myDay",
@@ -47,28 +55,27 @@ export const ListItem = ({ focused }: { focused: any }) => {
   ].includes(focused.boardKey);
 
   const value = t(titleToKey[focused.title] ?? focused.title);
-   const currentBoard =
-      boardList.find((b) => b.boardKey === focused.boardKey) ??
-      systemBoardsState?.[focused.boardKey];
-    const todayKey = getDateKey(new Date());
-    const isAll = currentBoard?.boardKey === BOARD_KEYS.ALL;
-    const isImportant = currentBoard?.boardKey === BOARD_KEYS.IMPORTANT;
-    const isComplete = currentBoard?.boardKey === BOARD_KEYS.COMPLETE;
-    const isMyDay = currentBoard?.boardKey === BOARD_KEYS.MY_DAY;
-  
+  const currentBoard =
+    boardList.find((b) => b.boardKey === focused.boardKey) ??
+    systemBoardsState?.[focused.boardKey];
+  const todayKey = getDateKey(new Date());
+  const isAll = currentBoard?.boardKey === BOARD_KEYS.ALL;
+  const isImportant = currentBoard?.boardKey === BOARD_KEYS.IMPORTANT;
+  const isComplete = currentBoard?.boardKey === BOARD_KEYS.COMPLETE;
+  const isMyDay = currentBoard?.boardKey === BOARD_KEYS.MY_DAY;
+
   const filteredTodos = todo.filter((t) => {
-      if (!currentBoard) return false;
-      if (isAll) return true;
-      if (isImportant) return t.isImportant;
-      if (isComplete) return t.status;
-      if (isMyDay) {
-        return getDateKey(t.createdAt) === todayKey;
-      }
-      return t.boardKey === currentBoard.boardKey;
-    });
+    if (!currentBoard) return false;
+    if (isAll) return true;
+    if (isImportant) return t.isImportant;
+    if (isComplete) return t.status;
+    if (isMyDay) {
+      return getDateKey(t.createdAt) === todayKey;
+    }
+    return t.boardKey === currentBoard.boardKey;
+  });
 
-    const notCompletedTodos = filteredTodos.filter((t) => !t.status).length;
-
+  const notCompletedTodos = filteredTodos.filter((t) => !t.status).length;
 
   return (
     <li className=" relative flex items-center justify-between">

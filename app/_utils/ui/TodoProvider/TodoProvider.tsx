@@ -9,9 +9,7 @@ import {
 import { useEffect, useMemo, useState } from "react";
 import { TodoContext } from "../../hooks";
 import { items, sidebar } from "@/app/todo/_common/Sidebar/Sidebar.const";
-import { auth } from "@/app/lib/auth";
 import { useSession } from "next-auth/react";
-import { BOARD_KEYS } from "../../constants";
 import { getDateKey } from "../../date";
 
 export type Boards = {
@@ -321,6 +319,8 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     );
   };
 
+  const [newBoardKey, setNewBoardKey] = useState<string | null>(null);
+
   async function handleNewList() {
     const last = Math.max(...boardList.map((b) => b.order), 0);
     const key = `board-${Date.now()}`;
@@ -360,6 +360,8 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
         userId: session?.user?.id,
       }),
     });
+
+    setNewBoardKey(key)
 
     setActiveBoard(key);
     await loadBoards();
@@ -406,6 +408,8 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
 
   const value = useMemo(
     () => ({
+      newBoardKey,
+      setNewBoardKey,
       setSystemBoardsState,
       systemBoardsState,
       handleUpdateTodo,
@@ -443,6 +447,8 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       moveToMyDay,
     }),
     [
+      newBoardKey,
+      setNewBoardKey,
       setSystemBoardsState,
       systemBoardsState,
       handleUpdateTodo,

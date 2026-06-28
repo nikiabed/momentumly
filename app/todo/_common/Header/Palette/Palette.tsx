@@ -5,6 +5,20 @@ import { ListItemProps } from "../..";
 import { useTodoContext } from "@/app/_utils/hooks/useTodoContext";
 import { themeTextColor } from "../Header";
 
+export const themeIconFill: Record<string, string> = {
+  fire: "#ffffff",
+  sunset: "#ffffff",
+  lavender: "#ffffff",
+  ocean: "#ffffff",
+  mint: "#ffffff",
+  purple: "#ffffff",
+
+  "pink-soft": "#374151",
+  "blue-soft": "#374151",
+  "purple-soft": "#374151",
+  "green-soft": "#374151",
+  "red-soft": "#374151",
+};
 export const colors = [
   {
     key: "sunset",
@@ -109,14 +123,14 @@ export const Palette = ({ item }: { item: ListItemProps }) => {
     setIsOpen(!isOpen);
   };
 
-  const iconFill = themeTextColor[item.theme] ?? "#000";
-
   return (
     <div className="relative" onClick={togglePalette}>
       <More
         size={24}
         color="transparent"
-        style={{ fill: iconFill }}
+        style={{
+          fill: themeIconFill[item.theme],
+        }}
         className="cursor-pointer"
       />
       {isOpen && (
