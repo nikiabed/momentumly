@@ -27,6 +27,10 @@ const TodoSchema = new mongoose.Schema({
     type: Date,
     default: null,
   },
+  attachment: {
+    type: String,
+    default: null,
+  },
 });
 
 export default mongoose.models.Todo || mongoose.model("Todo", TodoSchema);

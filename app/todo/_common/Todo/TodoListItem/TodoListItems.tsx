@@ -12,21 +12,15 @@ type itemProps = DetailedHTMLProps<
   list: string[];
 };
 
-export const isMyDay = (todo: any, today: string) => {
-  if (!todo.deadline) return false;
-  return getDateKey(todo.deadline) === today;
-};
-
-export const isOverdue = (todo: any, today: string) => {
-  if (!todo.deadline) return false;
-  if (todo.status) return false;
-  return new Date(todo.deadline) < new Date(today);
-};
-
 export const getTodoState = (todo: any, today: string) => {
+  const todayDate = new Date(today);
+  const deadlineDate = new Date(todo.deadline);
+  
   if (todo.status) return "done";
-  if (isOverdue(todo, today)) return "overdue";
-  if (isMyDay(todo, today)) return "today";
+  if (!todo.deadline) return "normal";
+  const deadlineKey = getDateKey(todo.deadline);
+  if (deadlineKey === today) return "today";
+  if (deadlineDate < todayDate) return "overdue";
   return "normal";
 };
 
@@ -36,8 +30,6 @@ export const TodoListItems: FC<itemProps> = ({ list, ...props }: any) => {
 
   const todayKey = getDateKey(new Date()) || "normal";
   const state = getTodoState(list, todayKey);
-
-  console.log(list.deadline, list.title, state)
 
   return (
     <div

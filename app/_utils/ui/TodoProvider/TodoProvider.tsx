@@ -462,8 +462,49 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     );
   };
 
+  const handleFile = async (file: File, id: string) => {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const res = await fetch("/api/upload", {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await res.json();
+
+    await fetch(`/api/todos/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        attachment: data.url,
+      }),
+    });
+
+    setTodo((prev: any) =>
+      prev.map((t: any) => (t._id === id ? { ...t, attachment: data.url } : t)),
+    );
+  };
+
+  const uploadFile = async (file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const res = await fetch("/api/upload", {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await res.json();
+    return data.url;
+  };
+
   const value = useMemo(
     () => ({
+      uploadFile,
+      handleFile,
       setDeadline,
       moveTodo,
       removeFromMyDay,
@@ -506,6 +547,8 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       moveToMyDay,
     }),
     [
+      uploadFile,
+      handleFile,
       setDeadline,
       moveTodo,
       removeFromMyDay,

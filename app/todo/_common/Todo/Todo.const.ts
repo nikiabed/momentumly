@@ -1,4 +1,4 @@
-import { ChangeEventHandler, Dispatch, SetStateAction } from "react";
+import { ChangeEvent, ChangeEventHandler, Dispatch, SetStateAction } from "react";
 import { GradientsKey } from "../Sidebar/Sidebar.const";
 import { v4 as uuidv4 } from "uuid";
 
@@ -83,7 +83,12 @@ export type Context = {
   setNewBoardKey?: React.Dispatch<React.SetStateAction<string | null>>;
   removeFromMyDay?: (id: string) => Promise<void>;
   moveTodo?: (todoId: string, boardKey: string) => Promise<void>;
-  setDeadline?: (id: string, date: string) => Promise<void>
+  setDeadline?: (id: string, date: string) => Promise<void>;
+  handleFile: (
+    e: ChangeEvent<HTMLInputElement, Element>,
+    id: string,
+  ) => Promise<void>;
+  uploadFile: (file: File) => Promise<any>
 };
 
 export const header = {

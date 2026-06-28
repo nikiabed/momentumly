@@ -14,15 +14,13 @@ import {
   Link21,
   Clock,
 } from "iconsax-reactjs";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { titleToKey } from "../../Sidebar";
 import { t } from "@/app/i18n/t";
 import { BOARD_KEYS } from "@/app/_utils";
 import DatePicker from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
-
-
 
 export const TodoEditInput = ({ list }: any) => {
   const {
@@ -35,11 +33,14 @@ export const TodoEditInput = ({ list }: any) => {
     boardList,
     moveTodo,
     setDeadline,
+    handleFile,
+    uploadFile,
   } = useTodoContext();
 
   const [isOpen, setOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDeadLineOpen, setDeadlineOpen] = useState(false);
+  const [linkOpen, setLinkOpen] = useState(false);
 
   const systemBoards = [
     BOARD_KEYS.ALL,
@@ -53,6 +54,10 @@ export const TodoEditInput = ({ list }: any) => {
   const moveTargets = [
     ...boardList.filter((b) => !systemBoards.includes(b.boardKey as any)),
   ];
+
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  console.log(list.attachment, list.title)
 
   return (
     <div className="w-full z-50">
@@ -148,11 +153,6 @@ export const TodoEditInput = ({ list }: any) => {
             >
               <Clock size={18} />
               <span>تعیین ددلاین</span>
-              {/* {list.deadline && (
-                <span>
-                  {new Date(list.deadline).toLocaleDateString("fa-IR")}
-                </span>
-              )} */}
             </div>
 
             {isDeadLineOpen && (
@@ -172,10 +172,32 @@ export const TodoEditInput = ({ list }: any) => {
             )}
           </div>
 
-          <button className="flex w-full items-center gap-3 px-4 py-3 cursor-pointer text-sm text-center justify-center hover:bg-black/5 transition">
+          <button
+            onClick={() => fileRef.current?.click()}
+            className="flex w-full items-center gap-3 px-4 py-3 cursor-pointer text-sm text-center justify-center hover:bg-black/5 transition"
+          >
             <Link21 size={18} />
             <span>افزودن لینک</span>
           </button>
+          <input
+            ref={fileRef}
+            type="file"
+            className="hidden"
+            onChange={async (e) => {
+              const file = e.target.files?.[0];
+              if (!file) return;
+              await handleFile(file, list._id);
+            }}
+          />
+          {list.attachment && (
+            <a
+              href={list.attachment}
+              target="_blank"
+              className="text-xs text-blue-500 underline"
+            >
+              فایل ضمیمه 📎
+            </a>
+          )}
 
           <div className="h-px bg-black/5" />
 

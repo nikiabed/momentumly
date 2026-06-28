@@ -9,13 +9,22 @@ export async function PATCH(req: Request, context: any) {
   const session = await auth();
   const body = await req.json();
 
-  const result = await Todo.findOneAndUpdate(
+  const result = await Todo.findByIdAndUpdate(
     {
       _id: id,
-      userId: session?.user?.id,
+      userId: session?.user?.id, // مهم
     },
-    { $set: body },
+    {
+      $set: {
+        attachment: body.attachment,
+      },
+    },
+    { new: true },
   );
+
+  if (!result) {
+    return Response.json({ error: "Todo not found" }, { status: 404 });
+  }
 
   return Response.json({ ok: true });
 }
