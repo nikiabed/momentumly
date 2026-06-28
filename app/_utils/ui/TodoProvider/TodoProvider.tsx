@@ -11,6 +11,7 @@ import { TodoContext } from "../../hooks";
 import { items, sidebar } from "@/app/todo/_common/Sidebar/Sidebar.const";
 import { useSession } from "next-auth/react";
 import { getDateKey } from "../../date";
+import { BOARD_KEYS } from "../../constants";
 
 export type Boards = {
   title: string;
@@ -171,6 +172,8 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
         status: false,
         isImportant: false,
         isEdit: false,
+        myDayDate:
+          activeBoard === BOARD_KEYS.MY_DAY ? getDateKey(new Date()) : null,
       }),
     });
 
@@ -361,7 +364,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       }),
     });
 
-    setNewBoardKey(key)
+    setNewBoardKey(key);
 
     setActiveBoard(key);
     await loadBoards();

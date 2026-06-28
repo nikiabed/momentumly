@@ -5,8 +5,8 @@ type Props = {
   data: {
     label: string;
     done: number;
-    total: number;
     score: number;
+    planned: number;
   }[];
   width: number;
   height: number;
@@ -24,7 +24,7 @@ export const LineChart: FC<Props> = ({ data, width, height }) => {
     if (data.length < 2) return;
 
     const values = data.map((d) => {
-      if (!d.total || d.total === 0) return 0;
+      if (!d.planned || d.planned === 0) return 0;
       return d.score;
     });
 
@@ -165,7 +165,7 @@ export const LineChart: FC<Props> = ({ data, width, height }) => {
       const d = data[i];
       const percent = Math.round(v);
 
-      ctx.fillText(`${d.done}/${d.total} (${percent}%)`, x, y - 12);
+      ctx.fillText(`${d.done}/${d.planned} (${percent}%)`, x, y - 12);
 
       // bottom label
       ctx.font = "16px dana";

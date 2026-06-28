@@ -70,7 +70,7 @@ export const ListItem = ({ focused }: { focused: any }) => {
     if (isImportant) return t.isImportant;
     if (isComplete) return t.status;
     if (isMyDay) {
-      return getDateKey(t.createdAt) === todayKey;
+      return t.myDayDate === todayKey;
     }
     return t.boardKey === currentBoard.boardKey;
   });
