@@ -17,7 +17,5 @@ export async function PATCH(req: Request, context: any) {
     { $set: body },
   );
 
-  console.log("UPDATED DOC:", result);
-
   return Response.json({ ok: true });
 }

@@ -196,6 +196,20 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     await loadTodos();
   }
 
+  const removeFromMyDay = async (id: string) => {
+    await fetch(`/api/todos/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        myDayDate: null,
+      }),
+    });
+
+    setTodo((prev) =>
+      prev.map((t) => (t._id === id ? { ...t, myDayDate: null } : t)),
+    );
+  };
+
   async function toggleImportant(id: string, value: boolean) {
     await fetch("/api/todos/important", {
       method: "PUT",
@@ -411,6 +425,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
 
   const value = useMemo(
     () => ({
+      removeFromMyDay,
       newBoardKey,
       setNewBoardKey,
       setSystemBoardsState,
@@ -450,6 +465,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       moveToMyDay,
     }),
     [
+      removeFromMyDay,
       newBoardKey,
       setNewBoardKey,
       setSystemBoardsState,

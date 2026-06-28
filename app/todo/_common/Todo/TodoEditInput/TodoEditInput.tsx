@@ -23,6 +23,7 @@ export const TodoEditInput = ({ list }: any) => {
     handleIsEdit,
     deleteTodo,
     moveToMyDay,
+    removeFromMyDay,
   } = useTodoContext();
 
   const [isOpen, setOpen] = useState(false);
@@ -111,6 +112,13 @@ export const TodoEditInput = ({ list }: any) => {
 
           <div className="h-px bg-black/5" />
 
+          <button
+            onClick={() => removeFromMyDay?.(list._id)}
+            className="flex w-full items-center gap-3 px-4 py-3 cursor-pointer text-sm text-center justify-center hover:bg-black/5 transition"
+          >
+            <Trash size={18} />
+            <span>حذف از امروز</span>
+          </button>
           <button
             onClick={() => deleteTodo?.(list._id)}
             className="flex w-full items-center gap-3 px-4 py-3 cursor-pointer text-sm text-center justify-center text-red-500 hover:bg-red-50 transition"
