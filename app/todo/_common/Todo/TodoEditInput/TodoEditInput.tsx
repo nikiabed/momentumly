@@ -18,6 +18,11 @@ import { useState } from "react";
 import { titleToKey } from "../../Sidebar";
 import { t } from "@/app/i18n/t";
 import { BOARD_KEYS } from "@/app/_utils";
+import DatePicker from "react-multi-date-picker";
+import persian from "react-date-object/calendars/persian";
+import persian_fa from "react-date-object/locales/persian_fa";
+
+
 
 export const TodoEditInput = ({ list }: any) => {
   const {
@@ -29,11 +34,12 @@ export const TodoEditInput = ({ list }: any) => {
     removeFromMyDay,
     boardList,
     moveTodo,
-    systemBoardsState,
+    setDeadline,
   } = useTodoContext();
 
   const [isOpen, setOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isDeadLineOpen, setDeadlineOpen] = useState(false);
 
   const systemBoards = [
     BOARD_KEYS.ALL,
@@ -49,7 +55,7 @@ export const TodoEditInput = ({ list }: any) => {
   ];
 
   return (
-    <div className="w-full">
+    <div className="w-full z-50">
       {/* Todo Row */}
       <div className="flex items-center gap-2 px-4 py-2">
         {list.status ? (
@@ -98,7 +104,7 @@ export const TodoEditInput = ({ list }: any) => {
 
       {/* Details Panel */}
       {isOpen && (
-        <div className=" rounded-2xl border border-black/5 bg-white shadow-sm flex justify-evenly">
+        <div className=" rounded-2xl border border-black/5 bg-white shadow-sm flex justify-evenly z-50">
           <button
             onClick={() => handleIsEdit?.(list._id)}
             className="flex w-full items-center gap-3 px-4 py-3 cursor-pointer text-sm text-center justify-center hover:bg-black/5 transition"
@@ -118,14 +124,14 @@ export const TodoEditInput = ({ list }: any) => {
           <button className="flex w-full items-center relative gap-3 px-4 py-3 cursor-pointer text-sm text-center justify-center hover:bg-black/5 transition">
             <Folder size={18} />
             <span onClick={() => setIsMenuOpen(!isMenuOpen)}>
-              انتقال به لیست دیگر
+              انتقال به لیست
             </span>
             {isMenuOpen && (
               <div className="absolute right-0 top-full bg-white shadow rounded-xl ">
                 {moveTargets?.map((board) => (
                   <button
                     key={board._id}
-                    onClick={() => moveTodo(list._id, board.boardKey)}
+                    onClick={() => moveTodo?.(list._id, board.boardKey)}
                     className="block w-full text-right px-3 py-2 hover:bg-slate-50 cursor-pointer"
                   >
                     {t(titleToKey[board.title]) || board.title}
@@ -135,10 +141,36 @@ export const TodoEditInput = ({ list }: any) => {
             )}
           </button>
 
-          <button className="flex w-full items-center gap-3 px-4 py-3 cursor-pointer text-sm text-center justify-center hover:bg-black/5 transition">
-            <Clock size={18} />
-            <span>تعیین ددلاین</span>
-          </button>
+          <div className="w-full">
+            <div
+              onClick={() => setDeadlineOpen(!isDeadLineOpen)}
+              className="flex w-full items-center gap-3 px-4 py-3 text-sm justify-center hover:bg-black/5 transition cursor-pointer"
+            >
+              <Clock size={18} />
+              <span>تعیین ددلاین</span>
+              {/* {list.deadline && (
+                <span>
+                  {new Date(list.deadline).toLocaleDateString("fa-IR")}
+                </span>
+              )} */}
+            </div>
+
+            {isDeadLineOpen && (
+              <div
+                className="absolute z-9999 bg-white border-none"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <DatePicker
+                  calendar={persian}
+                  locale={persian_fa}
+                  value={list.deadline}
+                  onChange={(date) => setDeadline?.(list._id, date?.toDate())}
+                  inputMode="none"
+                  inputClass="w-full px-3 py-1 text-[12px] shadow bg-transparent border-none outline-none text-center cursor-pointer hover:bg-black/10"
+                />
+              </div>
+            )}
+          </div>
 
           <button className="flex w-full items-center gap-3 px-4 py-3 cursor-pointer text-sm text-center justify-center hover:bg-black/5 transition">
             <Link21 size={18} />

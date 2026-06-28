@@ -23,6 +23,10 @@ const TodoSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  deadline: {
+    type: Date,
+    default: null,
+  },
 });
 
 export default mongoose.models.Todo || mongoose.model("Todo", TodoSchema);

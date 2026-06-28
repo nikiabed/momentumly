@@ -1,8 +1,9 @@
-"use client"
+"use client";
 import { DetailedHTMLProps, FC, HTMLAttributes, memo, useState } from "react";
 import { CloseCircle, TickCircle } from "iconsax-reactjs";
 import { useTodoContext } from "@/app/_utils/hooks";
 import { TodoEditInput } from "../TodoEditInput";
+import { getDateKey } from "@/app/_utils";
 
 type itemProps = DetailedHTMLProps<
   HTMLAttributes<HTMLDivElement>,
@@ -10,14 +11,40 @@ type itemProps = DetailedHTMLProps<
 > & {
   list: string[];
 };
+
+export const isMyDay = (todo: any, today: string) => {
+  if (!todo.deadline) return false;
+  return getDateKey(todo.deadline) === today;
+};
+
+export const isOverdue = (todo: any, today: string) => {
+  if (!todo.deadline) return false;
+  if (todo.status) return false;
+  return new Date(todo.deadline) < new Date(today);
+};
+
+export const getTodoState = (todo: any, today: string) => {
+  if (todo.status) return "done";
+  if (isOverdue(todo, today)) return "overdue";
+  if (isMyDay(todo, today)) return "today";
+  return "normal";
+};
+
 export const TodoListItems: FC<itemProps> = ({ list, ...props }: any) => {
   const [localTitle, setLocalTitle] = useState(list.title);
   const { handleUpdateTodo, handleIsEdit } = useTodoContext();
 
+  const todayKey = getDateKey(new Date()) || "normal";
+  const state = getTodoState(list, todayKey);
+
+  console.log(list.deadline, list.title, state)
+
   return (
     <div
       {...props}
-      className="flex justify-center items-center gap-1 bg-pink-100 rounded-lg hover:bg-pink-50 group py-2 pl-2"
+      className={`flex justify-center items-center gap-1 bg-pink-100 rounded-lg hover:bg-pink-50 group py-2 pl-2  ${state === "overdue" ? "bg-red-100 text-red-600" : ""}
+    ${state === "today" ? "!bg-blue-100" : ""}
+    ${state === "done" ? "opacity-50" : ""}`}
     >
       {list.isEdit ? (
         <form

@@ -445,8 +445,26 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     await loadTodos();
   };
 
+  const setDeadline = async (id: string, date: string) => {
+    const updateTodo = async (id: string, payload: any) => {
+      const res = await fetch(`/api/todos/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      return res.json();
+    };
+    await updateTodo(id, { deadline: date });
+
+    setTodo((prev) =>
+      prev.map((t) => (t._id === id ? { ...t, deadline: date } : t)),
+    );
+  };
+
   const value = useMemo(
     () => ({
+      setDeadline,
       moveTodo,
       removeFromMyDay,
       newBoardKey,
@@ -488,6 +506,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       moveToMyDay,
     }),
     [
+      setDeadline,
       moveTodo,
       removeFromMyDay,
       newBoardKey,

@@ -79,7 +79,7 @@ export const TodoList = ({
         onDragOver={handleOver}
         onDragEnter={handleDragEnter}
         onDragLeave={handleDragLeave}
-        className="flex flex-col gap-1 w-full"
+        className="flex flex-col gap-1 w-full "
       >
         {todo.map((list: any) => {
           return (

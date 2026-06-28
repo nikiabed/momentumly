@@ -82,7 +82,8 @@ export type Context = {
   newBoardKey?: string;
   setNewBoardKey?: React.Dispatch<React.SetStateAction<string | null>>;
   removeFromMyDay?: (id: string) => Promise<void>;
-  moveTodo: (todoId: string, boardKey: string) => Promise<void>;
+  moveTodo?: (todoId: string, boardKey: string) => Promise<void>;
+  setDeadline?: (id: string, date: string) => Promise<void>
 };
 
 export const header = {

@@ -23,7 +23,7 @@ export const Todo = () => {
   if (loading)
     return (
       <div
-        className={`bg-gray-300 overflow-hidden flex-4 h-screen w-full py-5`}
+        className={`bg-gray-300 flex-4 overflow-y-auto h-screen w-full py-5`}
       ></div>
     );
   return active ? <Board item={active} /> : null;
