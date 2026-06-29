@@ -1,6 +1,10 @@
 import { getDateKey } from "./date";
 
-export const buildWeeklyProgress = (todos: any[], weekOffset = 0) => {
+export const buildWeeklyProgress = (
+  todos: any[],
+  weekOffset = 0,
+  compact = false,
+) => {
   const days = [];
 
   const today = new Date();
@@ -19,10 +23,7 @@ export const buildWeeklyProgress = (todos: any[], weekOffset = 0) => {
     const dayTodos = todos.filter((t) => t.myDayDate === dateKey);
 
     const done = dayTodos.filter(
-      (t) =>
-        t.status &&
-        t.completedAt &&
-        getDateKey(t.completedAt) === dateKey
+      (t) => t.status && t.completedAt && getDateKey(t.completedAt) === dateKey,
     ).length;
 
     const planned = dayTodos.length;
@@ -30,9 +31,12 @@ export const buildWeeklyProgress = (todos: any[], weekOffset = 0) => {
     const ratio = planned === 0 ? 0 : done / planned;
 
     const score = Math.round(ratio * 80) + Math.min(planned, 10) * 2;
-
+    const label = compact
+      ? day.toLocaleDateString("fa-IR", { weekday: "narrow" })
+      : day.toLocaleDateString("fa-IR", { weekday: "short" });
+      
     days.push({
-      label: day.toLocaleDateString("fa-IR", { weekday: "short" }),
+      label,
       done,
       planned,
       score,

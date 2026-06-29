@@ -43,7 +43,6 @@ export const LineChart: FC<Props> = ({ data, width, height }) => {
     const stepX = chartWidth / (data.length - 1);
 
     const mapX = (i: number) => width - rightPadding - i * stepX;
-
     const mapY = (v: number) => padding + chartHeight - (v / 100) * chartHeight;
 
     // BG
@@ -70,7 +69,7 @@ export const LineChart: FC<Props> = ({ data, width, height }) => {
     }
 
     // LINE
-    const curveStrength = 0.25; // 👈 اینو کم و زیاد کن (0 تا 1)
+    const curveStrength = 0.25;
 
     ctx.beginPath();
 
@@ -79,18 +78,11 @@ export const LineChart: FC<Props> = ({ data, width, height }) => {
     for (let i = 1; i < values.length; i++) {
       const x = mapX(i);
       const y = mapY(values[i]);
-
       const prevX = mapX(i - 1);
       const prevY = mapY(values[i - 1]);
-
       const nextX = mapX(i + 1) ?? x;
-      const nextY = mapY(values[i + 1]) ?? y;
-
-      // کنترل شدت curve
       const cp1X = prevX + (x - prevX) * curveStrength;
-
       const cp2X = x - (nextX - x) * curveStrength;
-
       ctx.bezierCurveTo(cp1X, prevY, cp2X, y, x, y);
     }
 
@@ -115,8 +107,6 @@ export const LineChart: FC<Props> = ({ data, width, height }) => {
       const prevY = mapY(values[i - 1]);
 
       const nextX = mapX(i + 1) ?? x;
-      const nextY = mapY(values[i + 1]) ?? y;
-
       const curveStrength = 0.3;
 
       const cp1X = prevX + (x - prevX) * curveStrength;
@@ -152,7 +142,7 @@ export const LineChart: FC<Props> = ({ data, width, height }) => {
       ctx.fill();
       const purple = "#8b5cf6";
       ctx.strokeStyle = purple;
-      ctx.lineWidth = 3;
+      ctx.lineWidth =1;
 
       ctx.stroke();
 
@@ -164,7 +154,12 @@ export const LineChart: FC<Props> = ({ data, width, height }) => {
         "--font-sansx",
       );
 
-      ctx.font = `700 13px ${font}`;
+      if (width > 420) {
+        ctx.font = `700 13px ${font}`;
+      } else{
+        ctx.font = `700 5px ${font}`;
+        
+      }
       ctx.textAlign = "center";
 
       const d = data[i];
@@ -173,7 +168,11 @@ export const LineChart: FC<Props> = ({ data, width, height }) => {
       ctx.fillText(`${d.done}/${d.planned} (${percent}%)`, x, y - 12);
 
       // bottom label
-      ctx.font = "16px dana";
+      if (width > 420) {
+        ctx.font = "16px dana";
+      } else {
+        ctx.font = "13px dana";
+      }
       ctx.fillStyle = "#475569";
       ctx.fillText(data[i].label, x, height - 15);
     });

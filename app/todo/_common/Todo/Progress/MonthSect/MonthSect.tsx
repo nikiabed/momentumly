@@ -72,7 +72,7 @@ const MonthSect = () => {
   );
 
   return (
-    <div className="flex gap-6 justify-center">
+    <div className="flex flex-col md:flex-row gap-6 justify-center">
       <div className="bg-white rounded-3xl shadow p-5 flex flex-col gap-2 flex-1">
         <h2 className="text-xl font-semibold">سطح رشدت</h2>
         <div className="flex items-center justify-between">

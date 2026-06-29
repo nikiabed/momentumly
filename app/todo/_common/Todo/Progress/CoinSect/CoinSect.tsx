@@ -29,7 +29,7 @@ const CoinSect = () => {
   return (
     <div
       className="
-      flex justify-between items-center
+      flex flex-col lg:flex-row justify-between items-center
       bg-white
       shadow
       rounded-4xl

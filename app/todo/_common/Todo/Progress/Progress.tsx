@@ -19,10 +19,12 @@ type Props = {
 export const Progress = ({ progress = 0, xp = 0, streak = 0 }: Props) => {
   const { todo } = useTodoContext();
   const [weekOffset, setWeekOffset] = useState(0);
-  const weeklyData = buildWeeklyProgress(todo, weekOffset);
+  const [chartWidth, setChartWidth] = useState(0);
+  const isMobile = chartWidth < 500;
+  
+  const weeklyData = buildWeeklyProgress(todo, weekOffset, isMobile);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const [chartWidth, setChartWidth] = useState(0);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -43,7 +45,7 @@ export const Progress = ({ progress = 0, xp = 0, streak = 0 }: Props) => {
   };
 
   return (
-    <div className=" flex flex-col gap-5 w-full px-6 md:px-15">
+    <div className="flex flex-col gap-4 w-full px-4 md:px-10 lg:px-16">
       <CoinSect />
       <FunctionSect />
 
