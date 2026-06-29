@@ -21,38 +21,53 @@ export type TodoType = {
 
 export type TodoListType = TodoType[];
 
-export type ListItems = ListItemProps[];
-
-export type ListItemProps = {
+export type Boards = {
   title: string;
   state: boolean;
   _id: string;
   icon: string;
-  color: GradientsKey;
+  color: string;
+  boardKey: string;
+  order?: number;
+  editable: boolean;
+  isEdit: boolean;
+  filter: (todo: any) => any;
+  theme: string;
+};
+
+export type ListItems = Boards[];
+
+export type ListItemProps = {
+  _id: string;
+  title: string;
+  state: boolean;
+  icon: string;
+  color: string;
   boardKey: string;
   theme: string;
-  filter: (todo: TodoType) => any;
+  isEdit?: boolean;
+  editable?: boolean;
+  filter: (todo: TodoType) => boolean;
+  order?: number;
 };
 
 export type Context = {
   todo: TodoListType;
   setTodo?: any;
-  inputValue?: string | undefined;
-  addTodo?: (title: string, item: ListItemProps) => void;
-  handleChange?:
-    | ChangeEventHandler<HTMLInputElement, HTMLInputElement>
-    | undefined;
+  inputValue?: string | null;
+  addTodo?: (title: string, item: Boards) => void;
+  handleChange?: ChangeEventHandler<HTMLInputElement, HTMLInputElement> | null;
   deleteTodo?: (id: string) => Promise<void>;
   changeTaskState?: (index: string) => void;
   handleSubmit?: (e: any, item: ListItemProps) => void;
   isEdit?: boolean;
   setEdit?: any;
-  editedTask?: string | undefined;
+  editedTask?: string | null;
   handleNewChange?: (id: string, title: string) => Promise<void>;
   setEditedTask?: any;
   handleEditedTask?: (e: any) => void;
-  focused: ListItems;
-  setFocused?: Dispatch<SetStateAction<ListItems>>;
+  focused: Boards[];
+  setFocused?: Dispatch<SetStateAction<Boards[]>>;
   handleIsEdit?: (index: string) => void;
   handleImportant?: (index: string) => void;
   handleBoardSubmit?: (index: string, text: string) => void;
@@ -64,37 +79,32 @@ export type Context = {
   handleBoardEditable?: (index: string) => void;
   removeList?: (index: string) => void;
   moveToMyDay?: (index: string) => void;
-  boardList: ListItemProps[];
-  setBoardList?: Dispatch<SetStateAction<ListItemProps[]>>;
+  boardList: Boards[];
+  setBoardList?: Dispatch<SetStateAction<Boards[]>>;
   loadBoards?: () => Promise<void>;
   createBoard?: (name: string) => void;
   activeBoard?: string;
   setActiveBoard?: Dispatch<SetStateAction<string>>;
-  selectBoard?: (board: ListItemProps, id: string) => void;
+  selectBoard?: (board: Boards, id: string) => void;
   toggleImportant?: (id: string, value: boolean) => Promise<void>;
   toggleStatus?: (id: string, value: boolean) => Promise<void>;
   loading?: boolean;
-  finalBoard?: ListItemProps[];
+  finalBoard?: Boards[];
   searchText?: string;
   setSearchText?: Dispatch<SetStateAction<string>>;
-  uiBoard?: ListItemProps[];
+  uiBoard?: Boards[];
   saveBoard?: (id: string) => Promise<void>;
   handleUpdateTodo?: (id: string, title: string) => Promise<void>;
-  systemBoardsState?: Record<string, ListItemProps>;
-  setSystemBoardsState?: Dispatch<
-    SetStateAction<Record<string, ListItemProps>>
-  >;
-  newBoardKey?: string;
+  systemBoardsState?: Record<string, Boards>;
+  setSystemBoardsState?: Dispatch<SetStateAction<Record<string, Boards>>>;
+  newBoardKey?: string | null;
   setNewBoardKey?: React.Dispatch<React.SetStateAction<string | null>>;
   removeFromMyDay?: (id: string) => Promise<void>;
   moveTodo?: (todoId: string, boardKey: string) => Promise<void>;
   setDeadline?: (id: string, date: string) => Promise<void>;
-  handleFile: (
-    e: ChangeEvent<HTMLInputElement, Element>,
-    id: string,
-  ) => Promise<void>;
-  uploadFile: (file: File) => Promise<any>;
-  removeLink: (id: string) => Promise<void>;
+  handleFile?: (file: File, id: string) => Promise<void>;
+  uploadFile?: (file: File) => Promise<any>;
+  removeLink?: (id: string) => Promise<void>;
 };
 
 export const header = {

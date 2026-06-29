@@ -17,6 +17,7 @@ const Summary = () => {
   const coinsByDay: Record<string, number> = {};
   completed.forEach((t: any) => {
     const key = getDateKey(t.createdAt);
+    if (!key) return;
     coinsByDay[key] = (coinsByDay[key] || 0) + (t.status ? 10 : 0);
   });
 
@@ -69,7 +70,9 @@ const Summary = () => {
           </span>
 
           <div className="text-center">
-            <h2 className="text-gray-500 text-sm font-semibold">بیشترین سکه در روز</h2>
+            <h2 className="text-gray-500 text-sm font-semibold">
+              بیشترین سکه در روز
+            </h2>
             <h1 className="text-3xl font-semibold">{toFa(maxCoins)}</h1>
           </div>
         </div>

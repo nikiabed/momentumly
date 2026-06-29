@@ -16,7 +16,7 @@ type Props = {
   streak?: number;
 };
 
-export const Progress = ({ progress = 0, xp = 0, streak = 0 }: Props) => {
+export const Progress = () => {
   const { todo } = useTodoContext();
   const [weekOffset, setWeekOffset] = useState(0);
   const [chartWidth, setChartWidth] = useState(0);

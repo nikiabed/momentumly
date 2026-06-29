@@ -17,11 +17,11 @@ export const TodoInput: FC<InputProps> = ({item}) => {
           <Add size={20} />
         </button>
         <input
-          onChange={handleChange}
+          onChange={handleChange ?? undefined}
           type="text"
           className=" p-2 rounded-lg bg-pink-100 group-hover:bg-white w-full text-black focus:outline-none focus:bg-white"
           placeholder={input.placeholder}
-          value={inputValue}
+          value={inputValue ?? ""}
           name="task"
         />
       </form>

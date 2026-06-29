@@ -167,7 +167,12 @@ export const TodoEditInput = ({ list }: any) => {
                   calendar={persian}
                   locale={persian_fa}
                   value={list.deadline}
-                  onChange={(date) => setDeadline?.(list._id, date?.toDate())}
+                  onChange={(date) => {
+                    const d = date?.toDate?.();
+                    if (!d) return;
+
+                    void setDeadline?.(list._id, d.toDateString());
+                  }}
                   inputMode="none"
                   inputClass="w-full px-3 py-1 text-[12px] shadow bg-transparent border-none outline-none text-center cursor-pointer hover:bg-black/10"
                 />
@@ -190,7 +195,7 @@ export const TodoEditInput = ({ list }: any) => {
               onChange={async (e) => {
                 const file = e.target.files?.[0];
                 if (!file) return;
-                await handleFile(file, list._id);
+                await handleFile?.(file, list._id);
               }}
             />
             {list.attachment && (

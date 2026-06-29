@@ -5,7 +5,6 @@ import { ListItemProps, TodoListType } from "../Todo/Todo.const";
 import { ItemIcon } from "./ItemIcon";
 import { Palette } from "./Palette";
 import Coins from "./Coins/Coins";
-import { getTheme } from "../Todo";
 
 export const themeTextColor: Record<string, string> = {
   fire: "text-white",
