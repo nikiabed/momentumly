@@ -501,8 +501,23 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     return data.url;
   };
 
+  const removeLink = async (id: string) => {
+    await fetch(`/api/todos/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        attachment: "",
+      }),
+    });
+
+    setTodo((prev) => prev.map((t) => (t._id === id ? { ...t, attachment: "" } : t)));
+  };
+
   const value = useMemo(
     () => ({
+      removeLink,
       uploadFile,
       handleFile,
       setDeadline,
@@ -547,6 +562,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       moveToMyDay,
     }),
     [
+      removeLink,
       uploadFile,
       handleFile,
       setDeadline,

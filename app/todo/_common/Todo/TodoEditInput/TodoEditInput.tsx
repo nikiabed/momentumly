@@ -34,7 +34,7 @@ export const TodoEditInput = ({ list }: any) => {
     moveTodo,
     setDeadline,
     handleFile,
-    uploadFile,
+    removeLink,
   } = useTodoContext();
 
   const [isOpen, setOpen] = useState(false);
@@ -57,7 +57,7 @@ export const TodoEditInput = ({ list }: any) => {
 
   const fileRef = useRef<HTMLInputElement>(null);
 
-  console.log(list.attachment, list.title)
+  console.log(list.attachment, list.title);
 
   return (
     <div className="w-full z-50">
@@ -128,9 +128,7 @@ export const TodoEditInput = ({ list }: any) => {
 
           <button className="flex w-full items-center relative gap-3 px-4 py-3 cursor-pointer text-sm text-center justify-center hover:bg-black/5 transition">
             <Folder size={18} />
-            <span onClick={() => setIsMenuOpen(!isMenuOpen)}>
-              انتقال به لیست
-            </span>
+            <span onClick={() => setIsMenuOpen(!isMenuOpen)}>انتقال</span>
             {isMenuOpen && (
               <div className="absolute right-0 top-full bg-white shadow rounded-xl ">
                 {moveTargets?.map((board) => (
@@ -146,18 +144,18 @@ export const TodoEditInput = ({ list }: any) => {
             )}
           </button>
 
-          <div className="w-full">
+          <div className="w-full flex">
             <div
               onClick={() => setDeadlineOpen(!isDeadLineOpen)}
-              className="flex w-full items-center gap-3 px-4 py-3 text-sm justify-center hover:bg-black/5 transition cursor-pointer"
+              className="flex w-full items-center gap-3 px-4 py-3 text-sm text-center justify-center hover:bg-black/5 transition cursor-pointer"
             >
               <Clock size={18} />
-              <span>تعیین ددلاین</span>
+              <span>ددلاین</span>
             </div>
 
             {isDeadLineOpen && (
               <div
-                className="absolute z-9999 bg-white border-none"
+                className="absolute z-9999 bg-white border-none text-center"
                 onClick={(e) => e.stopPropagation()}
               >
                 <DatePicker
@@ -172,32 +170,38 @@ export const TodoEditInput = ({ list }: any) => {
             )}
           </div>
 
-          <button
-            onClick={() => fileRef.current?.click()}
-            className="flex w-full items-center gap-3 px-4 py-3 cursor-pointer text-sm text-center justify-center hover:bg-black/5 transition"
-          >
-            <Link21 size={18} />
-            <span>افزودن لینک</span>
-          </button>
-          <input
-            ref={fileRef}
-            type="file"
-            className="hidden"
-            onChange={async (e) => {
-              const file = e.target.files?.[0];
-              if (!file) return;
-              await handleFile(file, list._id);
-            }}
-          />
-          {list.attachment && (
-            <a
-              href={list.attachment}
-              target="_blank"
-              className="text-xs text-blue-500 underline"
+          <div className="flex w-full items-center gap-3 px-4 py-3 cursor-pointer text-sm text-center justify-center hover:bg-black/5 transition">
+            <div onClick={() => fileRef.current?.click()} className="flex gap-3">
+              <Link21 size={18} />
+              <span>لینک</span>
+            </div>
+            <input
+              ref={fileRef}
+              type="file"
+              className="hidden"
+              onChange={async (e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+                await handleFile(file, list._id);
+              }}
+            />
+            {list.attachment && (
+              <a
+                href={list.attachment}
+                target="_blank"
+                className="text-xs text-blue-500 underline"
+              >
+                فایل 📎
+              </a>
+            )}
+            {list.attachment && 
+            <button
+              onClick={() => removeLink?.(list._id)}
+              className="text-gray-400 hover:text-red-500 cursor-pointer"
             >
-              فایل ضمیمه 📎
-            </a>
-          )}
+              ✕
+            </button>}
+          </div>
 
           <div className="h-px bg-black/5" />
 

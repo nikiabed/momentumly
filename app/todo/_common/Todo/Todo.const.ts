@@ -1,4 +1,9 @@
-import { ChangeEvent, ChangeEventHandler, Dispatch, SetStateAction } from "react";
+import {
+  ChangeEvent,
+  ChangeEventHandler,
+  Dispatch,
+  SetStateAction,
+} from "react";
 import { GradientsKey } from "../Sidebar/Sidebar.const";
 import { v4 as uuidv4 } from "uuid";
 
@@ -88,7 +93,8 @@ export type Context = {
     e: ChangeEvent<HTMLInputElement, Element>,
     id: string,
   ) => Promise<void>;
-  uploadFile: (file: File) => Promise<any>
+  uploadFile: (file: File) => Promise<any>;
+  removeLink: (id: string) => Promise<void>;
 };
 
 export const header = {
