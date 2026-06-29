@@ -1,30 +1,45 @@
+import { NextResponse } from "next/server";
 import { connectDB } from "@/app/lib/mongodb";
-import Todo from "@/app/models/Todo";
 import { auth } from "@/app/lib/auth";
+import Todo from "@/app/models/Todo";
 
 export async function GET() {
   await connectDB();
+
   const session = await auth();
-  const todos = await Todo.find({ userId: session?.user?.id });
-  return Response.json(todos);
+
+  if (!session?.user?.id) {
+    return NextResponse.json(
+      { message: "Unauthorized" },
+      { status: 401 }
+    );
+  }
+
+  const todos = await Todo.find({
+    userId: session.user.id,
+  });
+
+  return NextResponse.json(todos);
 }
 
 export async function POST(req: Request) {
   await connectDB();
 
   const session = await auth();
-  console.log("POST SESSION:", session);
+
+  if (!session?.user?.id) {
+    return NextResponse.json(
+      { message: "Unauthorized" },
+      { status: 401 }
+    );
+  }
 
   const body = await req.json();
-  console.log("POST BODY:", body);
 
   const result = await Todo.create({
     ...body,
-    userId: session?.user?.id,
-    createdAt: new Date(),
+    userId: session.user.id,
   });
 
-  console.log("CREATED TODO:", result);
-
-  return Response.json(result);
+  return NextResponse.json(result);
 }

@@ -9,7 +9,7 @@ export async function PUT(req: Request) {
 
     const session = await auth();
 
-    if (!session) {
+    if (!session?.user?.id) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
@@ -22,15 +22,13 @@ export async function PUT(req: Request) {
     const updated = await Todo.findOneAndUpdate(
       {
         _id: id,
-        userId: session?.user?.id,
+        userId: session.user.id,
       },
       {
         status,
         completedAt: status ? new Date() : null,
       },
-      {
-        new: true,
-      },
+      { new: true },
     );
 
     if (!updated) {
@@ -42,6 +40,8 @@ export async function PUT(req: Request) {
       todo: updated,
     });
   } catch (err) {
+    console.error("PUT status error:", err);
+
     return NextResponse.json({ message: "Server error" }, { status: 500 });
   }
 }

@@ -9,7 +9,7 @@ export async function DELETE(req: Request) {
 
     const session = await auth();
 
-    if (!session) {
+    if (!session?.user?.id) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
@@ -21,18 +21,16 @@ export async function DELETE(req: Request) {
 
     const deleted = await Board.findOneAndDelete({
       _id: id,
-      userId: session?.user?.id,
+      userId: session.user.id,
     });
 
     if (!deleted) {
       return NextResponse.json({ message: "Board not found" }, { status: 404 });
     }
 
-    return NextResponse.json({
-      ok: true,
-    });
+    return NextResponse.json({ ok: true });
   } catch (err) {
-    console.error(err);
+    console.error("DELETE board error:", err);
 
     return NextResponse.json({ message: "Server error" }, { status: 500 });
   }
