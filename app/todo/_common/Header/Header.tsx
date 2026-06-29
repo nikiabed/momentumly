@@ -5,6 +5,7 @@ import { ListItemProps, TodoListType } from "../Todo/Todo.const";
 import { ItemIcon } from "./ItemIcon";
 import { Palette } from "./Palette";
 import Coins from "./Coins/Coins";
+import { Menu } from "iconsax-reactjs";
 
 export const themeTextColor: Record<string, string> = {
   fire: "text-white",
@@ -39,7 +40,7 @@ export const Header = ({
 
   return (
     <header
-      className={`flex justify-between items-center ${
+      className={`flex md:justify-between items-start flex-col md:flex-row gap-2 ${
         themeTextColor[item.theme]
       }`}
     >
@@ -47,6 +48,7 @@ export const Header = ({
         <div
           className={`flex gap-5 items-center ${themeTextColor[item.theme]}`}
         >
+          
           <ItemIcon item={item} size={30} />
           <h2 className="font-semibold text-3xl">
             {t(titleToKey[item.title] ?? item.title)}
@@ -57,7 +59,7 @@ export const Header = ({
         )}
       </div>
 
-      <div className="flex gap-2 items-center">
+      <div className="flex gap-3 items-center w-full md:w-auto justify-between">
         <Coins item={item} filterTodo={todo} />
         <Palette item={item} />
       </div>

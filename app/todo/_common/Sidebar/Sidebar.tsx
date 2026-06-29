@@ -9,12 +9,22 @@ import { sidebar } from "./Sidebar.const";
 import { signOut } from "next-auth/react";
 import { useSession } from "next-auth/react";
 
-export const Sidebar = () => {
+export const Sidebar = ({ sidebarOpen, setSidebarOpen }: any) => {
   const { handleNewList, uiBoard } = useTodoContext();
   const { data } = useSession();
 
   return (
-    <div className="overflow-y-hidden h-screen pt-5 px-3 bg-pink-50 flex flex-1 flex-col gap-2 justify-between">
+    <div
+      className={`
+fixed top-0 right-0 h-screen w-72 z-600
+bg-pink-50 flex flex-col gap-2 justify-between
+transition-transform duration-300
+
+md:static md:translate-x-0 pt-15 p-2 md:p-2
+
+${sidebarOpen ? "translate-x-0" : "translate-x-full"}
+`}
+    >
       <div className="shrink-0">
         <div className="flex gap-2 items-center">
           {data?.user?.image && (
@@ -38,7 +48,7 @@ export const Sidebar = () => {
         {uiBoard?.map((list: ListItemProps) => {
           const isProgress = list.boardKey === "progress";
           return (
-            <div key={list._id}>
+            <div key={list._id} onClick={() => setSidebarOpen(!sidebarOpen)}>
               <ListItem key={list._id} focused={list} />
               {isProgress && <div className=" mt-2 border-t border-gray-200" />}
             </div>

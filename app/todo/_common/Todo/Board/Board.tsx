@@ -12,8 +12,10 @@ import {
 import { colors, Header } from "../../Header";
 import { Lists } from "../Lists";
 import { ListItemProps } from "../Todo.const";
+import { HamburgerMenu, Menu } from "iconsax-reactjs";
 
-export const Board = ({ item }: any) => {
+export const Board = ({ item, sidebarOpen, setSidebarOpen }: any) => {
+
   const { todo, setTodo, boardList, searchText, systemBoardsState } =
     useTodoContext();
 
@@ -56,7 +58,7 @@ export const Board = ({ item }: any) => {
       (t) =>
         searchText && t.title.toLowerCase().includes(searchText.toLowerCase()),
     );
-  
+
   const isImage = currentBoard?.theme?.startsWith("img:");
 
   const bgStyle = isImage
@@ -73,8 +75,20 @@ export const Board = ({ item }: any) => {
 
   return (
     <div
-      className={` flex-4 h-screen justify-center overflow-y-auto  w-full ${bgClass}`} style={bgStyle}
+      className={` flex-4 h-screen justify-center overflow-y-auto relative w-full ${bgClass}`}
+      style={bgStyle}
     >
+      <button
+        className="md:hidden absolute  top-5
+      right-4
+      z-600
+      shadow
+      rounded-xl
+      p-1"
+        onClick={() => setSidebarOpen(!sidebarOpen)}
+      >
+        <HamburgerMenu size={24} />
+      </button>
       <div className="flex gap-4 flex-col h-screen py-5">
         <div className="shrink-0 px-15 flex flex-col gap-4 ">
           <Header item={currentBoard} todo={filteredTodos} />

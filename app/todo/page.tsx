@@ -1,7 +1,7 @@
 import { Metadata } from "next";
-import { Sidebar, Todo } from "./_common";
 import { auth } from "@/app/lib/auth";
 import { redirect } from "next/navigation";
+import TodoLayout from "./_common/Todo/TodoLayout";
 
 export const metadata: Metadata = {
   title: "Todo App",
@@ -15,10 +15,5 @@ export default async function todoPage() {
     redirect("/login");
   }
 
-  return (
-    <div className="h-screen w-full flex ">
-      <Sidebar />
-      <Todo />
-    </div>
-  );
+  return <TodoLayout />;
 }

@@ -143,7 +143,7 @@ export const Palette = ({ item }: { item: ListItemProps }) => {
         onClick={togglePalette}
       />
       {isOpen && (
-        <div className="absolute left-0 w-70 z-50 bg-rose-50 text-gray-600 rounded shadow flex flex-col flex-wrap gap-4 p-4">
+        <div className="absolute left-0 w-70 z-500 bg-rose-50 text-gray-600 rounded shadow flex flex-col flex-wrap gap-4 p-4">
           <div className="pr-2">تم ها</div>
           <div className="flex gap-2 flex-wrap p-2">
             {colors.map((theme: any, i: number) => (

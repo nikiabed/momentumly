@@ -109,7 +109,10 @@ export const TodoEditInput = ({ list }: any) => {
 
       {/* Details Panel */}
       {isOpen && (
-        <div className=" rounded-2xl border border-black/5 bg-white shadow-sm flex justify-evenly z-50">
+        <div
+          className=" rounded-2xl border border-black/5 bg-white shadow-sm flex flex-col
+  overflow-hidden md:justify-evenly z-50 md:flex-row md:overflow-auto"
+        >
           <button
             onClick={() => handleIsEdit?.(list._id)}
             className="flex w-full items-center gap-3 px-4 py-3 cursor-pointer text-sm text-center justify-center hover:bg-black/5 transition"
@@ -118,13 +121,15 @@ export const TodoEditInput = ({ list }: any) => {
             <span>ویرایش</span>
           </button>
 
-          <button
-            onClick={() => moveToMyDay?.(list._id)}
-            className="flex w-full items-center gap-3 px-4 py-3 cursor-pointer text-sm text-center justify-center hover:bg-black/5 transition"
-          >
-            <Calendar size={18} />
-            <span>انتقال به امروز</span>
-          </button>
+          {!list.myDayDate && (
+            <button
+              onClick={() => moveToMyDay?.(list._id)}
+              className="flex w-full items-center gap-3 px-4 py-3 cursor-pointer text-sm text-center justify-center hover:bg-black/5 transition"
+            >
+              <Calendar size={18} />
+              <span>انتقال به امروز</span>
+            </button>
+          )}
 
           <button className="flex w-full items-center relative gap-3 px-4 py-3 cursor-pointer text-sm text-center justify-center hover:bg-black/5 transition">
             <Folder size={18} />
@@ -171,7 +176,10 @@ export const TodoEditInput = ({ list }: any) => {
           </div>
 
           <div className="flex w-full items-center gap-3 px-4 py-3 cursor-pointer text-sm text-center justify-center hover:bg-black/5 transition">
-            <div onClick={() => fileRef.current?.click()} className="flex gap-3">
+            <div
+              onClick={() => fileRef.current?.click()}
+              className="flex gap-3"
+            >
               <Link21 size={18} />
               <span>لینک</span>
             </div>
@@ -194,24 +202,25 @@ export const TodoEditInput = ({ list }: any) => {
                 فایل 📎
               </a>
             )}
-            {list.attachment && 
-            <button
-              onClick={() => removeLink?.(list._id)}
-              className="text-gray-400 hover:text-red-500 cursor-pointer"
-            >
-              ✕
-            </button>}
+            {list.attachment && (
+              <button
+                onClick={() => removeLink?.(list._id)}
+                className="text-gray-400 hover:text-red-500 cursor-pointer"
+              >
+                ✕
+              </button>
+            )}
           </div>
 
-          <div className="h-px bg-black/5" />
-
-          <button
-            onClick={() => removeFromMyDay?.(list._id)}
-            className="flex w-full items-center gap-3 px-4 py-3 cursor-pointer text-sm text-center justify-center hover:bg-black/5 transition"
-          >
-            <Trash size={18} />
-            <span>حذف از امروز</span>
-          </button>
+          {list.myDayDate && (
+            <button
+              onClick={() => removeFromMyDay?.(list._id)}
+              className="flex w-full items-center gap-3 px-4 py-3 cursor-pointer text-sm text-center justify-center hover:bg-black/5 transition"
+            >
+              <Trash size={18} />
+              <span>حذف از امروز</span>
+            </button>
+          )}
           <button
             onClick={() => deleteTodo?.(list._id)}
             className="flex w-full items-center gap-3 px-4 py-3 cursor-pointer text-sm text-center justify-center text-red-500 hover:bg-red-50 transition"

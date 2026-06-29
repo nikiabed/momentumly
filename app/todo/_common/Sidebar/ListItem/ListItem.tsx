@@ -82,7 +82,7 @@ export const ListItem = ({ focused }: { focused: any }) => {
       <div
         onClick={() => selectBoard?.(focused, focused._id)}
         onDoubleClick={() => handleBoardEditable?.(focused._id)}
-        className={` justify-between rounded cursor-pointer w-full flex gap-1 items-center group hover:bg-black/5 hover:rounded ${activeBoard === focused.boardKey ? "bg-black/5" : "bg-none"} `}
+        className={` justify-between rounded cursor-pointer md:w-full flex gap-1 items-center group hover:bg-black/5 hover:rounded ${activeBoard === focused.boardKey ? "bg-black/5" : "bg-none"} `}
       >
         <div
           className={`flex py-2 items-center gap-2 before:border-r-4 before:border-transparent before:rounded before:h-5 ${activeBoard === focused.boardKey ? " before:border-rose-700!" : ""}`}

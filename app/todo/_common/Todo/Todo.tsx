@@ -3,7 +3,7 @@
 import { useTodoContext } from "@/app/_utils/hooks/useTodoContext";
 import { Board } from "./Board";
 
-export const Todo = () => {
+export const Todo = ({ sidebarOpen, setSidebarOpen }: any) => {
   const { loading, uiBoard, searchText, activeBoard } = useTodoContext();
   const searchView = {
     _id: "search",
@@ -14,7 +14,7 @@ export const Todo = () => {
     editable: false,
     isEdit: false,
     order: 0,
-    theme: "purple"
+    theme: "purple",
   };
   const active = searchText
     ? searchView
@@ -23,8 +23,16 @@ export const Todo = () => {
   if (loading)
     return (
       <div
-        className={`bg-gray-300 flex-4 overflow-y-auto h-screen w-full py-5`}
+        className={`bg-gray-300  overflow-y-auto h-screen w-full py-5`}
       ></div>
     );
-  return active ? <Board item={active} /> : null;
+
+    console.log(sidebarOpen,"sidebar")
+  return active ? (
+    <Board
+      item={active}
+      sidebarOpen={sidebarOpen}
+      setSidebarOpen={setSidebarOpen}
+    />
+  ) : null;
 };
