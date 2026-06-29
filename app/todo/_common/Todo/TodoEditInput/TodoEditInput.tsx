@@ -62,7 +62,7 @@ export const TodoEditInput = ({ list }: any) => {
   return (
     <div className="w-full z-50">
       {/* Todo Row */}
-      <div className="flex items-center gap-2 px-4 py-2">
+      <div className="flex items-center gap-2 px-4 py-2  min-w-0 text-wrap">
         {list.status ? (
           <TickCircle
             variant="Bold"
@@ -78,12 +78,12 @@ export const TodoEditInput = ({ list }: any) => {
           />
         )}
 
-        <button
+        <div
           onClick={() => setOpen((prev) => !prev)}
-          className="flex flex-1 items-center justify-between text-right cursor-pointer"
+          className="flex flex-1 min-w-0 items-center justify-between text-right cursor-pointer"
         >
           <span
-            className={`${list.status ? "line-through text-black/30" : ""} `}
+            className={`${list.status ? "line-through text-black/30" : ""} wrap-break-word flex-1 min-w-0`}
           >
             {list.title}
           </span>
@@ -93,7 +93,7 @@ export const TodoEditInput = ({ list }: any) => {
           ) : (
             <ArrowDown2 size={18} className="text-black/40" />
           )}
-        </button>
+        </div>
 
         <button
           className="cursor-pointer"

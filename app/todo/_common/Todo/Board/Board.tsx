@@ -22,7 +22,7 @@ export const Board = ({ item, sidebarOpen, setSidebarOpen }: any) => {
   const normalize = (key?: string) => key?.toLowerCase().replace(/\s/g, "");
   const currentBoard =
     boardList.find((b) => b.boardKey === item.boardKey) ??
-    systemBoardsState?.[item.boardKey];
+    systemBoardsState?.[item.boardKey] ;
   const todayKey = getDateKey(new Date());
   const isAll = currentBoard?.boardKey === BOARD_KEYS.ALL;
   const isImportant = currentBoard?.boardKey === BOARD_KEYS.IMPORTANT;
@@ -75,7 +75,7 @@ export const Board = ({ item, sidebarOpen, setSidebarOpen }: any) => {
 
   return (
     <div
-      className={` flex-4 h-screen justify-center overflow-y-auto relative w-full ${bgClass}`}
+      className={` flex-4 min-h-screen justify-center overflow-y-auto relative w-full ${bgClass}`}
       style={bgStyle}
     >
       <button
@@ -89,8 +89,8 @@ export const Board = ({ item, sidebarOpen, setSidebarOpen }: any) => {
       >
         <HamburgerMenu size={24} />
       </button>
-      <div className="flex gap-4 flex-col h-screen py-5">
-        <div className="shrink-0 px-15 flex flex-col gap-4 ">
+      <div className="flex gap-4 flex-col min-h-screen py-5">
+        <div className="shrink-0 px-16 flex flex-col gap-4 ">
           <Header item={currentBoard} todo={filteredTodos} />
           {currentBoard?.boardKey !== BOARD_KEYS.PROGRESS &&
             currentBoard?.boardKey !== BOARD_KEYS.COMPLETE &&
@@ -102,7 +102,7 @@ export const Board = ({ item, sidebarOpen, setSidebarOpen }: any) => {
         {currentBoard?.boardKey === BOARD_KEYS.PROGRESS ? (
           <Progress item={currentBoard} />
         ) : (
-          <div className=" overflow-y-auto grow flex flex-col gap-5 px-15 pb-5 w-full">
+          <div className=" grow flex flex-col gap-5 px-16 pb-5">
             {/* MY DAY */}
             {currentBoard?.boardKey === BOARD_KEYS.MY_DAY && (
               <>

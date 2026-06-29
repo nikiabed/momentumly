@@ -16,7 +16,7 @@ export default function TodoLayout() {
           className="fixed inset-0 bg-black/30 z-40 md:hidden"
         />
       )}
-      <main className="flex-4">
+      <main className="flex-4 overflow-y-auto">
         <Todo sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       </main>
     </div>
