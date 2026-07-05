@@ -163,60 +163,60 @@ export const Palette = ({ item }: { item: ListItemProps }) => {
             
             <div
               className=" cursor-pointer h-10 w-10 "
-              onClick={() => handleImageChange("images/background2.jpg")}
+              onClick={() => handleImageChange("/images/background2.jpg")}
             >
               <img
-                src="images/background2.jpg"
+                src="/images/background2.jpg"
                 alt="Image"
                 className="rounded h-full w-full object-cover"
               />
             </div>
             <div
               className=" cursor-pointer  h-10 w-10 "
-              onClick={() => handleImageChange("images/background3.jpg")}
+              onClick={() => handleImageChange("/images/background3.jpg")}
             >
               <img
-                src="images/background3.jpg"
+                src="/images/background3.jpg"
                 alt="Image"
                 className="rounded h-full w-full object-cover"
               />
             </div>
             <div
               className=" cursor-pointer  h-10 w-10 "
-              onClick={() => handleImageChange("images/background4.jpg")}
+              onClick={() => handleImageChange("/images/background4.jpg")}
             >
               <img
-                src="images/background4.jpg"
+                src="/images/background4.jpg"
                 alt="Image"
                 className="rounded h-full w-full object-cover"
               />
             </div>
             <div
               className=" cursor-pointer  h-10 w-10 "
-              onClick={() => handleImageChange("images/background5.jpg")}
+              onClick={() => handleImageChange("/images/background5.jpg")}
             >
               <img
-                src="images/background5.jpg"
+                src="/images/background5.jpg"
                 alt="Image"
                 className="rounded h-full w-full object-cover"
               />
             </div>
             <div
               className=" cursor-pointer  h-10 w-10 "
-              onClick={() => handleImageChange("images/background6.jpg")}
+              onClick={() => handleImageChange("/images/background6.jpg")}
             >
               <img
-                src="images/background6.jpg"
+                src="/images/background6.jpg"
                 alt="Image"
                 className="rounded h-full w-full object-cover"
               />
             </div>
             <div
               className=" cursor-pointer  h-10 w-10 "
-              onClick={() => handleImageChange("images/background7.jpg")}
+              onClick={() => handleImageChange("/images/background7.jpg")}
             >
               <img
-                src="images/background7.jpg"
+                src="/images/background7.jpg"
                 alt="Image"
                 className="rounded h-full w-full object-cover"
               />
