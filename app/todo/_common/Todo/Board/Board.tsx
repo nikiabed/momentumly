@@ -51,7 +51,7 @@ export const Board = ({ item, sidebarOpen, setSidebarOpen }: any) => {
         searchText && t.title.toLowerCase().includes(searchText.toLowerCase()),
     );
 
-  const isImage = currentBoard?.theme?.startsWith("img-");
+  const isImage = currentBoard?.theme?.startsWith("img:");
 
   const bgStyle = isImage
     ? {
