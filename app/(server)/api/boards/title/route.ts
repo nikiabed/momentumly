@@ -4,7 +4,7 @@ import { auth } from "@/app/lib/auth";
 
 import Board from "@/app/models/Board";
 
-export async function PATCH(req: Request) {
+export async function PUT(req: Request) {
   try {
     await connectDB();
 

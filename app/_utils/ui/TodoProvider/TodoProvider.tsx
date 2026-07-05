@@ -94,8 +94,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     if (hasImportant && !exists) {
       base.splice(1, 0, importantView);
     }
-
-    return base;
+    return [...base].sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
   }, [boardList, todo, activeBoard]);
 
   useEffect(() => {

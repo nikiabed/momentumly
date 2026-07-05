@@ -27,12 +27,6 @@ export const Board = ({ item, sidebarOpen, setSidebarOpen }: any) => {
   const isComplete = currentBoard?.boardKey === BOARD_KEYS.COMPLETE;
   const isMyDay = currentBoard?.boardKey === BOARD_KEYS.MY_DAY;
 
-  console.log(
-    todo.map((t) => ({
-      title: t.title,
-      myDayDate: t.myDayDate,
-    })),
-  );
   const filteredTodos = todo.filter((t) => {
     if (!currentBoard) return false;
     if (isAll) return true;

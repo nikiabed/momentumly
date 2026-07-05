@@ -28,7 +28,7 @@ export type Boards = {
   icon: string;
   color: string;
   boardKey: string;
-  order?: number;
+  order: number;
   editable: boolean;
   isEdit: boolean;
   filter: (todo: any) => any;
@@ -48,7 +48,7 @@ export type ListItemProps = {
   isEdit?: boolean;
   editable?: boolean;
   filter: (todo: TodoType) => boolean;
-  order?: number;
+  order: number;
 };
 
 export type Context = {
