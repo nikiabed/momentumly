@@ -55,7 +55,7 @@ export const Header = ({
             {t(titleToKey[item.title] ?? item.title)}
           </h2>
         </div>
-        {item.title === sidebar.myDay && (
+        {item.boardKey === "myDay" && (
           <span className="text-lg">{formatPersianDate(new Date())}</span>
         )}
       </div>

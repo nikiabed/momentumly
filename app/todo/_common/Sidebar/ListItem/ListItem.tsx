@@ -3,7 +3,7 @@ import { useTodoContext } from "@/app/_utils/hooks";
 import { ItemIcon } from "../../Header";
 import { sidebar } from "../Sidebar.const";
 import { More } from "iconsax-reactjs";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { t } from "@/app/i18n/t";
 import { BOARD_KEYS, getDateKey } from "@/app/_utils";
 
@@ -63,6 +63,19 @@ export const ListItem = ({ focused }: { focused: any }) => {
   const isImportant = currentBoard?.boardKey === BOARD_KEYS.IMPORTANT;
   const isComplete = currentBoard?.boardKey === BOARD_KEYS.COMPLETE;
   const isMyDay = currentBoard?.boardKey === BOARD_KEYS.MY_DAY;
+  const itemRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (itemRef.current && !itemRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const filteredTodos = todo.filter((t) => {
     if (!currentBoard) return false;
@@ -119,7 +132,7 @@ export const ListItem = ({ focused }: { focused: any }) => {
         )}
       </div>
       {!isSystemBoard && (
-        <div>
+        <div className="relative" ref={itemRef}>
           <More
             color="transparent"
             style={{

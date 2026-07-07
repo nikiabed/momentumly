@@ -14,7 +14,7 @@ import {
   Link21,
   Clock,
 } from "iconsax-reactjs";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { titleToKey } from "../../Sidebar";
 import { t } from "@/app/i18n/t";
 import { BOARD_KEYS } from "@/app/_utils";
@@ -40,8 +40,19 @@ export const TodoEditInput = ({ list }: any) => {
   const [isOpen, setOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDeadLineOpen, setDeadlineOpen] = useState(false);
-  const [linkOpen, setLinkOpen] = useState(false);
+  const todoRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (todoRef.current && !todoRef.current.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    };
 
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
   const systemBoards = [
     BOARD_KEYS.ALL,
     BOARD_KEYS.IMPORTANT,
@@ -57,10 +68,8 @@ export const TodoEditInput = ({ list }: any) => {
 
   const fileRef = useRef<HTMLInputElement>(null);
 
-  console.log(list.attachment, list.title);
-
   return (
-    <div className="w-full z-50">
+    <div className="w-full z-50 relative" ref={todoRef}>
       {/* Todo Row */}
       <div className="flex items-center gap-2 px-4 py-2  min-w-0 text-wrap">
         {list.status ? (

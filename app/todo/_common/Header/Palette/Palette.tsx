@@ -1,6 +1,6 @@
 "use client";
 import { More } from "iconsax-reactjs";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ListItemProps } from "../..";
 import { useTodoContext } from "@/app/_utils/hooks/useTodoContext";
 
@@ -82,6 +82,23 @@ export const Palette = ({ item }: { item: ListItemProps }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { setBoardList, setSystemBoardsState } = useTodoContext();
   const [selectedColor, setSelectedColor] = useState(item.theme ?? "sunset");
+  const paletteRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        paletteRef.current &&
+        !paletteRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const handleColorChange = async (key: string) => {
     setSelectedColor(key);
@@ -124,7 +141,6 @@ export const Palette = ({ item }: { item: ListItemProps }) => {
 
   const isImage = item.theme?.startsWith("img:");
 
-
   const handleImageChange = (src: string) => {
     handleColorChange(`img:${src}`);
   };
@@ -132,7 +148,7 @@ export const Palette = ({ item }: { item: ListItemProps }) => {
   const iconFill = isImage ? "#374151" : themeIconFill[item.theme];
 
   return (
-    <div className="relative">
+    <div className="relative" ref={paletteRef}>
       <More
         size={24}
         color="transparent"
@@ -160,7 +176,6 @@ export const Palette = ({ item }: { item: ListItemProps }) => {
               />
             ))}
 
-            
             <div
               className=" cursor-pointer h-10 w-10 "
               onClick={() => handleImageChange("/images/background2.jpg")}
@@ -168,7 +183,13 @@ export const Palette = ({ item }: { item: ListItemProps }) => {
               <img
                 src="/images/background2.jpg"
                 alt="Image"
-                className="rounded h-full w-full object-cover"
+                className={`h-10 w-10 cursor-pointer rounded
+    ${
+      item.theme === "img:/images/background2.jpg"
+        ? "ring-2 ring-offset-2 ring-blue-500"
+        : ""
+    }
+  `}
               />
             </div>
             <div
@@ -178,7 +199,13 @@ export const Palette = ({ item }: { item: ListItemProps }) => {
               <img
                 src="/images/background3.jpg"
                 alt="Image"
-                className="rounded h-full w-full object-cover"
+                className={`h-10 w-10 cursor-pointer rounded
+    ${
+      item.theme === "img:/images/background3.jpg"
+        ? "ring-2 ring-offset-2 ring-blue-500"
+        : ""
+    }
+  `}
               />
             </div>
             <div
@@ -188,7 +215,13 @@ export const Palette = ({ item }: { item: ListItemProps }) => {
               <img
                 src="/images/background4.jpg"
                 alt="Image"
-                className="rounded h-full w-full object-cover"
+                className={`h-10 w-10 cursor-pointer rounded
+    ${
+      item.theme === "img:/images/background4.jpg"
+        ? "ring-2 ring-offset-2 ring-blue-500"
+        : ""
+    }
+  `}
               />
             </div>
             <div
@@ -198,7 +231,13 @@ export const Palette = ({ item }: { item: ListItemProps }) => {
               <img
                 src="/images/background5.jpg"
                 alt="Image"
-                className="rounded h-full w-full object-cover"
+                className={`h-10 w-10 cursor-pointer rounded
+    ${
+      item.theme === "img:/images/background5.jpg"
+        ? "ring-2 ring-offset-2 ring-blue-500"
+        : ""
+    }
+  `}
               />
             </div>
             <div
@@ -208,7 +247,13 @@ export const Palette = ({ item }: { item: ListItemProps }) => {
               <img
                 src="/images/background6.jpg"
                 alt="Image"
-                className="rounded h-full w-full object-cover"
+                className={`h-10 w-10 cursor-pointer rounded
+    ${
+      item.theme === "img:/images/background6.jpg"
+        ? "ring-2 ring-offset-2 ring-blue-500"
+        : ""
+    }
+  `}
               />
             </div>
             <div
@@ -218,10 +263,15 @@ export const Palette = ({ item }: { item: ListItemProps }) => {
               <img
                 src="/images/background7.jpg"
                 alt="Image"
-                className="rounded h-full w-full object-cover"
+                className={`h-10 w-10 cursor-pointer rounded
+    ${
+      item.theme === "img:/images/background7.jpg"
+        ? "ring-2 ring-offset-2 ring-blue-500"
+        : ""
+    }
+  `}
               />
             </div>
-            
           </div>
         </div>
       )}
