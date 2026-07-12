@@ -75,7 +75,6 @@ export const Board = ({ item, sidebarOpen, setSidebarOpen }: any) => {
     return <div>Loading boards...</div>;
   }
 
-  
   return (
     <div
       className={` flex-4 min-h-screen justify-center overflow-y-auto relative w-full ${bgClass}`}
@@ -121,6 +120,24 @@ export const Board = ({ item, sidebarOpen, setSidebarOpen }: any) => {
                   const grouped = activeTodos.filter((t) => {
                     return normalize(t.boardKey) === normalize(board.boardKey);
                   });
+                  const groupByDate = (todos: any[]) => {
+                    return todos.reduce(
+                      (acc, todo) => {
+                        const date = getDateKey(todo.createdAt);
+
+                        if (!acc[date || ""]) {
+                          acc[date || ""] = [];
+                        }
+
+                        acc[date || ""].push(todo);
+
+                        return acc;
+                      },
+                      {} as Record<string, any[]>,
+                    );
+                  };
+
+                  const groupedByDate = groupByDate(grouped);
                   if (!grouped.length) return null;
                   return (
                     <Lists

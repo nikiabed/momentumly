@@ -1,17 +1,15 @@
 import {
-  ChangeEvent,
   ChangeEventHandler,
   Dispatch,
   SetStateAction,
 } from "react";
-import { GradientsKey } from "../Sidebar/Sidebar.const";
 import { v4 as uuidv4 } from "uuid";
 
 export type TodoType = {
   _id: string;
   title: string;
   status: boolean;
-  date?: string;
+  deadline?: string;
   isImportant: boolean;
   item: string;
   boardKey?: string;
