@@ -20,7 +20,12 @@ export async function PATCH(req: Request, context: any) {
   if (body.deadline !== undefined) {
     update.deadline = body.deadline;
   }
-  console.log(update);
+  if (body.myDayDate !== undefined) {
+    update.myDayDate = body.myDayDate;
+  }
+  if (body.boardKey !== undefined) {
+    update.boardKey = body.boardKey;
+  }
 
   const result = await Todo.findOneAndUpdate(
     {
@@ -34,8 +39,6 @@ export async function PATCH(req: Request, context: any) {
       returnDocument: "after",
     },
   );
-
-  console.log(result.deadline);
 
   if (!result) {
     return NextResponse.json({ error: "Todo not found" }, { status: 404 });

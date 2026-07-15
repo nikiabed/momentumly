@@ -150,6 +150,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
+
   async function loadTodos() {
     try {
       const res = await fetch("/api/todos");
@@ -233,9 +234,9 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  useEffect(() => {
+useEffect(() => {
     loadTodos();
-  }, []);
+}, []);
 
   async function deleteTodo(id: string) {
     try {
@@ -527,7 +528,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const moveTodo = async (todoId: string, boardKey: string) => {
+  const moveTodo = async (id: string, boardKey: string) => {
     try {
       const body =
         boardKey === BOARD_KEYS.MY_DAY
@@ -539,7 +540,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
               myDayDate: null,
             };
 
-      const res = await fetch(`/api/todos/${todoId}`, {
+      const res = await fetch(`/api/todos/${id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -557,7 +558,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const setDeadline = async (id: string, date: string) => {
+  const setDeadline = async (id: string, date: Date | null) => {
     try {
       const res = await fetch(`/api/todos/${id}`, {
         method: "PATCH",
@@ -579,6 +580,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     } catch (err) {
       console.error("Set deadline failed:", err);
     }
+
   };
 
   const handleFile = async (file: File, id: string) => {

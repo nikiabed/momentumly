@@ -9,7 +9,7 @@ export type TodoType = {
   _id: string;
   title: string;
   status: boolean;
-  deadline?: string;
+  deadline?: Date | null;
   isImportant: boolean;
   item: string;
   boardKey?: string;
@@ -99,7 +99,7 @@ export type Context = {
   setNewBoardKey?: React.Dispatch<React.SetStateAction<string | null>>;
   removeFromMyDay?: (id: string) => Promise<void>;
   moveTodo?: (todoId: string, boardKey: string) => Promise<void>;
-  setDeadline?: (id: string, date: string) => Promise<void>;
+  setDeadline?: (id: string, date: Date | null) => Promise<void>;
   handleFile?: (file: File, id: string) => Promise<void>;
   uploadFile?: (file: File) => Promise<any>;
   removeLink?: (id: string) => Promise<void>;

@@ -33,11 +33,9 @@ export const Board = ({ item, sidebarOpen, setSidebarOpen }: any) => {
     if (isImportant) return t.isImportant;
     if (isComplete) return t.status;
     if (isMyDay) {
-      return (
-        t.myDayDate === todayKey ||
-        (t.boardKey === BOARD_KEYS.MY_DAY &&
-          getDateKey(t.createdAt) === todayKey)
-      );
+      const deadlineToday = t.deadline && getDateKey(t.deadline) === todayKey;
+      const manuallyAdded = t.myDayDate === todayKey;
+      return deadlineToday || manuallyAdded;
     }
     return t.boardKey === currentBoard.boardKey;
   });

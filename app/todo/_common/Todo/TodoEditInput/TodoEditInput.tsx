@@ -38,7 +38,6 @@ export const TodoEditInput = ({ list }: any) => {
 
   const [isOpen, setOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isDeadLineOpen, setDeadlineOpen] = useState(false);
   const todoRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   useClickOutside([todoRef, menuRef], () => {
@@ -62,7 +61,7 @@ export const TodoEditInput = ({ list }: any) => {
   const isToday = list.myDayDate === today;
 
   return (
-    <div className="w-full z-50 relative" ref={todoRef}>
+    <div className="w-full relative" ref={todoRef}>
       {/* Todo Row */}
       <div className="flex items-center gap-2 px-4 py-2  min-w-0 text-wrap">
         {list.status ? (
@@ -113,7 +112,7 @@ export const TodoEditInput = ({ list }: any) => {
       {isOpen && (
         <div
           className=" rounded-2xl border border-black/5 bg-white shadow-sm flex flex-col
-   md:justify-evenly z-50 md:flex-row "
+   md:justify-evenly z-0 md:flex-row "
         >
           <div
             onClick={() => handleIsEdit?.(list._id)}
@@ -123,7 +122,7 @@ export const TodoEditInput = ({ list }: any) => {
             <span>ویرایش</span>
           </div>
 
-          {!list.myDayDate && !isToday && (
+          {!isToday && (
             <div
               onClick={() => moveToMyDay?.(list._id)}
               className="flex w-full items-center gap-3 px-4 py-3 cursor-pointer text-sm text-center justify-center hover:bg-black/5 transition"
@@ -137,7 +136,7 @@ export const TodoEditInput = ({ list }: any) => {
             <div
               onClick={() => setIsMenuOpen((prev) => !prev)}
               className="flex w-full items-center gap-3 px-4 py-3
-      justify-center text-sm  hover:bg-black/5  transition cursor-pointer"
+      justify-center text-sm  hover:bg-black/5 transition cursor-pointer"
             >
               <Folder size={18} />
               <span>انتقال</span>
@@ -153,7 +152,7 @@ export const TodoEditInput = ({ list }: any) => {
         mt-2
         bg-white
         shadow-lg
-        z-50
+        z-100
       "
               >
                 {moveTargets?.map((board) => (
@@ -172,7 +171,8 @@ export const TodoEditInput = ({ list }: any) => {
           {
             <DeadlinePicker
               value={list.deadline}
-              onChange={(date) => setDeadline?.(list._id, date.toDateString())}
+              onChange={(date) => setDeadline?.(list._id, date)}
+              onClear={() => setDeadline?.(list._id, null)}
             />
           }
 
