@@ -14,7 +14,7 @@ export const Lists = ({ todo, list }: any) => {
 
   const groupedByDate = todo.reduce(
     (acc, item) => {
-      const date = getDateKey(item.date || item.createdAt);
+      const date = getDateKey(item.deadline || item.createdAt);
       if (!acc[date || ""]) {
         acc[date || ""] = [];
       }
@@ -46,7 +46,6 @@ export const Lists = ({ todo, list }: any) => {
       {isOpen &&
         Object.entries(groupedByDate).map(([date, todos]: any) => {
           const formatted = formatGroupDate(date);
-          console.log("formatted", formatted);
           const icon =
             formatted.label === "امروز" ? (
               <Sun1 size={16} />
