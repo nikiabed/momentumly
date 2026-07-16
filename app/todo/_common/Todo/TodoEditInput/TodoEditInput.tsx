@@ -17,7 +17,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { titleToKey } from "../../Sidebar";
 import { t } from "@/app/i18n/t";
-import { BOARD_KEYS } from "@/app/_utils";
+import { BOARD_KEYS, isInMyDay, isManuallyInMyDay } from "@/app/_utils";
 import { DeadlinePicker } from "./DeadlinePicker";
 import { useClickOutside } from "@/app/_utils/hooks/useClickOutside";
 
@@ -57,8 +57,7 @@ export const TodoEditInput = ({ list }: any) => {
   ];
 
   const fileRef = useRef<HTMLInputElement>(null);
-  const today = new Date().toISOString().slice(0, 10);
-  const isToday = list.myDayDate === today;
+  const isToday = isInMyDay(list);
 
   return (
     <div className="w-full relative" ref={todoRef}>
@@ -122,7 +121,7 @@ export const TodoEditInput = ({ list }: any) => {
             <span>ویرایش</span>
           </div>
 
-          {!isToday && (
+          {!isInMyDay(list) && (
             <div
               onClick={() => moveToMyDay?.(list._id)}
               className="flex w-full items-center gap-3 px-4 py-3 cursor-pointer text-sm text-center justify-center hover:bg-black/5 transition"
@@ -213,7 +212,7 @@ export const TodoEditInput = ({ list }: any) => {
             )}
           </div>
 
-          {list.myDayDate && isToday && (
+          {isManuallyInMyDay(list) && isInMyDay(list) && (
             <div
               onClick={() => removeFromMyDay?.(list._id)}
               className="flex w-full items-center gap-3 px-4 py-3 cursor-pointer text-sm text-center justify-center hover:bg-black/5 transition"

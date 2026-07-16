@@ -7,20 +7,19 @@ import { TodoList } from "../TodoList";
 import { t } from "@/app/i18n/t";
 import { titleToKey } from "../../Sidebar";
 import { formatGroupDate, getDateKey } from "@/app/_utils/date";
+import { getTodoDisplayDate } from "@/app/_utils/todo";
 
 export const Lists = ({ todo, list }: any) => {
   const [isOpen, setOpen] = useState(false);
   const { setTodo } = useContext(TodoContext);
 
   const groupedByDate = todo.reduce(
-    (acc, item) => {
-      const date = getDateKey(item.deadline || item.createdAt);
+    (acc: Record<string, typeof todo>, item: any) => {
+      const date = getTodoDisplayDate(item);
       if (!acc[date || ""]) {
         acc[date || ""] = [];
       }
-
       acc[date || ""].push(item);
-
       return acc;
     },
     {} as Record<string, typeof todo>,

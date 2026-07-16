@@ -1,4 +1,5 @@
 import { getDateKey } from "./date";
+import { isInDay } from "./todo";
 
 export const buildWeeklyProgress = (
   todos: any[],
@@ -9,7 +10,6 @@ export const buildWeeklyProgress = (
 
   const today = new Date();
 
-  // 👇 شروع هفته با offset
   const diff = (today.getDay() + 1) % 7;
   const startOfWeek = new Date(today);
   startOfWeek.setDate(today.getDate() - diff - weekOffset * 7);
@@ -17,10 +17,8 @@ export const buildWeeklyProgress = (
   for (let i = 0; i < 7; i++) {
     const day = new Date(startOfWeek);
     day.setDate(startOfWeek.getDate() + i);
-
     const dateKey = getDateKey(day);
-
-    const dayTodos = todos.filter((t) => t.myDayDate === dateKey);
+    const dayTodos = todos.filter((t) => isInDay(t, day));
 
     const done = dayTodos.filter(
       (t) => t.status && t.completedAt && getDateKey(t.completedAt) === dateKey,
@@ -34,7 +32,7 @@ export const buildWeeklyProgress = (
     const label = compact
       ? day.toLocaleDateString("fa-IR", { weekday: "narrow" })
       : day.toLocaleDateString("fa-IR", { weekday: "short" });
-      
+
     days.push({
       label,
       done,

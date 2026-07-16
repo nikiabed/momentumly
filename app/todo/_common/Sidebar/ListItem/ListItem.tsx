@@ -5,7 +5,7 @@ import { sidebar } from "../Sidebar.const";
 import { More } from "iconsax-reactjs";
 import { useEffect, useRef, useState } from "react";
 import { t } from "@/app/i18n/t";
-import { BOARD_KEYS, getDateKey } from "@/app/_utils";
+import { BOARD_KEYS, getDateKey, isInMyDay } from "@/app/_utils";
 
 export const titleToKey: Record<string, string> = {
   "My Day": "myDay",
@@ -58,7 +58,6 @@ export const ListItem = ({ focused }: { focused: any }) => {
   const currentBoard =
     boardList.find((b) => b.boardKey === focused.boardKey) ??
     systemBoardsState?.[focused.boardKey];
-  const todayKey = getDateKey(new Date());
   const isAll = currentBoard?.boardKey === BOARD_KEYS.ALL;
   const isImportant = currentBoard?.boardKey === BOARD_KEYS.IMPORTANT;
   const isComplete = currentBoard?.boardKey === BOARD_KEYS.COMPLETE;
@@ -83,7 +82,7 @@ export const ListItem = ({ focused }: { focused: any }) => {
     if (isImportant) return t.isImportant;
     if (isComplete) return t.status;
     if (isMyDay) {
-      return t.myDayDate === todayKey;
+      return isInMyDay(t);
     }
     return t.boardKey === currentBoard.boardKey;
   });

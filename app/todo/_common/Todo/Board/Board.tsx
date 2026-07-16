@@ -6,6 +6,7 @@ import {
   BOARD_KEYS,
   BOARD_LABELS,
   getDateKey,
+  isInMyDay,
   useTodoContext,
 } from "@/app/_utils";
 import { colors, Header } from "../../Header";
@@ -33,9 +34,7 @@ export const Board = ({ item, sidebarOpen, setSidebarOpen }: any) => {
     if (isImportant) return t.isImportant;
     if (isComplete) return t.status;
     if (isMyDay) {
-      const deadlineToday = t.deadline && getDateKey(t.deadline) === todayKey;
-      const manuallyAdded = t.myDayDate === todayKey;
-      return deadlineToday || manuallyAdded;
+      return isInMyDay(t);
     }
     return t.boardKey === currentBoard.boardKey;
   });
@@ -65,9 +64,6 @@ export const Board = ({ item, sidebarOpen, setSidebarOpen }: any) => {
   if (!currentBoard) return null;
 
   type BoardKey = keyof typeof BOARD_LABELS;
-
-  console.log("boardList:", boardList);
-  console.log("currentBoard:", currentBoard);
 
   if (!boardList?.length) {
     return <div>Loading boards...</div>;

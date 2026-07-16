@@ -4,6 +4,7 @@ import { CloseCircle, TickCircle } from "iconsax-reactjs";
 import { useTodoContext } from "@/app/_utils/hooks";
 import { TodoEditInput } from "../TodoEditInput";
 import { getDateKey } from "@/app/_utils";
+import { TodoType } from "../..";
 
 type itemProps = DetailedHTMLProps<
   HTMLAttributes<HTMLDivElement>,
@@ -12,15 +13,16 @@ type itemProps = DetailedHTMLProps<
   list: string[];
 };
 
-export const getTodoState = (todo: any, today: string) => {
-  const todayDate = new Date(today);
-  const deadlineDate = new Date(todo.deadline);
-  
+export const getTodoState = (
+  todo: TodoType,
+  today = getDateKey(new Date()),
+) => {
   if (todo.status) return "done";
   if (!todo.deadline) return "normal";
-  const deadlineKey = getDateKey(todo.deadline);
-  if (deadlineKey === today) return "today";
-  if (deadlineDate < todayDate) return "overdue";
+  const deadline = getDateKey(todo.deadline);
+  if (!deadline) return "normal";
+  if (deadline === today) return "today";
+  if (today && deadline < today) return "overdue";
   return "normal";
 };
 
