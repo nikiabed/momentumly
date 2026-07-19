@@ -1,8 +1,7 @@
-import { TodoList } from '@/app/types/todo';
+import { TodoList } from "@/app/types/todo";
 import { ChangeEventHandler, Dispatch, SetStateAction } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { Board } from '@/app/types/board';
-
+import { Board } from "@/app/types/board";
 
 // export type ListItemProps = {
 //   _id: string;
@@ -63,15 +62,16 @@ export type Context = {
   saveBoard?: (id: string) => Promise<void>;
   handleUpdateTodo?: (id: string, title: string) => Promise<void>;
   systemBoardsState?: Record<string, Board>;
-  setSystemBoardsState?: Dispatch<SetStateAction<Record<string, Boards>>>;
+  setSystemBoardsState?: Dispatch<SetStateAction<Record<string, Board>>>;
   newBoardKey?: string | null;
   setNewBoardKey?: React.Dispatch<React.SetStateAction<string | null>>;
   removeFromMyDay?: (id: string) => Promise<void>;
   moveTodo?: (todoId: string, boardKey: string) => Promise<void>;
-  setDeadline?: (id: string, date: Date | null) => Promise<void>;
+  setDeadline?: (id: string, date: Date | null) => Promise<boolean>;
   handleFile?: (file: File, id: string) => Promise<void>;
   uploadFile?: (file: File) => Promise<any>;
   removeLink?: (id: string) => Promise<void>;
+  handleToggleImportant?: (id: string, value: boolean) => Promise<void>;
 };
 
 export const header = {

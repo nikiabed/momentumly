@@ -12,6 +12,12 @@ export const TodoContext = createContext<Context>({
       boardKey: "",
       item: "",
       createdAt: "",
+      isEdit: false,
+      deadline: null,
+      myDayDate: null,
+      attachment: null,
+      completedAt: null,
+
     },
   ],
   focused: [],
