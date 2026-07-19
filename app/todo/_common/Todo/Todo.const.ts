@@ -1,20 +1,21 @@
-import {
-  ChangeEventHandler,
-  Dispatch,
-  SetStateAction,
-} from "react";
+import { ChangeEventHandler, Dispatch, SetStateAction } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 export type TodoType = {
   _id: string;
+  userId?: string;
   title: string;
   status: boolean;
-  deadline?: Date | null;
   isImportant: boolean;
   item: string;
-  boardKey?: string;
+  boardKey: string | null;
+  isEdit: boolean;
+  myDayDate: string | null;
+  deadline: Date | null;
+  attachment: string | null;
   createdAt: string;
-  myDayDate?: string | null;
+  updatedAt?: string;
+  completedAt: string | null;
 };
 
 export type TodoListType = TodoType[];

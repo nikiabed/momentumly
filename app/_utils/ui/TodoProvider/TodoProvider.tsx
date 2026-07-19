@@ -3,13 +3,15 @@ import {
   Boards,
   ListItemProps,
   TodoListType,
+  TodoType,
 } from "@/app/todo/_common/Todo/Todo.const";
 import { useEffect, useMemo, useState } from "react";
 import { TodoContext } from "../../hooks";
-import { items, sidebar } from "@/app/todo/_common/Sidebar/Sidebar.const";
+import { items } from "@/app/todo/_common/Sidebar/Sidebar.const";
 import { useSession } from "next-auth/react";
 import { getDateKey } from "../../date";
 import { BOARD_KEYS } from "../../constants";
+import { todoService } from "../../services/todo.service";
 
 type SystemBoard = {
   _id: string;
@@ -24,6 +26,20 @@ type SystemBoard = {
   filter: (todo: any) => any;
 };
 
+export type TodoUpdate = Partial<
+  Pick<
+    TodoType,
+    | "title"
+    | "status"
+    | "isImportant"
+    | "boardKey"
+    | "myDayDate"
+    | "deadline"
+    | "attachment"
+    | "completedAt"
+  >
+>;
+
 export function TodoProvider({ children }: { children: React.ReactNode }) {
   const [todo, setTodo] = useState<TodoListType>([]);
   const [inputValue, setInputValue] = useState<string>("");
@@ -34,6 +50,24 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState("");
   const { data: session } = useSession();
+
+  useEffect(() => {
+    loadBoards();
+    loadTodos();
+  }, []);
+
+  const updateTodo = async (id: string, changes: TodoUpdate) => {
+    try {
+      await todoService.update(id, changes);
+      setTodo((prev) =>
+        prev.map((t) => (t._id === id ? { ...t, ...changes } : t)),
+      );
+      return true;
+    } catch (err) {
+      console.error(err);
+      return false;
+    }
+  };
 
   const systemBoards: Record<string, Boards> = {
     important: {
@@ -97,10 +131,6 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     return [...base].sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
   }, [boardList, todo, activeBoard]);
 
-  useEffect(() => {
-    loadBoards();
-  }, []);
-
   function selectBoard(board: Boards, id: string) {
     if (searchText) {
       setActiveBoard("search");
@@ -149,7 +179,6 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       console.error("Create board failed:", err);
     }
   }
-
 
   async function loadTodos() {
     try {
@@ -234,115 +263,37 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-useEffect(() => {
-    loadTodos();
-}, []);
-
-  async function deleteTodo(id: string) {
+  const deleteTodo = async (id: string) => {
     try {
-      const res = await fetch("/api/todos/delete", {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ id }),
-      });
+      await todoService.remove(id);
 
-      if (!res.ok) {
-        const error = await res.json();
-        throw new Error(error.message);
-      }
-
-      await loadTodos();
+      setTodo((prev) => prev.filter((todo) => todo._id !== id));
     } catch (err) {
       console.error("Delete todo failed:", err);
     }
-  }
+  };
 
-  const removeFromMyDay = async (id: string) => {
-    try {
-      const res = await fetch(`/api/todos/${id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          myDayDate: null,
-        }),
-      });
-
-      if (!res.ok) {
-        const error = await res.json();
-        throw new Error(error.message);
-      }
-
-      setTodo((prev) =>
-        prev.map((t) => (t._id === id ? { ...t, myDayDate: null } : t)),
-      );
-    } catch (err) {
-      console.error("Remove from My Day failed:", err);
+  const toggleImportant = async (id: string, value: boolean) => {
+    await updateTodo(id, {
+      isImportant: value,
+    });
+    const importantExists = todo.some((t) => t._id !== id && t.isImportant);
+    if (activeBoard === BOARD_KEYS.IMPORTANT && !importantExists) {
+      setActiveBoard(BOARD_KEYS.MY_DAY);
     }
   };
 
-  async function toggleImportant(id: string, value: boolean) {
-    try {
-      const res = await fetch("/api/todos/important", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id,
-          isImportant: value,
-        }),
-      });
-
-      if (!res.ok) {
-        const error = await res.json();
-        throw new Error(error.message);
-      }
-
-      await loadTodos();
-
-      const importantExists = todo.some((t) => t._id !== id && t.isImportant);
-
-      if (activeBoard === "important" && !importantExists) {
-        setActiveBoard("myDay");
-      }
-    } catch (err) {
-      console.error("Toggle important failed:", err);
-    }
-  }
-
-  async function toggleStatus(id: string, value: boolean) {
-    try {
-      const res = await fetch("/api/todos/status", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id,
-          status: value,
-        }),
-      });
-
-      if (!res.ok) {
-        const error = await res.json();
-        throw new Error(error.message);
-      }
-
-      await loadTodos();
-    } catch (err) {
-      console.error("Toggle status failed:", err);
-    }
-  }
+  const toggleStatus = async (id: string, value: boolean) => {
+    await updateTodo(id, {
+      status: value,
+    });
+  };
 
   const addTodo = async (title: string, item: ListItemProps) => {
     await createTodo({
       title,
       status: false,
-      isImportant: item.title === sidebar.important,
+      isImportant: item.title === BOARD_KEYS.IMPORTANT,
       item: item.title,
       boardKey: item._id,
     });
@@ -371,16 +322,11 @@ useEffect(() => {
   };
 
   const handleUpdateTodo = async (id: string, title: string) => {
-    setTodo((prev) =>
-      prev.map((t) => (t._id === id ? { ...t, title, isEdit: false } : t)),
-    );
-
-    await fetch("/api/todos/title", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id, title }),
+    await updateTodo(id, {
+      title,
     });
   };
+
   const handleIsEdit = (id: string) => {
     setTodo((prev) =>
       prev.map((item) =>
@@ -503,85 +449,35 @@ useEffect(() => {
   }
 
   const moveToMyDay = async (id: string) => {
-    try {
-      const todayKey = getDateKey(new Date());
+    await updateTodo(id, {
+      myDayDate: getDateKey(new Date()),
+    });
+  };
 
-      const res = await fetch(`/api/todos/${id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          myDayDate: todayKey,
-        }),
-      });
-
-      if (!res.ok) {
-        throw new Error("Failed to move todo");
-      }
-
-      setTodo((prev) =>
-        prev.map((t) => (t._id === id ? { ...t, myDayDate: todayKey } : t)),
-      );
-    } catch (err) {
-      console.error("Move to My Day failed:", err);
-    }
+  const removeFromMyDay = async (id: string) => {
+    await updateTodo(id, {
+      myDayDate: null,
+    });
   };
 
   const moveTodo = async (id: string, boardKey: string) => {
-    try {
-      const body =
-        boardKey === BOARD_KEYS.MY_DAY
-          ? {
-              myDayDate: getDateKey(new Date()),
-            }
-          : {
-              boardKey,
-              myDayDate: null,
-            };
+    const changes =
+      boardKey === BOARD_KEYS.MY_DAY
+        ? {
+            myDayDate: getDateKey(new Date()),
+          }
+        : {
+            boardKey,
+            myDayDate: null,
+          };
 
-      const res = await fetch(`/api/todos/${id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(body),
-      });
-
-      if (!res.ok) {
-        throw new Error("Failed to move todo");
-      }
-
-      await loadTodos();
-    } catch (err) {
-      console.error("Move todo failed:", err);
-    }
+    await updateTodo(id, changes);
   };
 
-  const setDeadline = async (id: string, date: Date | null) => {
-    try {
-      const res = await fetch(`/api/todos/${id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          deadline: date,
-        }),
-      });
-
-      if (!res.ok) {
-        throw new Error("Failed to set deadline");
-      }
-
-      setTodo((prev) =>
-        prev.map((t) => (t._id === id ? { ...t, deadline: date } : t)),
-      );
-    } catch (err) {
-      console.error("Set deadline failed:", err);
-    }
-
-  };
+  const setDeadline = async (id: string, date: Date | null) =>
+    await updateTodo(id, {
+      deadline: date,
+    });
 
   const handleFile = async (file: File, id: string) => {
     try {
@@ -646,29 +542,10 @@ useEffect(() => {
     }
   };
 
-  const removeLink = async (id: string) => {
-    try {
-      const res = await fetch(`/api/todos/${id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          attachment: "",
-        }),
-      });
-
-      if (!res.ok) {
-        throw new Error("Failed to remove attachment");
-      }
-
-      setTodo((prev) =>
-        prev.map((t) => (t._id === id ? { ...t, attachment: "" } : t)),
-      );
-    } catch (err) {
-      console.error("Remove link failed:", err);
-    }
-  };
+  const removeLink = async (id: string) =>
+    await updateTodo(id, {
+      attachment: "",
+    });
 
   const value = useMemo(
     () => ({
@@ -677,6 +554,7 @@ useEffect(() => {
       handleFile,
       setDeadline,
       moveTodo,
+      moveToMyDay,
       removeFromMyDay,
       newBoardKey,
       setNewBoardKey,
@@ -714,7 +592,6 @@ useEffect(() => {
       handleBoardIsEdit,
       handleBoardEditable,
       removeList,
-      moveToMyDay,
     }),
     [
       removeLink,

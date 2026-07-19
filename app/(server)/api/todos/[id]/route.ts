@@ -14,17 +14,32 @@ export async function PATCH(req: Request, context: any) {
   console.log(body);
   const update: Record<string, any> = {};
 
-  if (body.attachment !== undefined) {
-    update.attachment = body.attachment;
+  if (body.title !== undefined) {
+    update.title = body.title;
   }
-  if (body.deadline !== undefined) {
-    update.deadline = body.deadline;
+
+  if (body.status !== undefined) {
+    update.status = body.status;
   }
+
+  if (body.isImportant !== undefined) {
+    update.isImportant = body.isImportant;
+  }
+
+  if (body.boardKey !== undefined) {
+    update.boardKey = body.boardKey;
+  }
+
   if (body.myDayDate !== undefined) {
     update.myDayDate = body.myDayDate;
   }
-  if (body.boardKey !== undefined) {
-    update.boardKey = body.boardKey;
+
+  if (body.deadline !== undefined) {
+    update.deadline = body.deadline;
+  }
+
+  if (body.attachment !== undefined) {
+    update.attachment = body.attachment;
   }
 
   const result = await Todo.findOneAndUpdate(
@@ -47,5 +62,24 @@ export async function PATCH(req: Request, context: any) {
   return NextResponse.json({
     ok: true,
     todo: result,
+  });
+}
+
+export async function DELETE(req: Request, context: any) {
+  await connectDB();
+  const session = await auth();
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  const { id } = await context.params;
+  const result = await Todo.findOneAndDelete({
+    _id: id,
+    userId: session.user.id,
+  });
+  if (!result) {
+    return NextResponse.json({ error: "Todo not found" }, { status: 404 });
+  }
+  return NextResponse.json({
+    ok: true,
   });
 }
