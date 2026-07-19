@@ -1,13 +1,7 @@
 import { useTodoContext } from "@/app/_utils";
-import { ListItemProps, TodoType } from "../../Todo";
+import { TodoList, Board } from "@/app/types";
 
-const Coins = ({
-  item,
-  filterTodo,
-}: {
-  item: ListItemProps;
-  filterTodo:  TodoType[];
-}) => {
+export const Coins = ({ item, filterTodo }: { item: Board; filterTodo: TodoList }) => {
   const { todo } = useTodoContext();
   const globalCoins = todo.filter((t) => t.status).length * 10;
   const boardCoins = filterTodo.filter((t) => t.status).length * 10;
@@ -43,5 +37,3 @@ const Coins = ({
     </div>
   );
 };
-
-export default Coins;

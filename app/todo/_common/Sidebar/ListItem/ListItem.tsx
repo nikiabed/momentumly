@@ -5,7 +5,8 @@ import { sidebar } from "../Sidebar.const";
 import { More } from "iconsax-reactjs";
 import { useEffect, useRef, useState } from "react";
 import { t } from "@/app/i18n/t";
-import { BOARD_KEYS, getDateKey, isInMyDay } from "@/app/_utils";
+import { BOARD_KEYS, isInMyDay } from "@/app/_utils";
+import { Board } from "@/app/types";
 
 export const titleToKey: Record<string, string> = {
   "My Day": "myDay",
@@ -17,7 +18,7 @@ export const titleToKey: Record<string, string> = {
   Search: "search",
 };
 
-export const ListItem = ({ focused }: { focused: any }) => {
+export const ListItem = ({ focused }: { focused: Board }) => {
   const {
     handleBoardInput,
     removeList,
@@ -126,7 +127,7 @@ export const ListItem = ({ focused }: { focused: any }) => {
             {notCompletedTodos}
           </span>
         )}
-        {focused.title == sidebar.progress && (
+        {focused.title == BOARD_KEYS.PROGRESS && (
           <div className="border-b border-gray-300 p absolute -bottom-1 w-full"></div>
         )}
       </div>

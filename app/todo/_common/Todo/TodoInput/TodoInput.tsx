@@ -1,12 +1,13 @@
 import { DetailedHTMLProps, FC, HTMLAttributes } from "react";
-import { input, ListItemProps } from "../Todo.const";
+import { input } from "../Todo.const";
 import { Add } from "iconsax-reactjs";
 import { useTodoContext } from "@/app/_utils/hooks";
+import { Board } from "@/app/types";
 
 type InputProps = DetailedHTMLProps<
   HTMLAttributes<HTMLDivElement>,
   HTMLDivElement> & {
-    item : ListItemProps
+    item : Board
   }
 
 export const TodoInput: FC<InputProps> = ({item}) => {

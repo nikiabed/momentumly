@@ -1,6 +1,5 @@
 import { IconProps, SearchNormal1 } from "iconsax-reactjs";
-import { ListItemProps } from "../../Todo";
-import { FC, memo } from "react";
+import { FC } from "react";
 import {
   Card,
   Chart,
@@ -9,9 +8,10 @@ import {
   Sun1,
   TickCircle,
 } from "iconsax-reactjs";
+import { Board } from "@/app/types/board";
 
 interface ItemIcon extends IconProps {
-  item: ListItemProps;
+  item: Board;
 }
 export const ItemIcon: FC<ItemIcon> = ({ item, ...props }) => {
   switch (item.icon) {

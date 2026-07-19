@@ -1,7 +1,7 @@
 import { useTodoContext } from "@/app/_utils";
-import LevelBar from "./LevelBar/LevelBar";
-import Summary from "./Summary/Summary";
 import Image from "next/image";
+import { Summary } from "./Summary";
+import { LevelBar } from "./LevelBar";
 
 function getLevelProgress(
   coins: number,
@@ -32,7 +32,7 @@ function getCurrentLevel(coins: number, thresholds: number[]) {
   return level;
 }
 
-const MonthSect = () => {
+export const MonthSect = () => {
   const { todo } = useTodoContext();
   const coins = todo.filter((t) => t.status).length * 10;
   const thresholds = [0, 1000, 3000, 6000, 9000, 12000];
@@ -108,5 +108,3 @@ const MonthSect = () => {
     </div>
   );
 };
-
-export default MonthSect;

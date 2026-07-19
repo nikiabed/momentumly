@@ -3,15 +3,14 @@
 import { useTodoContext } from "@/app/_utils/hooks/useTodoContext";
 import { Board } from "./Board";
 import { useMemo } from "react";
-import { Boards } from "./Todo.const";
+import type { Board as BoardType } from "@/app/types";
 
 export const Todo = ({ sidebarOpen, setSidebarOpen }: any) => {
   const { loading, uiBoard, searchText, activeBoard } = useTodoContext();
 
   console.log(uiBoard, activeBoard);
-  
 
-  const systemBoards: Record<string, Boards> = {
+  const systemBoards: Record<string, BoardType> = {
     important: {
       _id: "important",
       title: "Important",
@@ -44,7 +43,6 @@ export const Todo = ({ sidebarOpen, setSidebarOpen }: any) => {
 
   const active = useMemo(() => {
     if (searchText) return systemBoards.search;
-
     return uiBoard?.find((b) => b.boardKey === activeBoard) ?? uiBoard?.[0];
   }, [searchText, uiBoard, activeBoard]);
 

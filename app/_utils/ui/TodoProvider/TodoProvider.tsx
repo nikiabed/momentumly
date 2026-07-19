@@ -1,17 +1,12 @@
 "use client";
-import {
-  Boards,
-  ListItemProps,
-  TodoListType,
-  TodoType,
-} from "@/app/todo/_common/Todo/Todo.const";
 import { useEffect, useMemo, useState } from "react";
 import { TodoContext } from "../../hooks";
 import { items } from "@/app/todo/_common/Sidebar/Sidebar.const";
 import { useSession } from "next-auth/react";
 import { getDateKey } from "../../date";
 import { BOARD_KEYS } from "../../constants";
-import { todoService } from "../../services/todo.service";
+import { boardService, todoService, uploadService } from "../../services";
+import { TodoList, Todo, BoardList, Board } from "@/app/types";
 
 type SystemBoard = {
   _id: string;
@@ -28,7 +23,7 @@ type SystemBoard = {
 
 export type TodoUpdate = Partial<
   Pick<
-    TodoType,
+    Todo,
     | "title"
     | "status"
     | "isImportant"
@@ -41,11 +36,11 @@ export type TodoUpdate = Partial<
 >;
 
 export function TodoProvider({ children }: { children: React.ReactNode }) {
-  const [todo, setTodo] = useState<TodoListType>([]);
+  const [todo, setTodo] = useState<TodoList>([]);
   const [inputValue, setInputValue] = useState<string>("");
   const [focused, setFocused] = useState(items);
   const [editedBoard, setEditedBoard] = useState("");
-  const [boardList, setBoardList] = useState<Boards[]>([]);
+  const [boardList, setBoardList] = useState<BoardList>([]);
   const [activeBoard, setActiveBoard] = useState<string>("myDay");
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState("");
@@ -55,6 +50,15 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     loadBoards();
     loadTodos();
   }, []);
+
+  const loadTodos = async () => {
+    try {
+      const data = await todoService.getTodos();
+      setTodo(data);
+    } catch (err) {
+      console.error("Load todos failed:", err);
+    }
+  };
 
   const updateTodo = async (id: string, changes: TodoUpdate) => {
     try {
@@ -69,7 +73,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const systemBoards: Record<string, Boards> = {
+  const systemBoards: Record<string, Board> = {
     important: {
       _id: "important",
       title: "Important",
@@ -131,7 +135,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     return [...base].sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
   }, [boardList, todo, activeBoard]);
 
-  function selectBoard(board: Boards, id: string) {
+  const selectBoard = (board: Board, id: string) => {
     if (searchText) {
       setActiveBoard("search");
     }
@@ -142,126 +146,69 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
         state: board._id === id,
       })),
     );
-  }
+  };
 
-  async function loadBoards() {
+  const loadBoards = async () => {
     try {
       setLoading(true);
-      const res = await fetch("/api/boards");
-      if (!res.ok) {
-        throw new Error();
-      }
-      setBoardList(await res.json());
+      const data = await boardService.getBoards();
+      setBoardList(data);
     } catch (err) {
       console.error(err);
     } finally {
       setLoading(false);
     }
-  }
+  };
 
-  async function createBoard(name: string) {
+  const createBoard = async (name: string) => {
     try {
-      const res = await fetch("/api/boards", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name }),
+      await boardService.create({
+        name,
       });
-
-      if (!res.ok) {
-        const error = await res.json();
-        throw new Error(error.message);
-      }
-
       await loadBoards();
     } catch (err) {
-      console.error("Create board failed:", err);
+      console.error("Create board failed", err);
     }
-  }
-
-  async function loadTodos() {
-    try {
-      const res = await fetch("/api/todos");
-      if (res.status === 401) {
-        return;
-      }
-      if (!res.ok) {
-        throw new Error("Failed to load todos");
-      }
-      const data = await res.json();
-      setTodo(data);
-    } catch (err) {
-      console.error(err);
-    }
-  }
+  };
 
   const saveBoard = async (id: string) => {
     try {
       const newTitle = editedBoard;
-
-      setFocused((prev: any[]) =>
+      setFocused((prev) =>
         prev.map((b) =>
           b._id === id ? { ...b, title: newTitle, isEdit: false } : b,
         ),
       );
 
-      const res = await fetch("/api/boards/title", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id,
-          title: newTitle,
-        }),
-      });
-
-      if (!res.ok) {
-        const error = await res.json();
-        throw new Error(error.message);
-      }
-
+      await boardService.updateTitle(id, newTitle);
       await loadBoards();
     } catch (err) {
       console.error("Save board failed:", err);
     }
   };
 
-  async function createTodo(todo: {
+  const createTodo = async (todo: {
     title: string;
     status: boolean;
     isImportant: boolean;
     item: string;
     boardKey?: string;
-  }) {
+  }) => {
     try {
-      const res = await fetch("/api/todos", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...todo,
-          boardKey: activeBoard,
-          status: false,
-          isImportant: false,
-          isEdit: false,
-          myDayDate:
-            activeBoard === BOARD_KEYS.MY_DAY ? getDateKey(new Date()) : null,
-        }),
+      await todoService.create({
+        ...todo,
+        boardKey: activeBoard,
+        status: false,
+        isImportant: false,
+        isEdit: false,
+        myDayDate:
+          activeBoard === BOARD_KEYS.MY_DAY ? getDateKey(new Date()) : null,
       });
-
-      if (!res.ok) {
-        const error = await res.json();
-        throw new Error(error.message);
-      }
-
       await loadTodos();
     } catch (err) {
-      console.error(err);
+      console.error("Create todo failed:", err);
     }
-  }
+  };
 
   const deleteTodo = async (id: string) => {
     try {
@@ -274,9 +221,10 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
   };
 
   const toggleImportant = async (id: string, value: boolean) => {
-    await updateTodo(id, {
+    const success = await updateTodo(id, {
       isImportant: value,
     });
+    if (!success) return;
     const importantExists = todo.some((t) => t._id !== id && t.isImportant);
     if (activeBoard === BOARD_KEYS.IMPORTANT && !importantExists) {
       setActiveBoard(BOARD_KEYS.MY_DAY);
@@ -289,7 +237,9 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
-  const addTodo = async (title: string, item: ListItemProps) => {
+  type AddTodoBoard = Pick<Board, "_id" | "title">;
+
+  const addTodo = async (title: string, item: AddTodoBoard) => {
     await createTodo({
       title,
       status: false,
@@ -306,7 +256,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     setInputValue(e.target.value);
   };
 
-  const handleSubmit = async (e: any, item: ListItemProps) => {
+  const handleSubmit = async (e: any, item: Board) => {
     e.preventDefault();
     if (!inputValue.trim()) return;
     await addTodo(inputValue, item);
@@ -378,8 +328,8 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
 
   const [newBoardKey, setNewBoardKey] = useState<string | null>(null);
 
-  async function handleNewList() {
-    const last = Math.max(...boardList.map((b) => b.order ?? 0), 0);
+  const handleNewList = async () => {
+    const last = Math.max(...boardList.map((b: Board) => b.order ?? 0), 0);
     const key = `board-${Date.now()}`;
     const newBoard = {
       _id: key,
@@ -395,58 +345,41 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     };
 
     setFocused((prev: any) => {
-      const updated = prev.map((b: any) => ({ ...b, state: false }));
+      const updated = prev.map((b: Board) => ({ ...b, state: false }));
       return [...updated, newBoard];
     });
 
-    await fetch("/api/boards", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-
-      body: JSON.stringify({
-        title: "بدون عنوان",
-        boardKey: key,
-        state: false,
-        icon: "HamburgerMenu",
-        color: "newList",
-        editable: true,
-        isEdit: true,
-        order: last + 1,
-        theme: "lavender",
-        userId: session?.user?.id,
-      }),
+    await boardService.create({
+      title: "بدون عنوان",
+      boardKey: key,
+      state: false,
+      icon: "HamburgerMenu",
+      color: "newList",
+      editable: true,
+      isEdit: true,
+      order: last + 1,
+      theme: "lavender",
+      userId: session?.user?.id,
     });
 
     setNewBoardKey(key);
-
     setActiveBoard(key);
     await loadBoards();
-  }
+  };
 
-  async function removeList(id: string) {
-    const index = boardList.findIndex((b) => b._id === id);
-
-    const nextBoard = boardList[index - 1] || boardList[0];
-
-    await fetch("/api/boards/delete", {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-
-      body: JSON.stringify({
-        id,
-      }),
-    });
-
-    await loadBoards();
-
-    if (activeBoard === boardList[index].boardKey) {
-      setActiveBoard(nextBoard?.boardKey || "myDay");
+  const removeList = async (id: string) => {
+    try {
+      const index = boardList.findIndex((b) => b._id === id);
+      const nextBoard = boardList[index - 1] || boardList[0];
+      await boardService.remove(id);
+      await loadBoards();
+      if (activeBoard === boardList[index]?.boardKey) {
+        setActiveBoard(nextBoard?.boardKey || "myDay");
+      }
+    } catch (err) {
+      console.error("Remove board failed:", err);
     }
-  }
+  };
 
   const moveToMyDay = async (id: string) => {
     await updateTodo(id, {
@@ -481,38 +414,14 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
 
   const handleFile = async (file: File, id: string) => {
     try {
-      const formData = new FormData();
-      formData.append("file", file);
+      const url = await uploadService.upload(file);
 
-      const uploadRes = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
+      await todoService.update(id, {
+        attachment: url,
       });
 
-      if (!uploadRes.ok) {
-        throw new Error("Upload failed");
-      }
-
-      const data = await uploadRes.json();
-
-      const todoRes = await fetch(`/api/todos/${id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          attachment: data.url,
-        }),
-      });
-
-      if (!todoRes.ok) {
-        throw new Error("Failed to save attachment");
-      }
-
-      setTodo((prev: any) =>
-        prev.map((t: any) =>
-          t._id === id ? { ...t, attachment: data.url } : t,
-        ),
+      setTodo((prev) =>
+        prev.map((t) => (t._id === id ? { ...t, attachment: url } : t)),
       );
     } catch (err) {
       console.error("Handle file failed:", err);
@@ -521,31 +430,25 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
 
   const uploadFile = async (file: File) => {
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-
-      const res = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!res.ok) {
-        throw new Error("Upload failed");
-      }
-
-      const data = await res.json();
-
-      return data.url;
+      return await uploadService.upload(file);
     } catch (err) {
       console.error("Upload file failed:", err);
       return null;
     }
   };
 
-  const removeLink = async (id: string) =>
-    await updateTodo(id, {
-      attachment: "",
-    });
+  const removeLink = async (id: string) => {
+    try {
+      await todoService.update(id, {
+        attachment: "",
+      });
+      setTodo((prev) =>
+        prev.map((t) => (t._id === id ? { ...t, attachment: "" } : t)),
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const value = useMemo(
     () => ({

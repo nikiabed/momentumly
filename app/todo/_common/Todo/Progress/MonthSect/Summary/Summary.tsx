@@ -1,6 +1,6 @@
 import { getDateKey, toFa, useTodoContext } from "@/app/_utils";
 
-const Summary = () => {
+export const Summary = () => {
   const { todo } = useTodoContext();
   const now = new Date();
 
@@ -129,5 +129,3 @@ const Summary = () => {
     </div>
   );
 };
-
-export default Summary;

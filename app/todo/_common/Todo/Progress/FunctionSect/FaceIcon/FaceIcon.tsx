@@ -1,4 +1,4 @@
-const FaceIcon = ({ score }: { score: number }) => {
+export const FaceIcon = ({ score }: { score: number }) => {
   const moods = [
     {
       bg: "#FCA5A5",
@@ -45,5 +45,3 @@ const FaceIcon = ({ score }: { score: number }) => {
     </svg>
   );
 };
-
-export default FaceIcon;

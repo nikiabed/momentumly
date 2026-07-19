@@ -2,7 +2,7 @@ import { useTodoContext } from "@/app/_utils";
 import { getStats } from "@/app/_utils/stats";
 import Image from "next/image";
 
-const WeekSect = () => {
+export const WeekSect = () => {
     const { todo } = useTodoContext();
   
   const {progress} = getStats(todo)
@@ -52,4 +52,3 @@ const mood = getWeekMood(progress);
   );
 };
 
-export default WeekSect;

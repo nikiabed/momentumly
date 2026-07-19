@@ -1,1 +1,5 @@
 export * from './Progress'
+export * from './WeekSect'
+export * from './CoinSect'
+export * from './FunctionSect'
+export * from './MonthSect'

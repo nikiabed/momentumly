@@ -1,9 +1,9 @@
 import { useTodoContext } from "@/app/_utils";
 import { buildWeeklyProgress } from "@/app/_utils/progress";
-import FaceIcon from "./FaceIcon/FaceIcon";
-import RecordSect from "./RecordSect/RecordSect";
+import { FaceIcon } from "./FaceIcon";
+import { RecordSect } from "./RecordSect";
 
-const FunctionSect = () => {
+export const FunctionSect = () => {
   const { todo } = useTodoContext();
 
   const weekData = buildWeeklyProgress(todo);
@@ -43,5 +43,3 @@ const FunctionSect = () => {
     </div>
   );
 };
-
-export default FunctionSect;

@@ -11,8 +11,8 @@ import {
 } from "@/app/_utils";
 import { colors, Header } from "../../Header";
 import { Lists } from "../Lists";
-import { ListItemProps } from "../Todo.const";
 import { HamburgerMenu } from "iconsax-reactjs";
+import { Board as BoardType } from "@/app/types";
 
 export const Board = ({ item, sidebarOpen, setSidebarOpen }: any) => {
   const { todo, setTodo, boardList, searchText, systemBoardsState } =
@@ -22,7 +22,6 @@ export const Board = ({ item, sidebarOpen, setSidebarOpen }: any) => {
   const currentBoard =
     boardList.find((b) => b.boardKey === item.boardKey) ??
     systemBoardsState?.[item.boardKey];
-  const todayKey = getDateKey(new Date());
   const isAll = currentBoard?.boardKey === BOARD_KEYS.ALL;
   const isImportant = currentBoard?.boardKey === BOARD_KEYS.IMPORTANT;
   const isComplete = currentBoard?.boardKey === BOARD_KEYS.COMPLETE;
@@ -110,9 +109,12 @@ export const Board = ({ item, sidebarOpen, setSidebarOpen }: any) => {
             )}
             {currentBoard?.boardKey === BOARD_KEYS.ALL && (
               <>
-                {boardList?.map((board: ListItemProps) => {
+                {boardList?.map((board: BoardType) => {
                   const grouped = activeTodos.filter((t) => {
-                    return normalize(t.boardKey) === normalize(board.boardKey);
+                    return (
+                      t.boardKey &&
+                      normalize(t.boardKey) === normalize(board.boardKey)
+                    );
                   });
                   const groupByDate = (todos: any[]) => {
                     return todos.reduce(
@@ -151,9 +153,12 @@ export const Board = ({ item, sidebarOpen, setSidebarOpen }: any) => {
             )}
             {currentBoard?.boardKey === BOARD_KEYS.COMPLETE && (
               <>
-                {boardList?.map((board) => {
+                {boardList?.map((board: BoardType) => {
                   const grouped = completedTodos.filter((t) => {
-                    return normalize(t.boardKey) === normalize(board.boardKey);
+                    return (
+                      t.boardKey &&
+                      normalize(t.boardKey) === normalize(board.boardKey)
+                    );
                   });
                   if (!grouped.length) return null;
                   return (

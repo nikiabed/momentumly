@@ -5,20 +5,12 @@ export const BOARD_KEYS = {
   COMPLETE: "complete",
   PROGRESS: "progress",
   WORK: "work",
-  UUTITLED: "untitled",
+  UNTITLED: "untitled",
   SEARCH: "search",
 } as const;
 
-export type BoardKey =
-  | "myDay"
-  | "all"
-  | "important"
-  | "complete"
-  | "progress"
-  | "work"
-  | "untitled"
-  | "search";
-  
+export type BoardKey = (typeof BOARD_KEYS)[keyof typeof BOARD_KEYS];
+
 export const BOARD_LABELS: Record<BoardKey, string> = {
   myDay: "امروز",
   all: "همه",
@@ -29,4 +21,3 @@ export const BOARD_LABELS: Record<BoardKey, string> = {
   untitled: "بدون عنوان",
   search: "جستجو",
 } as const;
-

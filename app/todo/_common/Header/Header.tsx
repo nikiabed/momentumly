@@ -1,10 +1,10 @@
 import { t } from "@/app/i18n/t";
 import { titleToKey } from "../Sidebar";
-import { sidebar } from "../Sidebar/Sidebar.const";
-import { ListItemProps, TodoListType } from "../Todo/Todo.const";
 import { ItemIcon } from "./ItemIcon";
 import { Palette } from "./Palette";
-import Coins from "./Coins/Coins";
+import { Board, TodoList } from "@/app/types";
+import { BOARD_KEYS } from "@/app/_utils";
+import { Coins } from "./Coins";
 
 export const themeTextColor: Record<string, string> = {
   fire: "text-white",
@@ -20,13 +20,7 @@ export const themeTextColor: Record<string, string> = {
   "red-soft": "text-gray-700",
 };
 
-export const Header = ({
-  item,
-  todo,
-}: {
-  item: ListItemProps;
-  todo: TodoListType;
-}) => {
+export const Header = ({ item, todo }: { item: Board; todo: TodoList }) => {
   const formatPersianDate = (date: Date) => {
     return new Intl.DateTimeFormat("fa-IR", {
       weekday: "long",
@@ -36,8 +30,6 @@ export const Header = ({
       .format(date)
       .replace(" ", "، ");
   };
-
-
 
   return (
     <header
@@ -49,13 +41,12 @@ export const Header = ({
         <div
           className={`flex gap-5 items-center ${themeTextColor[item.theme]}`}
         >
-          
           <ItemIcon item={item} size={30} />
           <h2 className="font-semibold text-3xl">
             {t(titleToKey[item.title] ?? item.title)}
           </h2>
         </div>
-        {item.boardKey === "myDay" && (
+        {item.boardKey === BOARD_KEYS.MY_DAY && (
           <span className="text-lg">{formatPersianDate(new Date())}</span>
         )}
       </div>

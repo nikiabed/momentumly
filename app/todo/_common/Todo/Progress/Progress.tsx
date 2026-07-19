@@ -5,25 +5,18 @@ import { LineChart } from "../../LineChart";
 import { useTodoContext } from "@/app/_utils";
 import { ChartHeader } from "../../ChartHeader";
 import CoinSect from "./CoinSect/CoinSect";
-import FunctionSect from "./FunctionSect/FunctionSect";
-import MonthSect from "./MonthSect/MonthSect";
-import WeekSect from "./WeekSect/WeekSect";
+import { MonthSect } from "./MonthSect/MonthSect";
 import { useEffect, useRef, useState } from "react";
-
-type Props = {
-  progress: number;
-  xp?: number;
-  streak?: number;
-};
+import { WeekSect } from "./WeekSect";
+import { FunctionSect } from "./FunctionSect";
 
 export const Progress = () => {
   const { todo } = useTodoContext();
   const [weekOffset, setWeekOffset] = useState(0);
   const [chartWidth, setChartWidth] = useState(0);
   const isMobile = chartWidth < 500;
-  
-  const weeklyData = buildWeeklyProgress(todo, weekOffset, isMobile);
 
+  const weeklyData = buildWeeklyProgress(todo, weekOffset, isMobile);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -38,11 +31,6 @@ export const Progress = () => {
 
     return () => window.removeEventListener("resize", resize);
   }, []);
-
-  type Props = {
-    onChangeWeek: (offset: number) => void;
-    active: number;
-  };
 
   return (
     <div className="flex flex-col gap-4 w-full px-4 md:px-10 lg:px-16">

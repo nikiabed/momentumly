@@ -20,7 +20,7 @@ export const getStreak = (todos: any[]) => {
   }
   return streak;
 };
-const RecordSect = () => {
+export const RecordSect = () => {
   const { todo } = useTodoContext();
   const streak = getStreak(todo);
   return (
@@ -32,5 +32,3 @@ const RecordSect = () => {
     </div>
   );
 };
-
-export default RecordSect;

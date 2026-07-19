@@ -1,8 +1,9 @@
 "use client";
 import { More } from "iconsax-reactjs";
 import { useEffect, useRef, useState } from "react";
-import { ListItemProps } from "../..";
 import { useTodoContext } from "@/app/_utils/hooks/useTodoContext";
+import { Board } from "@/app/types";
+import { boardService } from "@/app/_utils";
 
 export const themeIconFill: Record<string, string> = {
   fire: "#ffffff",
@@ -78,7 +79,7 @@ export const colors = [
   },
 ];
 
-export const Palette = ({ item }: { item: ListItemProps }) => {
+export const Palette = ({ item }: { item: Board }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { setBoardList, setSystemBoardsState } = useTodoContext();
   const [selectedColor, setSelectedColor] = useState(item.theme ?? "sunset");
@@ -106,8 +107,8 @@ export const Palette = ({ item }: { item: ListItemProps }) => {
     const isMongoBoard = /^[a-f\d]{24}$/i.test(item._id);
 
     if (isMongoBoard) {
-      setBoardList?.((prev: any) =>
-        prev.map((b: any) => (b._id === item._id ? { ...b, theme: key } : b)),
+      setBoardList?.((prev: Board[]) =>
+        prev.map((b: Board) => (b._id === item._id ? { ...b, theme: key } : b)),
       );
     } else {
       setSystemBoardsState?.((prev: any) => ({
@@ -120,17 +121,10 @@ export const Palette = ({ item }: { item: ListItemProps }) => {
     }
 
     if (isMongoBoard) {
-      const res = await fetch("/api/boards/theme", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          boardId: item._id,
-          theme: key,
-        }),
-      });
-
-      if (!res.ok) {
-        console.error("SAVE FAILED");
+      try {
+        await boardService.updateTheme(item._id, key);
+      } catch (err) {
+        console.error("SAVE FAILED", err);
       }
     }
   };

@@ -4,17 +4,16 @@ import { TodoContext } from "@/app/_utils/hooks";
 import { ArrowDown2, Calendar, Clock, Moon, Sun1 } from "iconsax-reactjs";
 import { useContext, useState } from "react";
 import { TodoList } from "../TodoList";
-import { t } from "@/app/i18n/t";
-import { titleToKey } from "../../Sidebar";
-import { formatGroupDate, getDateKey } from "@/app/_utils/date";
+import { formatGroupDate } from "@/app/_utils/date";
 import { getTodoDisplayDate } from "@/app/_utils/todo";
+import { Todo, TodoList as TodoListType } from "@/app/types";
 
-export const Lists = ({ todo, list }: any) => {
+export const Lists = ({ todo, list }: { todo: TodoListType; list: string }) => {
   const [isOpen, setOpen] = useState(false);
   const { setTodo } = useContext(TodoContext);
 
   const groupedByDate = todo.reduce(
-    (acc: Record<string, typeof todo>, item: any) => {
+    (acc: Record<string, typeof todo>, item: Todo) => {
       const date = getTodoDisplayDate(item);
       if (!acc[date || ""]) {
         acc[date || ""] = [];
@@ -43,7 +42,7 @@ export const Lists = ({ todo, list }: any) => {
         </span>
       </div>
       {isOpen &&
-        Object.entries(groupedByDate).map(([date, todos]: any) => {
+        Object.entries(groupedByDate).map(([date, todos]) => {
           const formatted = formatGroupDate(date);
           const icon =
             formatted.label === "امروز" ? (
@@ -72,10 +71,8 @@ export const Lists = ({ todo, list }: any) => {
                     {formatted.label}
                   </span>
                 )}
-
                 <span className="text-sm text-gray-200">{formatted.date}</span>
               </div>
-
               <TodoList todo={todos} setTodo={setTodo} />
             </div>
           );

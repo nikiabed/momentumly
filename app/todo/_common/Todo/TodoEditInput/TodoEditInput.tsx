@@ -12,9 +12,8 @@ import {
   ArrowUp2,
   Folder,
   Link21,
-  Clock,
 } from "iconsax-reactjs";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { titleToKey } from "../../Sidebar";
 import { t } from "@/app/i18n/t";
 import { BOARD_KEYS, isInMyDay, isManuallyInMyDay } from "@/app/_utils";

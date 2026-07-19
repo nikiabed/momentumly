@@ -4,7 +4,7 @@ import { CloseCircle, TickCircle } from "iconsax-reactjs";
 import { useTodoContext } from "@/app/_utils/hooks";
 import { TodoEditInput } from "../TodoEditInput";
 import { getDateKey } from "@/app/_utils";
-import { TodoType } from "../..";
+import { Todo } from "@/app/types";
 
 type itemProps = DetailedHTMLProps<
   HTMLAttributes<HTMLDivElement>,
@@ -14,7 +14,7 @@ type itemProps = DetailedHTMLProps<
 };
 
 export const getTodoState = (
-  todo: TodoType,
+  todo: Todo,
   today = getDateKey(new Date()),
 ) => {
   if (todo.status) return "done";

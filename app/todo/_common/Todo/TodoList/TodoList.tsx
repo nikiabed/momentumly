@@ -1,9 +1,8 @@
 "use client";
 import { useCallback, useState } from "react";
-import { TodoListType } from "../Todo.const";
 import { TodoListItems } from "../TodoListItem";
 import { v4 as uuidv4 } from "uuid";
-
+import { TodoList as TodoListType } from "@/app/types";
 
 export const TodoList = ({
   todo,
@@ -16,11 +15,8 @@ export const TodoList = ({
   const [dragPage, setDragPage] = useState(0);
   const handleDrag = (e: any) => {
     setDragPage(e.pageY);
-    
   };
-  const handleDragEnter = (e: any) => {
-    
-  };
+  const handleDragEnter = (e: any) => {};
   const handleDragLeave = (e: any) => {
     // setList((prev) =>
     //   prev.map((li: any) => (li.dragEnter ? { ...li, dragEnter: false } : li)),
@@ -71,7 +67,7 @@ export const TodoList = ({
     //   clone.splice(1)
     //   return clone
     // });
-  },[]);
+  }, []);
   return (
     <>
       <ul
@@ -94,4 +90,4 @@ export const TodoList = ({
       </ul>
     </>
   );
-}
+};

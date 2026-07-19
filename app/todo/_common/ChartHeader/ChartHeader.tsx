@@ -1,6 +1,7 @@
 "use client";
 import { ArrowDown2 } from "iconsax-reactjs";
 import { FC, useState } from "react";
+import { CHART_HEADER, WEEK_OPTIONS } from "./chartHeader.const";
 type ChartHeaderProps = {
   onChangeWeek: (offset: number) => void;
   active: number;
@@ -18,7 +19,7 @@ export const ChartHeader: FC<ChartHeaderProps> = ({
 
   return (
     <div className="flex items-center justify-between mb-1 px-10 text-gray-700 font-bold text-lg">
-      <h2>پیشرفت هفتگی</h2>
+      <h2>{CHART_HEADER.title}</h2>
 
       <div
         className="relative flex gap-2 px-3 py-1.5 justify-center items-center
@@ -33,13 +34,7 @@ export const ChartHeader: FC<ChartHeaderProps> = ({
         onClick={() => setOpen(!open)}
       >
         <ArrowDown2 size={16} />
-        <button>
-          {active === 0
-            ? "این هفته"
-            : active === 1
-              ? "هفته قبل"
-              : `${active} هفته قبل`}
-        </button>
+        <button>{WEEK_OPTIONS.find((w) => w.value === active)?.label}</button>
 
         {open && (
           <div
@@ -58,19 +53,19 @@ export const ChartHeader: FC<ChartHeaderProps> = ({
               className="w-full px-3 py-2 text-sm hover:bg-slate-50 text-right cursor-pointer"
               onClick={() => selectWeek(0)}
             >
-              این هفته{" "}
+              {WEEK_OPTIONS.find((w) => w.value === 0)?.label}
             </button>
             <button
               className="w-full px-3 py-2 text-sm hover:bg-slate-50 text-right cursor-pointer"
               onClick={() => selectWeek(1)}
             >
-              هفته قبل
+              {WEEK_OPTIONS.find((w) => w.value === 1)?.label}
             </button>
             <button
               className="w-full px-3 py-2 text-sm hover:bg-slate-50 text-right cursor-pointer"
               onClick={() => selectWeek(2)}
             >
-              2 هفته قبل
+              {WEEK_OPTIONS.find((w) => w.value === 2)?.label}
             </button>
           </div>
         )}
