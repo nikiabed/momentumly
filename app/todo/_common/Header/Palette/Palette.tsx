@@ -81,7 +81,7 @@ export const colors = [
 
 export const Palette = ({ item }: { item: Board }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { setBoardList, setSystemBoardsState } = useTodoContext();
+  const { setBoardList, setSystemBoards } = useTodoContext();
   const [selectedColor, setSelectedColor] = useState(item.theme ?? "sunset");
   const paletteRef = useRef<HTMLDivElement>(null);
 
@@ -111,7 +111,7 @@ export const Palette = ({ item }: { item: Board }) => {
         prev.map((b: Board) => (b._id === item._id ? { ...b, theme: key } : b)),
       );
     } else {
-      setSystemBoardsState?.((prev: any) => ({
+      setSystemBoards?.((prev: any) => ({
         ...prev,
         [item.boardKey]: {
           ...prev[item.boardKey],

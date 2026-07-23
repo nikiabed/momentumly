@@ -12,7 +12,6 @@ import { Board } from "@/app/types";
 export const Sidebar = ({ sidebarOpen, setSidebarOpen }: any) => {
   const { handleNewList, uiBoard } = useTodoContext();
   const { data } = useSession();
-
   return (
     <div
       className={`

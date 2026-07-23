@@ -1,24 +1,11 @@
 "use client";
 import { useMemo, useState } from "react";
 import { TodoContext } from "../../hooks";
-import { BOARD_KEYS } from "../../constants";
+import { BOARD_KEYS, BOARD_LABELS } from "../../constants";
 import { Todo, Board } from "@/app/types";
 import { useBoards } from "../../hooks/useBoards";
 import { useTodos } from "../../hooks/useTodos";
 import { useBoardView } from "../../hooks/useBoardView";
-
-type SystemBoard = {
-  _id: string;
-  theme: string;
-  title: string;
-  state: boolean;
-  icon: string;
-  color: string;
-  boardKey: string;
-  isEdit: boolean;
-  editable: boolean;
-  filter: (todo: any) => any;
-};
 
 export type TodoUpdate = Partial<
   Pick<
@@ -37,6 +24,37 @@ export type TodoUpdate = Partial<
 export function TodoProvider({ children }: { children: React.ReactNode }) {
   const [activeBoard, setActiveBoard] = useState<string>("myDay");
   const [searchText, setSearchText] = useState("");
+  const [systemBoards, setSystemBoards] = useState<Record<string, Board>>({
+    important: {
+      _id: BOARD_KEYS.IMPORTANT,
+      title: BOARD_LABELS.important,
+      boardKey: BOARD_KEYS.IMPORTANT,
+      icon: "Star1",
+      color: BOARD_KEYS.IMPORTANT,
+      order: 2,
+      editable: false,
+      isEdit: false,
+      theme: "fire",
+      state: false,
+      filter: (todo: any) => todo.isImportant,
+    },
+
+    search: {
+      _id: BOARD_KEYS.SEARCH,
+      title: BOARD_LABELS.search,
+      boardKey: BOARD_KEYS.SEARCH,
+      icon: "SearchNormal1",
+      color: BOARD_KEYS.SEARCH,
+      order: 0,
+      editable: false,
+      isEdit: false,
+      theme: "purple",
+      state: false,
+      filter: (todo: any) =>
+        searchText &&
+        todo.title.toLowerCase().includes(searchText.toLowerCase()),
+    },
+  });
 
   const todos = useTodos(activeBoard);
   const boards = useBoards(activeBoard, setActiveBoard);
@@ -45,6 +63,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     todos.todo,
     activeBoard,
     searchText,
+    systemBoards,
   );
   const handleToggleImportant = async (id: string, value: boolean) => {
     const success = await todos.toggleImportant(id, value);
@@ -55,6 +74,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     }
   };
   const selectBoard = (board: Board, id: string) => {
+    console.log("CLICK BOARD", board);
     if (searchText) {
       setActiveBoard?.("search");
     }
@@ -76,6 +96,10 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       selectBoard,
       activeBoard,
       setActiveBoard,
+      systemBoards,
+      setSystemBoards,
+      searchText,
+      setSearchText,
     }),
     [
       todos,
@@ -85,8 +109,12 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       setActiveBoard,
       activeBoard,
       handleToggleImportant,
+      systemBoards,
+      setSystemBoards,
+      searchText,
+      setSearchText,
     ],
   );
-
+  console.log("PROVIDER SEARCH", searchText);
   return <TodoContext.Provider value={value}>{children}</TodoContext.Provider>;
 }

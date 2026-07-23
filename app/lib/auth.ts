@@ -20,7 +20,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
   callbacks: {
     async signIn({ user }) {
-      console.log("LOGIN START");
       await connectDB();
       console.log("TODO COUNT:", await Todo.countDocuments());
 

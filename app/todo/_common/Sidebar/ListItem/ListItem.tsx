@@ -27,7 +27,7 @@ export const ListItem = ({ focused }: { focused: Board }) => {
     saveBoard,
     todo,
     boardList,
-    systemBoardsState,
+    systemBoards,
     setNewBoardKey,
     newBoardKey,
   } = useTodoContext();
@@ -58,7 +58,7 @@ export const ListItem = ({ focused }: { focused: Board }) => {
   const value = t(titleToKey[focused.title] ?? focused.title);
   const currentBoard =
     boardList.find((b) => b.boardKey === focused.boardKey) ??
-    systemBoardsState?.[focused.boardKey];
+    systemBoards?.[focused.boardKey];
   const isAll = currentBoard?.boardKey === BOARD_KEYS.ALL;
   const isImportant = currentBoard?.boardKey === BOARD_KEYS.IMPORTANT;
   const isComplete = currentBoard?.boardKey === BOARD_KEYS.COMPLETE;

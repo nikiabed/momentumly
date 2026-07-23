@@ -15,22 +15,28 @@ import { HamburgerMenu } from "iconsax-reactjs";
 import { Board as BoardType } from "@/app/types";
 
 export const Board = ({ item, sidebarOpen, setSidebarOpen }: any) => {
-  const { todo, setTodo, boardList, searchText, systemBoardsState } =
+  const { todo, setTodo, boardList, searchText, systemBoards } =
     useTodoContext();
 
   const normalize = (key?: string) => key?.toLowerCase().replace(/\s/g, "");
   const currentBoard =
-    boardList.find((b) => b.boardKey === item.boardKey) ??
-    systemBoardsState?.[item.boardKey];
+    systemBoards?.[item.boardKey] ??
+    boardList.find((b) => b.boardKey === item.boardKey);
   const isAll = currentBoard?.boardKey === BOARD_KEYS.ALL;
   const isImportant = currentBoard?.boardKey === BOARD_KEYS.IMPORTANT;
   const isComplete = currentBoard?.boardKey === BOARD_KEYS.COMPLETE;
   const isMyDay = currentBoard?.boardKey === BOARD_KEYS.MY_DAY;
+  const isSearch = currentBoard?.boardKey === BOARD_KEYS.SEARCH;
 
   const filteredTodos = todo.filter((t) => {
     if (!currentBoard) return false;
     if (isAll) return true;
     if (isImportant) return t.isImportant;
+    if (isSearch) {
+      return (
+        searchText && t.title.toLowerCase().includes(searchText.toLowerCase())
+      );
+    }
     if (isComplete) return t.status;
     if (isMyDay) {
       return isInMyDay(t);
@@ -42,9 +48,8 @@ export const Board = ({ item, sidebarOpen, setSidebarOpen }: any) => {
   const completedTodos = filteredTodos.filter((t) => t.status);
   const searchTodos = todo
     .filter((t) => !t.status)
-    .filter(
-      (t) =>
-        searchText && t.title.toLowerCase().includes(searchText.toLowerCase()),
+    .filter((t) =>
+      t.title.toLowerCase().includes((searchText ?? "").toLowerCase()),
     );
 
   const isImage = currentBoard?.theme?.startsWith("img:");
@@ -67,6 +72,16 @@ export const Board = ({ item, sidebarOpen, setSidebarOpen }: any) => {
   if (!boardList?.length) {
     return <div>Loading boards...</div>;
   }
+
+  console.log("SEARCH DEBUG", {
+    item,
+    currentBoard,
+    searchText,
+    todoCount: todo.length,
+  });
+
+  console.log("SEARCH TODOS", searchTodos);
+  console.log("BOARD SEARCH", searchText);
 
   return (
     <div
@@ -182,7 +197,6 @@ export const Board = ({ item, sidebarOpen, setSidebarOpen }: any) => {
                   )}
                 </>
               )}
-            {searchText && <TodoList todo={searchTodos} setTodo={setTodo} />}
             {currentBoard?.boardKey === BOARD_LABELS[BOARD_KEYS.ALL] &&
               boardList
                 ?.slice()

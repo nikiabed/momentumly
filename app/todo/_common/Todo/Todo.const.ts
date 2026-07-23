@@ -32,7 +32,6 @@ export type Context = {
   handleNewChange?: (id: string, title: string) => Promise<void>;
   setEditedTask?: any;
   handleEditedTask?: (e: any) => void;
-  focused: Board[];
   setFocused?: Dispatch<SetStateAction<Board[]>>;
   handleIsEdit?: (index: string) => void;
   handleImportant?: (index: string) => void;
@@ -61,8 +60,8 @@ export type Context = {
   uiBoard?: Board[];
   saveBoard?: (id: string) => Promise<void>;
   handleUpdateTodo?: (id: string, title: string) => Promise<void>;
-  systemBoardsState?: Record<string, Board>;
-  setSystemBoardsState?: Dispatch<SetStateAction<Record<string, Board>>>;
+  systemBoards?: Record<string, Board>;
+  setSystemBoards?: Dispatch<SetStateAction<Record<string, Board>>>;
   newBoardKey?: string | null;
   setNewBoardKey?: React.Dispatch<React.SetStateAction<string | null>>;
   removeFromMyDay?: (id: string) => Promise<void>;
