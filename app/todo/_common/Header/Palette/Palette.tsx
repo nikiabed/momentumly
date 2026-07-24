@@ -3,7 +3,7 @@ import { More } from "iconsax-reactjs";
 import { useEffect, useRef, useState } from "react";
 import { useTodoContext } from "@/app/_utils/hooks/useTodoContext";
 import { Board } from "@/app/types";
-import { boardService } from "@/app/_utils";
+import { userPreferenceService } from "@/app/_utils";
 
 export const themeIconFill: Record<string, string> = {
   fire: "#ffffff",
@@ -111,20 +111,18 @@ export const Palette = ({ item }: { item: Board }) => {
         prev.map((b: Board) => (b._id === item._id ? { ...b, theme: key } : b)),
       );
     } else {
-      setSystemBoards?.((prev: any) => ({
+      setSystemBoards?.((prev) => ({
         ...prev,
         [item.boardKey]: {
           ...prev[item.boardKey],
           theme: key,
         },
       }));
-    }
 
-    if (isMongoBoard) {
       try {
-        await boardService.updateTheme(item._id, key);
+        await userPreferenceService.updateTheme(item.boardKey, key);
       } catch (err) {
-        console.error("SAVE FAILED", err);
+        console.log(err);
       }
     }
   };
@@ -140,6 +138,10 @@ export const Palette = ({ item }: { item: Board }) => {
   };
 
   const iconFill = isImage ? "#374151" : themeIconFill[item.theme];
+
+  useEffect(() => {
+    setSelectedColor(item.theme ?? "sunset");
+  }, [item.theme]);
 
   return (
     <div className="relative" ref={paletteRef}>

@@ -21,12 +21,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   callbacks: {
     async signIn({ user }) {
       await connectDB();
-      console.log("TODO COUNT:", await Todo.countDocuments());
-
       let dbUser = await User.findOne({
         email: user.email,
       });
-
 
       if (!dbUser) {
         dbUser = await User.create({
@@ -34,8 +31,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           name: user.name,
           image: user.image,
         });
-
-        console.log("CREATED USER", dbUser?._id);
 
         const todoResult = await Todo.updateMany(
           {
@@ -57,6 +52,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             },
           },
         );
+      }
+
+      if (!dbUser.preferences) {
+        dbUser.preferences = {
+          boardThemes: {
+            important: "fire",
+            search: "purple",
+          },
+        };
+
+        await dbUser.save();
       }
 
       return true;

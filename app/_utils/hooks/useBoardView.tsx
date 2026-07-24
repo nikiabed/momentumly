@@ -21,25 +21,18 @@ export function useBoardView(
       hasImportant &&
       !base.some((b) => b.boardKey === BOARD_KEYS.IMPORTANT)
     ) {
-      base.splice(1, 0, {
-        ...systemBoards.important,
-        state: activeBoard === BOARD_KEYS.IMPORTANT,
-      });
+      base.splice(1, 0, systemBoards.important);
     }
 
     if (searchText) {
-      base.unshift({
-        ...systemBoards.search,
-        state: activeBoard === BOARD_KEYS.SEARCH,
-      });
+      base.unshift(systemBoards.search);
     }
 
     return base.sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
-  }, [boardList, todo, activeBoard, systemBoards, searchText]);
+  }, [boardList, todo, systemBoards, searchText]);
 
   return {
     uiBoard,
     systemBoards,
-    setSystemBoards,
   };
 }

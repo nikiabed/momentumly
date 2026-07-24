@@ -1,12 +1,12 @@
 "use client";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { TodoContext } from "../../hooks";
 import { BOARD_KEYS, BOARD_LABELS } from "../../constants";
 import { Todo, Board } from "@/app/types";
 import { useBoards } from "../../hooks/useBoards";
 import { useTodos } from "../../hooks/useTodos";
 import { useBoardView } from "../../hooks/useBoardView";
-
+import { userPreferenceService } from "../../services";
 export type TodoUpdate = Partial<
   Pick<
     Todo,
@@ -86,6 +86,37 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       })),
     );
   };
+
+  useEffect(() => {
+     console.log("🔥 PROVIDER MOUNT");
+     const loadPreferences = async () => {
+      console.log("🔥 Before fetch");
+      try {
+        const data = await userPreferenceService.getPreferences();
+        console.log("🔥 PREF DATA FULL", JSON.stringify(data, null, 2));
+
+        setSystemBoards((prev) => ({
+          ...prev,
+          important: {
+            ...prev.important,
+            theme:
+              data.systemBoards?.important?.theme ??
+              prev.important.theme,
+          },
+          search: {
+            ...prev.search,
+            theme:
+              data.systemBoards?.search?.theme ??
+              prev.search.theme,
+          },
+        }));
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    loadPreferences();
+  }, []);
 
   const value = useMemo(
     () => ({
