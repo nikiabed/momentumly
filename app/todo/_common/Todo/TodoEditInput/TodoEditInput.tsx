@@ -113,7 +113,7 @@ export const TodoEditInput = ({ list }: any) => {
    md:justify-evenly z-0 md:flex-row "
         >
           <div
-            onClick={() => handleIsEdit?.(list._id)}
+            onClick={() => handleIsEdit?.(list._id, true)}
             className="flex w-full items-center gap-3 px-4 py-3 cursor-pointer text-sm text-center justify-center hover:bg-black/5 transition"
           >
             <Edit size={18} />

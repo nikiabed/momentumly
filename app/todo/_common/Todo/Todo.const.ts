@@ -1,5 +1,10 @@
 import { TodoList } from "@/app/types/todo";
-import { ChangeEventHandler, Dispatch, SetStateAction } from "react";
+import {
+  ChangeEvent,
+  ChangeEventHandler,
+  Dispatch,
+  SetStateAction,
+} from "react";
 import { v4 as uuidv4 } from "uuid";
 import { Board } from "@/app/types/board";
 
@@ -22,10 +27,10 @@ export type Context = {
   setTodo?: any;
   inputValue?: string | null;
   addTodo?: (title: string, item: Board) => void;
-  handleChange?: ChangeEventHandler<HTMLInputElement, HTMLInputElement> | null;
+  handleChange?: (e: ChangeEvent<HTMLInputElement, Element>) => void;
   deleteTodo?: (id: string) => Promise<void>;
   changeTaskState?: (index: string) => void;
-  handleSubmit?: (e: any, item: Board) => void;
+  handleSubmit?: (e: any, item: Board) => Promise<void>;
   isEdit?: boolean;
   setEdit?: any;
   editedTask?: string | null;
@@ -33,7 +38,7 @@ export type Context = {
   setEditedTask?: any;
   handleEditedTask?: (e: any) => void;
   setFocused?: Dispatch<SetStateAction<Board[]>>;
-  handleIsEdit?: (index: string) => void;
+  handleIsEdit?: (id: string, value: boolean) => void;
   handleImportant?: (index: string) => void;
   handleBoardSubmit?: (index: string, text: string) => void;
   boardValue?: string;

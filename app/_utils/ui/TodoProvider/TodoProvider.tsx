@@ -18,6 +18,7 @@ export type TodoUpdate = Partial<
     | "deadline"
     | "attachment"
     | "completedAt"
+    | "isEdit"
   >
 >;
 
@@ -88,22 +89,18 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
-     const loadPreferences = async () => {
+    const loadPreferences = async () => {
       try {
         const data = await userPreferenceService.getPreferences();
         setSystemBoards((prev) => ({
           ...prev,
           important: {
             ...prev.important,
-            theme:
-              data.systemBoards?.important?.theme ??
-              prev.important.theme,
+            theme: data.systemBoards?.important?.theme ?? prev.important.theme,
           },
           search: {
             ...prev.search,
-            theme:
-              data.systemBoards?.search?.theme ??
-              prev.search.theme,
+            theme: data.systemBoards?.search?.theme ?? prev.search.theme,
           },
         }));
       } catch (err) {
@@ -142,6 +139,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       setSearchText,
     ],
   );
-  console.log("PROVIDER SEARCH", searchText);
+  console.log("TODOS CONTEXT", todos.todo);
+  console.log("VIEW TODO", view.todos);
   return <TodoContext.Provider value={value}>{children}</TodoContext.Provider>;
 }

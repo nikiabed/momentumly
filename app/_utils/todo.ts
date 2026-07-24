@@ -1,17 +1,17 @@
-import { TodoType } from "../todo/_common";
+import { Todo } from "../types";
 import { getDateKey } from "./date";
 
-export const isInMyDay = (todo: TodoType) => {
+export const isInMyDay = (todo: Todo) => {
   const today = getDateKey(new Date());
   const manuallyAdded = todo.myDayDate === today;
   const deadlineToday = todo.deadline && getDateKey(todo.deadline) === today;
   return manuallyAdded || deadlineToday;
 };
 
-export const isManuallyInMyDay = (todo: TodoType) =>
+export const isManuallyInMyDay = (todo: Todo) =>
   todo.myDayDate === getDateKey(new Date());
 
-export const isInDay = (todo: TodoType, date: Date | string) => {
+export const isInDay = (todo: Todo, date: Date | string) => {
   const dayKey = getDateKey(date);
 
   return (
@@ -20,6 +20,6 @@ export const isInDay = (todo: TodoType, date: Date | string) => {
   );
 };
 
-export const getTodoDisplayDate = (todo: TodoType) => {
+export const getTodoDisplayDate = (todo: Todo) => {
   return getDateKey(todo.deadline || todo.createdAt);
 };

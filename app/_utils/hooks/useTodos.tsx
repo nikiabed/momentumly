@@ -1,5 +1,5 @@
 "use client";
-import { TodoList } from "@/app/types/todo";
+import { Todo, TodoList } from "@/app/types/todo";
 import { useEffect, useState } from "react";
 import { TodoUpdate } from "../ui";
 import { todoService, uploadService } from "../services";
@@ -18,25 +18,37 @@ export function useTodos(activeBoard: string) {
   const loadTodos = async () => {
     try {
       const data = await todoService.getTodos();
+      console.log("LOADED TODOS AFTER CREATE", data);
+
       setTodo(data);
     } catch (err) {
       console.error("Load todos failed:", err);
     }
+    console.log("LOAD TODOS RESULT", todo);
   };
 
   const updateTodo = async (id: string, changes: TodoUpdate) => {
     try {
-      await todoService.update(id, changes);
-      setTodo((prev) =>
-        prev.map((t) => (t._id === id ? { ...t, ...changes } : t)),
-      );
+      const updated = await todoService.update(id, changes);
+
+      console.log("UPDATED FROM API", updated.todo);
+
+      setTodo((prev) => {
+        const next = prev.map((t) => (t._id === id ? updated.todo : t));
+        console.log(
+          "STATE AFTER UPDATE",
+          next.find((t) => t._id === id),
+        );
+
+        return next;
+      });
+
       return true;
     } catch (err) {
       console.error(err);
       return false;
     }
   };
-
   const createTodo = async (todo: {
     title: string;
     status: boolean;
@@ -45,7 +57,11 @@ export function useTodos(activeBoard: string) {
     boardKey?: string;
   }) => {
     try {
-      await todoService.create({
+      console.log("CREATE TODO", todo.title);
+      const isMyDay =
+        activeBoard === BOARD_KEYS.MY_DAY ||
+        activeBoard === BOARD_KEYS.IMPORTANT;
+      const result = await todoService.create({
         ...todo,
         boardKey:
           activeBoard === BOARD_KEYS.IMPORTANT
@@ -54,11 +70,12 @@ export function useTodos(activeBoard: string) {
         status: false,
         isImportant: activeBoard === BOARD_KEYS.IMPORTANT ? true : false,
         isEdit: false,
-        myDayDate:
-          activeBoard === BOARD_KEYS.MY_DAY ? getDateKey(new Date()) : null,
+        myDayDate: isMyDay ? getDateKey(new Date()) : null,
       });
+      console.log("result", result);
 
       await loadTodos();
+      console.log("🔥 LOAD TODOS CALLED");
     } catch (err) {
       console.error("Create todo failed:", err);
     }
@@ -100,30 +117,32 @@ export function useTodos(activeBoard: string) {
     setInputValue("");
   };
 
-  const handleChange = (e: any) => {
-    e.preventDefault();
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
   };
 
   const handleSubmit = async (e: any, item: Board) => {
     e.preventDefault();
+    console.log("🔥 HANDLE SUBMIT");
     if (!inputValue.trim()) return;
     await addTodo(inputValue, item);
   };
 
-  const handleUpdateTodo = async (id: string, title: string) => {
-    await updateTodo(id, {
-      title,
+  const handleUpdateTodo = async (list: Todo, title: string) => {
+    const result = await updateTodo(list._id, {
+      title: title,
+      isEdit: false,
     });
+    console.log("result", result);
   };
 
-  const handleIsEdit = (id: string) => {
+  const handleIsEdit = (id: string, value: boolean) => {
     setTodo((prev) =>
       prev.map((item) =>
         item._id === id
           ? {
               ...item,
-              isEdit: true,
+              isEdit: value,
             }
           : item,
       ),

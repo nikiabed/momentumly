@@ -1,5 +1,12 @@
 "use client";
-import { DetailedHTMLProps, FC, HTMLAttributes, memo, useState } from "react";
+import {
+  DetailedHTMLProps,
+  FC,
+  HTMLAttributes,
+  memo,
+  useEffect,
+  useState,
+} from "react";
 import { CloseCircle, TickCircle } from "iconsax-reactjs";
 import { useTodoContext } from "@/app/_utils/hooks";
 import { TodoEditInput } from "../TodoEditInput";
@@ -13,10 +20,7 @@ type itemProps = DetailedHTMLProps<
   list: string[];
 };
 
-export const getTodoState = (
-  todo: Todo,
-  today = getDateKey(new Date()),
-) => {
+export const getTodoState = (todo: Todo, today = getDateKey(new Date())) => {
   if (todo.status) return "done";
   if (!todo.deadline) return "normal";
   const deadline = getDateKey(todo.deadline);
@@ -31,8 +35,12 @@ export const TodoListItems: FC<itemProps> = ({ list, ...props }: any) => {
   const { handleUpdateTodo, handleIsEdit } = useTodoContext();
 
   const todayKey = getDateKey(new Date()) || "normal";
+  useEffect(() => {
+    setLocalTitle(list.title);
+  }, [list.title]);
   const state = getTodoState(list, todayKey);
 
+  console.log("RENDER TODO", list._id, list.isEdit);
   return (
     <div
       {...props}
@@ -45,12 +53,13 @@ export const TodoListItems: FC<itemProps> = ({ list, ...props }: any) => {
           name="edited task"
           onKeyDown={(e: any) => {
             if (e.key === "Escape") {
-              handleIsEdit?.(list._id);
+              handleIsEdit?.(list._id, false);
             }
           }}
           onSubmit={(e) => {
             e.preventDefault();
-            handleUpdateTodo?.(list._id, localTitle);
+            console.log("EDIT SUBMIT");
+            handleUpdateTodo?.(list, localTitle);
           }}
           className="flex items-center justify-center w-full"
         >
@@ -58,7 +67,7 @@ export const TodoListItems: FC<itemProps> = ({ list, ...props }: any) => {
             type="button"
             className="pr-5 px-1"
             onClick={() => {
-              handleIsEdit?.(list._id);
+              handleIsEdit?.(list._id, false);
             }}
           >
             <CloseCircle size={20} />
