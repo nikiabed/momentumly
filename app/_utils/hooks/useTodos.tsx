@@ -47,13 +47,17 @@ export function useTodos(activeBoard: string) {
     try {
       await todoService.create({
         ...todo,
-        boardKey: activeBoard,
+        boardKey:
+          activeBoard === BOARD_KEYS.IMPORTANT
+            ? BOARD_KEYS.MY_DAY
+            : activeBoard,
         status: false,
-        isImportant: false,
+        isImportant: activeBoard === BOARD_KEYS.IMPORTANT ? true : false,
         isEdit: false,
         myDayDate:
           activeBoard === BOARD_KEYS.MY_DAY ? getDateKey(new Date()) : null,
       });
+
       await loadTodos();
     } catch (err) {
       console.error("Create todo failed:", err);

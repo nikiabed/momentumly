@@ -88,13 +88,9 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
-     console.log("🔥 PROVIDER MOUNT");
      const loadPreferences = async () => {
-      console.log("🔥 Before fetch");
       try {
         const data = await userPreferenceService.getPreferences();
-        console.log("🔥 PREF DATA FULL", JSON.stringify(data, null, 2));
-
         setSystemBoards((prev) => ({
           ...prev,
           important: {
