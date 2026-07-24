@@ -211,7 +211,7 @@ export const TodoEditInput = ({ list }: any) => {
             )}
           </div>
 
-          {isManuallyInMyDay(list) && isInMyDay(list) && (
+          {isManuallyInMyDay(list) && list.boardKey !== BOARD_KEYS.MY_DAY && (
             <div
               onClick={() => removeFromMyDay?.(list._id)}
               className="flex w-full items-center gap-3 px-4 py-3 cursor-pointer text-sm text-center justify-center hover:bg-black/5 transition"
