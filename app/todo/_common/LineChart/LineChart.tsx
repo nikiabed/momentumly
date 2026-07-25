@@ -175,7 +175,7 @@ export const LineChart: FC<Props> = ({ data, width, height }) => {
 
       ctx.textAlign = "center";
 
-      ctx.fillText(`XP ${d.score} `, x, y - 10);
+      ctx.fillText(`%${d.score} `, x, y - 10);
       // bottom label
       if (width > 420) {
         ctx.font = "16px dana";
@@ -237,7 +237,6 @@ export const LineChart: FC<Props> = ({ data, width, height }) => {
     const tooltipWidth = 180;
     if (!tooltip) return;
     if (index === 0) {
-      // شنبه
       return {
         transform: "translateX(0)",
         left: tooltip.x - 220,
@@ -245,7 +244,6 @@ export const LineChart: FC<Props> = ({ data, width, height }) => {
     }
 
     if (index === data.length - 1) {
-      // جمعه
       return {
         transform: "translateX(-100%)",
         left: tooltip.x + 220,
@@ -257,14 +255,6 @@ export const LineChart: FC<Props> = ({ data, width, height }) => {
       left: tooltip.x,
     };
   };
-  console.log(
-    data.map((d) => ({
-      day: d.label,
-      score: d.score,
-      onTime: d.onTime,
-      recovery: d.recovery,
-    })),
-  );
 
   return (
     <div className="relative">
@@ -327,7 +317,7 @@ export const LineChart: FC<Props> = ({ data, width, height }) => {
             <div className="bg-purple-50 rounded-xl p-3 text-center">
               <div className="text-xs text-purple-400">⭐ امتیاز</div>
               <div className="font-bold text-purple-600 mt-1">
-                {tooltip.data.score} XP
+                %{tooltip.data.score}
               </div>
             </div>
           </div>

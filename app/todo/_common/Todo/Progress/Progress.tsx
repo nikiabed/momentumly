@@ -9,6 +9,7 @@ import { MonthSect } from "./MonthSect/MonthSect";
 import { useEffect, useRef, useState } from "react";
 import { WeekSect } from "./WeekSect";
 import { FunctionSect } from "./FunctionSect";
+import { getXPStats } from "@/app/_utils/progress";
 
 export const Progress = () => {
   const { todo } = useTodoContext();
@@ -17,7 +18,7 @@ export const Progress = () => {
   const isMobile = chartWidth < 500;
 
   const weeklyData = buildWeeklyProgress(todo, weekOffset, isMobile);
-  console.log("WEEKLY DATA", weeklyData);
+  const { globalXP } = getXPStats(todo);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -35,7 +36,7 @@ export const Progress = () => {
 
   return (
     <div className="flex flex-col gap-4 w-full px-4 md:px-10 lg:px-16">
-      <CoinSect />
+      <CoinSect xp={globalXP} />
       <FunctionSect />
 
       <div

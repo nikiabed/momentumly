@@ -1,5 +1,6 @@
 import { calculateCoin } from "./CalculateCoin";
 import { calculateDailyScore } from "./calculateDailyScore";
+import { calculateXP } from "./calculateXP";
 import { getCompletionType } from "./completion";
 import { isCompletedOn, isPlannedForDay } from "./todoAnalytics";
 
@@ -26,7 +27,7 @@ export const buildWeeklyProgress = (
     const recoveryTodos = completedTodos.filter(
       (t) => getCompletionType(t) === "delayed",
     );
-
+    const xp = completedTodos.reduce((sum, t) => sum + calculateXP(t), 0);
     const score = calculateDailyScore({
       planned: plannedTodos.length,
       onTime: onTimeTodos.length,
@@ -44,6 +45,7 @@ export const buildWeeklyProgress = (
       totalCompleted: completedTodos.length,
       coins,
       score,
+      xp: xp,
     });
   }
 

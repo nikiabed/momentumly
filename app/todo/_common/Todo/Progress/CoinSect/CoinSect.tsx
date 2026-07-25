@@ -1,30 +1,11 @@
 import Image from "next/image";
 import { useTodoContext } from "@/app/_utils";
+import { getCoinStats } from "@/app/_utils/progress";
 
-const CoinSect = () => {
+const CoinSect = ({ xp }: { xp: number }) => {
   const { todo } = useTodoContext();
-
-  const globalCoins = todo.filter((t) => t.status).length * 10;
-
-  const weekCoins =
-    todo.filter((t) => {
-      const created = new Date(t.createdAt);
-      const weekAgo = new Date();
-      weekAgo.setDate(weekAgo.getDate() - 7);
-      return t.status && created >= weekAgo;
-    }).length * 10;
-
-  const todayCoins =
-    todo.filter((t) => {
-      if (!t.status) return false;
-      const created = new Date(t.createdAt);
-      const today = new Date();
-      return (
-        created.getFullYear() === today.getFullYear() &&
-        created.getMonth() === today.getMonth() &&
-        created.getDate() === today.getDate()
-      );
-    }).length * 10;
+  const { globalCoins, weekCoins, todayCoins, weekRecovery, todayRecovery } =
+    getCoinStats(todo);
 
   return (
     <div
@@ -41,21 +22,35 @@ const CoinSect = () => {
       <div className="flex flex-col justify-between">
         <div>
           <div className="flex items-center gap-2 text-gray-700">
-            <span>🪙</span>
-            <p className="text-2xl font-bold">کل سکه‌هات</p>
+            <p className="text-2xl font-bold">سطح</p>
           </div>
 
           <h1 className="text-5xl font-bold text-violet-700 text-center">
-            {globalCoins}
+            XP {xp}
           </h1>
+        </div>
+        <div>
+          <div className="flex items-center gap-2 text-gray-700">
+            <p className="text-2xl font-bold">کل سکه‌هات</p>
+          </div>
+
+          <h2 className="text-5xl font-bold text-violet-700 text-center">
+            {globalCoins}
+          </h2>
         </div>
 
         <div className="mt-5 flex items-center gap-2">
-          <span className="text-center">✨</span>
-          <p className="text-lg text-gray-700 font-semibold" >این هفته</p>
+          <p className="text-lg text-gray-700 font-semibold">این هفته</p>
         </div>
         <div>
           <h2 className="text-2xl font-semibold text-center">{weekCoins} +</h2>
+        </div>
+        <div className="mt-5 flex items-center gap-2">
+          <span className="text-center">🔄</span>
+          <p className="text-lg text-gray-700 font-semibold">نجات</p>
+        </div>
+        <div>
+          <h2 className="text-2xl font-semibold text-center">{weekRecovery}</h2>
         </div>
       </div>
 
@@ -77,7 +72,7 @@ const CoinSect = () => {
 
           <p className="text-gray-500">به هدفت نزدیک‌تر شدی</p>
         </div>
-        <button
+        <div
           className="
     cursor-pointer
     px-5 py-3
@@ -87,7 +82,8 @@ const CoinSect = () => {
   "
         >
           🪙 +{todayCoins} سکه امروز
-        </button>
+          <div>🔄 +{todayRecovery}</div>
+        </div>
       </div>
     </div>
   );

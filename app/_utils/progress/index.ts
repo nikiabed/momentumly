@@ -3,3 +3,7 @@ export * from "./todoAnalytics";
 export * from "./CalculateCoin";
 export * from "./completion";
 export * from "./calculateDailyScore";
+export * from "./getCoinStats";
+export * from "./calculateRecovery";
+export * from "./calculateXP";
+export * from "./getXPStats";
