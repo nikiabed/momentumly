@@ -81,13 +81,6 @@ export const Board = ({ item, sidebarOpen, setSidebarOpen }: any) => {
     return <div>Loading boards...</div>;
   }
 
-  console.log("SEARCH DEBUG", {
-    item,
-    currentBoard,
-    searchText,
-    todoCount: todo.length,
-  });
-
   return (
     <div
       className={` flex-4 min-h-screen justify-center overflow-y-auto relative w-full ${bgClass}`}

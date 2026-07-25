@@ -18,28 +18,17 @@ export function useTodos(activeBoard: string) {
   const loadTodos = async () => {
     try {
       const data = await todoService.getTodos();
-      console.log("LOADED TODOS AFTER CREATE", data);
-
       setTodo(data);
     } catch (err) {
       console.error("Load todos failed:", err);
     }
-    console.log("LOAD TODOS RESULT", todo);
   };
 
   const updateTodo = async (id: string, changes: TodoUpdate) => {
     try {
       const updated = await todoService.update(id, changes);
-
-      console.log("UPDATED FROM API", updated.todo);
-
       setTodo((prev) => {
         const next = prev.map((t) => (t._id === id ? updated.todo : t));
-        console.log(
-          "STATE AFTER UPDATE",
-          next.find((t) => t._id === id),
-        );
-
         return next;
       });
 
@@ -57,7 +46,6 @@ export function useTodos(activeBoard: string) {
     boardKey?: string;
   }) => {
     try {
-      console.log("CREATE TODO", todo.title);
       const isMyDay =
         activeBoard === BOARD_KEYS.MY_DAY ||
         activeBoard === BOARD_KEYS.IMPORTANT;
@@ -72,10 +60,8 @@ export function useTodos(activeBoard: string) {
         isEdit: false,
         myDayDate: isMyDay ? getDateKey(new Date()) : null,
       });
-      console.log("result", result);
 
       await loadTodos();
-      console.log("🔥 LOAD TODOS CALLED");
     } catch (err) {
       console.error("Create todo failed:", err);
     }
@@ -128,7 +114,6 @@ export function useTodos(activeBoard: string) {
 
   const handleSubmit = async (e: any, item: Board) => {
     e.preventDefault();
-    console.log("🔥 HANDLE SUBMIT");
     if (!inputValue.trim()) return;
     await addTodo(inputValue, item);
   };
@@ -138,7 +123,6 @@ export function useTodos(activeBoard: string) {
       title: title,
       isEdit: false,
     });
-    console.log("result", result);
   };
 
   const handleIsEdit = (id: string, value: boolean) => {

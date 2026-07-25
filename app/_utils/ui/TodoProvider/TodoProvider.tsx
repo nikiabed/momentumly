@@ -75,7 +75,6 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     }
   };
   const selectBoard = (board: Board, id: string) => {
-    console.log("CLICK BOARD", board);
     if (searchText) {
       setActiveBoard?.("search");
     }
@@ -139,7 +138,6 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       setSearchText,
     ],
   );
-  console.log("TODOS CONTEXT", todos.todo);
-  console.log("VIEW TODO", view.todos);
+
   return <TodoContext.Provider value={value}>{children}</TodoContext.Provider>;
 }

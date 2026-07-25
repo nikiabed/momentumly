@@ -3,7 +3,7 @@ import { More } from "iconsax-reactjs";
 import { useEffect, useRef, useState } from "react";
 import { useTodoContext } from "@/app/_utils/hooks/useTodoContext";
 import { Board } from "@/app/types";
-import { userPreferenceService } from "@/app/_utils";
+import { boardService, userPreferenceService } from "@/app/_utils";
 
 export const themeIconFill: Record<string, string> = {
   fire: "#ffffff",
@@ -105,11 +105,23 @@ export const Palette = ({ item }: { item: Board }) => {
     setSelectedColor(key);
 
     const isMongoBoard = /^[a-f\d]{24}$/i.test(item._id);
-
+    console.log({
+      id: item._id,
+      boardKey: item.boardKey,
+      isMongoBoard,
+    });
     if (isMongoBoard) {
       setBoardList?.((prev: Board[]) =>
         prev.map((b: Board) => (b._id === item._id ? { ...b, theme: key } : b)),
       );
+      try {
+        console.log(item._id);
+        await boardService.updateTheme(item._id, key);
+        const board = await boardService.getBoards();
+        console.log(board);
+      } catch (err) {
+        console.log(err);
+      }
     } else {
       setSystemBoards?.((prev) => ({
         ...prev,

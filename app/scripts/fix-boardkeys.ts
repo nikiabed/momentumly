@@ -22,8 +22,6 @@ async function run() {
 
   const res = await todos.updateMany({}, { $set: { boardKey: "myDay" } });
 
-  console.log(res);
-
   await client.close();
 }
 

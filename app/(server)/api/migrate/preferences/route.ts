@@ -7,10 +7,6 @@ export async function GET() {
     await connectDB();
 
     const before = await User.find({});
-
-    console.log("🔥 USERS BEFORE");
-    console.log(JSON.stringify(before, null, 2));
-
     const result = await User.updateMany(
       {},
       {
@@ -21,13 +17,7 @@ export async function GET() {
       },
     );
 
-    console.log("🔥 UPDATE RESULT");
-    console.log(result);
-
     const after = await User.find({});
-
-    console.log("🔥 USERS AFTER");
-    console.log(JSON.stringify(after, null, 2));
 
     return NextResponse.json({
       message: "preferences updated",

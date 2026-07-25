@@ -78,13 +78,6 @@ export const TodoList = ({
         className="flex flex-col gap-1"
       >
         {todo.map((list: any) => {
-          console.log(
-            "TODO LIST RENDER",
-            list._id,
-            list.isEdit,
-            list.updatedAt,
-          );
-
           return (
             <TodoListItems
               key={list._id}

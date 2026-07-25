@@ -40,7 +40,6 @@ export const TodoListItems: FC<itemProps> = ({ list, ...props }: any) => {
   }, [list.title]);
   const state = getTodoState(list, todayKey);
 
-  console.log("RENDER TODO", list._id, list.isEdit);
   return (
     <div
       {...props}
@@ -58,7 +57,6 @@ export const TodoListItems: FC<itemProps> = ({ list, ...props }: any) => {
           }}
           onSubmit={(e) => {
             e.preventDefault();
-            console.log("EDIT SUBMIT");
             handleUpdateTodo?.(list, localTitle);
           }}
           className="flex items-center justify-center w-full"

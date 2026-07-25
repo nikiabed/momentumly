@@ -57,8 +57,11 @@ export type Context = {
   setActiveBoard?: Dispatch<SetStateAction<string>>;
   selectBoard?: (board: Board, id: string) => void;
   toggleImportant?: (id: string, value: boolean) => Promise<void>;
-  toggleStatus?: (id: string, value: boolean) => Promise<void>;
-  loading?: boolean;
+  toggleStatus?: (
+    id: string,
+    value: boolean,
+    completedAt: Date,
+  ) => Promise<void>;
   finalBoard?: Board[];
   searchText?: string;
   setSearchText?: Dispatch<SetStateAction<string>>;

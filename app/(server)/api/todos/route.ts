@@ -16,16 +16,10 @@ export async function GET() {
     userId: session.user.id,
   });
 
-  console.log(
-    "TODOS FROM DB",
-    todos.find((t) => t._id === "6a6209ed572266c213f05c93"),
-  );
-
   return NextResponse.json(todos);
 }
 
 export async function POST(req: Request) {
-  console.log("🔥 POST TODO HIT");
   await connectDB();
 
   const session = await auth();
@@ -40,8 +34,6 @@ export async function POST(req: Request) {
     ...body,
     userId: session.user.id,
   });
-
-  console.log("POST TODO HIT");
 
   return NextResponse.json(result);
 }
