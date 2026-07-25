@@ -11,7 +11,6 @@ export async function PATCH(req: Request, context: any) {
   }
   const { id } = await context.params;
   const body = await req.json();
-  console.log(body);
   const update: Record<string, any> = {};
 
   if (body.title !== undefined) {

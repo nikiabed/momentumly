@@ -1,5 +1,5 @@
 import { useTodoContext } from "@/app/_utils";
-import { buildWeeklyProgress } from "@/app/_utils/progress";
+import { buildWeeklyProgress } from "@/app/_utils/progress/buildWeeklyProgress";
 import { FaceIcon } from "./FaceIcon";
 import { RecordSect } from "./RecordSect";
 

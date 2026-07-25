@@ -1,6 +1,6 @@
 "use client";
 
-import { buildWeeklyProgress } from "@/app/_utils/progress";
+import { buildWeeklyProgress } from "@/app/_utils/progress/buildWeeklyProgress";
 import { LineChart } from "../../LineChart";
 import { useTodoContext } from "@/app/_utils";
 import { ChartHeader } from "../../ChartHeader";
@@ -17,6 +17,7 @@ export const Progress = () => {
   const isMobile = chartWidth < 500;
 
   const weeklyData = buildWeeklyProgress(todo, weekOffset, isMobile);
+  console.log("WEEKLY DATA", weeklyData);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {

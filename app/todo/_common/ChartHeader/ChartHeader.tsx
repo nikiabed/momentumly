@@ -46,6 +46,7 @@ export const ChartHeader: FC<ChartHeaderProps> = ({
             rounded-xl
             shadow-lg
             overflow-hidden
+            z-80
             
           "
           >
