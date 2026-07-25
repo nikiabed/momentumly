@@ -44,8 +44,16 @@ export const Board = ({ item, sidebarOpen, setSidebarOpen }: any) => {
     return t.boardKey === currentBoard.boardKey;
   });
 
-  const activeTodos = filteredTodos.filter((t) => !t.status);
-  const completedTodos = filteredTodos.filter((t) => t.status);
+  const activeTodos = isMyDay
+    ? todo.filter((t) => isInMyDay(t) && !t.status)
+    : filteredTodos.filter((t) => !t.status);
+
+  const today = getDateKey(new Date());
+  const completedTodos = isMyDay
+    ? todo.filter(
+        (t) => t.status && t.completedAt && getDateKey(t.completedAt) === today,
+      )
+    : filteredTodos.filter((t) => t.status);
   const searchTodos = todo
     .filter((t) => !t.status)
     .filter((t) =>
@@ -79,9 +87,6 @@ export const Board = ({ item, sidebarOpen, setSidebarOpen }: any) => {
     searchText,
     todoCount: todo.length,
   });
-
-  console.log("SEARCH TODOS", searchTodos);
-  console.log("BOARD SEARCH", searchText);
 
   return (
     <div

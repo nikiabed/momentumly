@@ -19,6 +19,7 @@ import { t } from "@/app/i18n/t";
 import { BOARD_KEYS, isInMyDay, isManuallyInMyDay } from "@/app/_utils";
 import { DeadlinePicker } from "./DeadlinePicker";
 import { useClickOutside } from "@/app/_utils/hooks/useClickOutside";
+import { CompletedDatePicker } from "./CompletedDatePicker";
 
 export const TodoEditInput = ({ list }: any) => {
   const {
@@ -39,9 +40,14 @@ export const TodoEditInput = ({ list }: any) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const todoRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
-  useClickOutside([todoRef, menuRef], () => {
+  const [isCompleteMenuOpen, setIsCompleteMenuOpen] = useState(false);
+  const completeMenuRef = useRef<HTMLDivElement>(null);
+
+  useClickOutside([todoRef, menuRef, completeMenuRef], () => {
     setOpen(false);
+    setIsCompleteMenuOpen(false);
   });
+
   const systemBoards = [
     BOARD_KEYS.ALL,
     BOARD_KEYS.IMPORTANT,
@@ -61,20 +67,66 @@ export const TodoEditInput = ({ list }: any) => {
   return (
     <div className="w-full relative" ref={todoRef}>
       {/* Todo Row */}
-      <div className="flex items-center gap-2 px-4 py-2  min-w-0 text-wrap">
+      <div
+        className="flex items-center gap-2 px-4 py-2  min-w-0 text-wrap"
+        ref={completeMenuRef}
+      >
+        <ArrowDown2
+          size={14}
+          className="cursor-pointer text-black/50 hover:text-gray-600"
+          onClick={() => setIsCompleteMenuOpen((p) => !p)}
+        />
+
         {list.status ? (
           <TickCircle
             variant="Bold"
             size={24}
             className="text-rose-400 cursor-pointer shrink-0"
-            onClick={() => toggleStatus?.(list._id, !list.status)}
+            onClick={() => toggleStatus?.(list._id, !list.status, new Date())}
           />
         ) : (
           <Record
             size={24}
             className="text-black/50 cursor-pointer shrink-0"
-            onClick={() => toggleStatus?.(list._id, !list.status)}
+            onClick={() => toggleStatus?.(list._id, !list.status, new Date())}
           />
+        )}
+
+        {isCompleteMenuOpen && (
+          <div className="absolute top-12 right-0 w-48 bg-white z-50 ">
+            <button
+              className="w-full px-4 py-2 text-right hover:bg-gray-100 cursor-pointer shrink-0"
+              onClick={() => {
+                toggleStatus?.(list._id, true, new Date());
+                setIsCompleteMenuOpen(false);
+              }}
+            >
+              ✓ انجام امروز
+            </button>
+            <button
+              className="w-full px-4 py-2 text-right hover:bg-gray-100 cursor-pointer shrink-0"
+              onClick={() => {
+                const yesterday = new Date();
+                yesterday.setDate(yesterday.getDate() - 1);
+                toggleStatus?.(list._id, true, yesterday);
+                setIsCompleteMenuOpen(false);
+              }}
+            >
+              ✓ انجام دیروز
+            </button>
+            <div className="w-full px-4 py-2 text-right hover:bg-gray-100 cursor-pointer shrink-0">
+              <div className=" text-right">
+                <CompletedDatePicker
+                  value={list.completedAt}
+                  onChange={(date:any) => {
+                    const d = date?.toDate?.();
+                    if (!d) return;
+                    toggleStatus?.(list._id, true, d);
+                  }}
+                />
+              </div>
+            </div>
+          </div>
         )}
 
         <div
@@ -169,7 +221,7 @@ export const TodoEditInput = ({ list }: any) => {
           {
             <DeadlinePicker
               value={list.deadline}
-              onChange={(date) => setDeadline?.(list._id, date)}
+              onChange={(date: Date) => setDeadline?.(list._id, date)}
               onClear={() => setDeadline?.(list._id, null)}
             />
           }

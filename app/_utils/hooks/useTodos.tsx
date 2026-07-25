@@ -97,9 +97,14 @@ export function useTodos(activeBoard: string) {
     });
   };
 
-  const toggleStatus = async (id: string, value: boolean) => {
+  const toggleStatus = async (
+    id: string,
+    value: boolean,
+    completedAt: Date,
+  ) => {
     await updateTodo(id, {
       status: value,
+      completedAt: value ? (completedAt ?? new Date()) : null,
     });
   };
 

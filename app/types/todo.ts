@@ -12,7 +12,7 @@ export type Todo = {
   attachment: string | null;
   createdAt: string;
   updatedAt?: string;
-  completedAt: string | null;
+  completedAt: Date | null;
 };
 
 export type TodoList = Todo[];

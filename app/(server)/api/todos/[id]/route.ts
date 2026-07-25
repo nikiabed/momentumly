@@ -20,6 +20,7 @@ export async function PATCH(req: Request, context: any) {
 
   if (body.status !== undefined) {
     update.status = body.status;
+    update.completedAt = body.status ? new Date() : null;
   }
 
   if (body.isImportant !== undefined) {
@@ -40,6 +41,10 @@ export async function PATCH(req: Request, context: any) {
 
   if (body.attachment !== undefined) {
     update.attachment = body.attachment;
+  }
+
+  if (body.isEdit !== undefined) {
+    update.isEdit = body.isEdit;
   }
 
   const result = await Todo.findOneAndUpdate(
