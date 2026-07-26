@@ -4,28 +4,32 @@ import DatePicker from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
 import { Calendar, Clock, CloseCircle } from "iconsax-reactjs";
+import { FC, HTMLAttributes } from "react";
 
-type DatePickerFieldProps = {
+type DatePickerFieldProps = Omit<HTMLAttributes<HTMLDivElement>, "onChange"> & {
   value?: string | Date | null;
   onChange: (date: Date) => void;
   onClear?: () => void;
   label?: string;
 };
-
-export const DatePickerField = ({
+export const DatePickerField: FC<DatePickerFieldProps> = ({
   value,
   onChange,
   onClear,
   label = "انتخاب تاریخ",
-}: DatePickerFieldProps) => {
+  className,
+  ...props
+}) => {
   return (
     <div
-      className="
-      w-full relative flex 
-      transition
-      cursor-pointer
-      items-center
-      "
+      {...props}
+      className={`
+        w-full relative flex
+        transition
+        cursor-pointer
+        items-center
+        ${className ?? ""}
+      `}
     >
       <DatePicker
         portal
@@ -53,11 +57,7 @@ export const DatePickerField = ({
               gap-3
               text-sm
               cursor-pointer
-              ${
-                value
-                  ? "rounded-full bg-rose-100  text-rose-600"
-                  : ""
-              }
+              ${value ? "rounded-full bg-rose-100 text-rose-600" : ""}
             `}
           >
             {value ? (

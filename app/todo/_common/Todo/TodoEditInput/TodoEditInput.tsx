@@ -118,7 +118,7 @@ export const TodoEditInput = ({ list }: any) => {
               <div className=" text-right">
                 <CompletedDatePicker
                   value={list.completedAt}
-                  onChange={(date:any) => {
+                  onChange={(date: any) => {
                     const d = date?.toDate?.();
                     if (!d) return;
                     toggleStatus?.(list._id, true, d);
@@ -223,6 +223,7 @@ export const TodoEditInput = ({ list }: any) => {
               value={list.deadline}
               onChange={(date: Date) => setDeadline?.(list._id, date)}
               onClear={() => setDeadline?.(list._id, null)}
+              className={"justify-center hover:hover:bg-black/5"}
             />
           }
 
