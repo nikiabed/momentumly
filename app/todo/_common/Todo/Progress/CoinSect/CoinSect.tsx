@@ -22,15 +22,6 @@ const CoinSect = ({ xp }: { xp: number }) => {
       <div className="flex flex-col justify-between">
         <div>
           <div className="flex items-center gap-2 text-gray-700">
-            <p className="text-2xl font-bold">سطح</p>
-          </div>
-
-          <h1 className="text-5xl font-bold text-violet-700 text-center">
-            XP {xp}
-          </h1>
-        </div>
-        <div>
-          <div className="flex items-center gap-2 text-gray-700">
             <p className="text-2xl font-bold">کل سکه‌هات</p>
           </div>
 

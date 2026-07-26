@@ -2,24 +2,9 @@ import { useTodoContext } from "@/app/_utils";
 import Image from "next/image";
 import { Summary } from "./Summary";
 import { LevelBar } from "./LevelBar";
-import { getMonthStats } from "@/app/_utils/progress";
+import { getCoinStats, getMonthStats } from "@/app/_utils/progress";
 
-function getLevelProgress(
-  coins: number,
-  currentLevelThreshold: number,
-  nextLevelThreshold: number,
-) {
-  const progress = coins - currentLevelThreshold;
-  const needed = nextLevelThreshold - currentLevelThreshold;
-  const percent = Math.min((progress / needed) * 100, 100);
-
-  return {
-    percent,
-    remaining: Math.max(needed - progress, 0),
-  };
-}
-
-function getCurrentLevel(coins: number, thresholds: number[]) {
+function getLevelInfo(coins: number, thresholds: number[]) {
   let level = 0;
 
   for (let i = 0; i < thresholds.length; i++) {
@@ -30,14 +15,38 @@ function getCurrentLevel(coins: number, thresholds: number[]) {
     }
   }
 
-  return level;
+  const currentThreshold = thresholds[level];
+  const nextThreshold = thresholds[level + 1];
+
+  // آخرین level
+  if (nextThreshold === undefined) {
+    return {
+      level,
+      currentThreshold,
+      nextThreshold: null,
+      percent: 100,
+      remaining: 0,
+    };
+  }
+
+  const progress = coins - currentThreshold;
+  const needed = nextThreshold - currentThreshold;
+
+  return {
+    level,
+    currentThreshold,
+    nextThreshold,
+    percent: Math.min((progress / needed) * 100, 100),
+    remaining: Math.max(nextThreshold - coins, 0),
+  };
 }
 
 export const MonthSect = () => {
   const { todo } = useTodoContext();
   const coins = todo.filter((t) => t.status).length * 10;
-  const thresholds = [0, 1000, 3000, 6000, 9000, 12000];
-  const currentLevel = getCurrentLevel(coins, thresholds);
+  const thresholds = [0, 450, 1500, 4000, 9000, 12000];
+  const { globalCoins } = getCoinStats(todo);
+
   const levels = [
     {
       name: "جوانه",
@@ -65,13 +74,10 @@ export const MonthSect = () => {
     },
   ];
 
+  const { level, currentThreshold, nextThreshold, percent, remaining } =
+    getLevelInfo(globalCoins, thresholds);
 
-  const currentPlant = levels[currentLevel] ?? levels[levels.length - 1];
-  const { percent, remaining } = getLevelProgress(
-    coins,
-    thresholds[currentLevel],
-    thresholds[currentLevel + 1],
-  );
+  const currentPlant = levels[level] ?? levels[levels.length - 1];
 
   return (
     <div className="flex flex-col md:flex-row gap-6 justify-center">
@@ -82,9 +88,7 @@ export const MonthSect = () => {
             <h1 className="text-4xl font-bold text-[#34d399] ">
               {currentPlant.name}
             </h1>
-            <h2 className="text-gray-400 font-semibold ">
-              سطح {getCurrentLevel(coins, thresholds) + 1}
-            </h2>
+            <h2 className="text-gray-400 font-semibold ">سطح {level + 1} </h2>
           </div>
           <div>
             <Image
@@ -101,8 +105,8 @@ export const MonthSect = () => {
           برای رسیدن به سطح بعدی
         </div>
         <div>
-          {thresholds[getCurrentLevel(coins, thresholds) + 1]} / {remaining}{" "}
-          <span className="text-[#34d399]">سکه</span>
+          {globalCoins} / {nextThreshold}
+          <span className="text-[#34d399]"> سکه  </span>
         </div>
       </div>
 
