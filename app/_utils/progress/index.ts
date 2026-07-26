@@ -7,3 +7,5 @@ export * from "./getCoinStats";
 export * from "./calculateRecovery";
 export * from "./calculateXP";
 export * from "./getXPStats";
+export * from "./calculateDailyProgress";
+export * from "./getMonthStats";

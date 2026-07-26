@@ -2,6 +2,7 @@ import { useTodoContext } from "@/app/_utils";
 import Image from "next/image";
 import { Summary } from "./Summary";
 import { LevelBar } from "./LevelBar";
+import { getMonthStats } from "@/app/_utils/progress";
 
 function getLevelProgress(
   coins: number,
@@ -63,6 +64,7 @@ export const MonthSect = () => {
       image: "/images/plant5.png",
     },
   ];
+
 
   const currentPlant = levels[currentLevel] ?? levels[levels.length - 1];
   const { percent, remaining } = getLevelProgress(

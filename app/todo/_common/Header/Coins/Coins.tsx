@@ -4,7 +4,6 @@ import { getCoinStats } from "@/app/_utils/progress";
 import { TodoList, Board } from "@/app/types";
 
 export const Coins = ({
-  item,
   filterTodo,
 }: {
   item: Board;
