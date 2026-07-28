@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "dotenv": "^17.4.2",
+    "framer-motion": "^12.42.2",
     "iconsax-reactjs": "^0.0.8",
     "mongodb": "^7.2.0",
     "mongoose": "^9.7.2",

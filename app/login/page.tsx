@@ -3,6 +3,7 @@
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { LoginScene } from "./LoginScene";
 
 export default function LoginPage() {
   const { status } = useSession();
@@ -15,20 +16,47 @@ export default function LoginPage() {
   }, [status]);
   return (
     <div className="h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-6 rounded-xl shadow-md text-center">
-        <h1 className="mb-4 text-xl font-bold">خوش آمدید</h1>
+      <div
+        className="
+relative
+overflow-hidden
+bg-linear-to-br
+from-purple-50
+to-green-50
+h-screen
+flex
+items-center
+justify-center
+"
+      >
+        <div
+          className="
+bg-white/80
+backdrop-blur
+rounded-[40px]
+shadow-xl
+p-10
+flex
+flex-col
+items-center
+gap-6
+"
+        >
+          <LoginScene />
 
-        <div className="flex gap-3">
-          <button
-            onClick={() =>
-              signIn("google", {
-                callbackUrl: "/todo",
-              })
-            }
-            className="px-4 py-2 bg-black text-white rounded-lg cursor-pointer"
+          <h1
+            className="
+text-3xl
+font-black
+text-gray-800
+"
           >
-            ادامه با گوگل
-          </button>
+            آماده‌ای شروع کنی؟ 🌱
+          </h1>
+
+          <p className="text-gray-500">هر روز یک قدم کوچک، یک رشد بزرگ</p>
+
+          <button>شروع مسیر 🚀</button>
         </div>
       </div>
     </div>
