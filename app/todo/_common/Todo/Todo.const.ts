@@ -1,16 +1,17 @@
+import { SystemBoard } from "@/app/_utils";
 import { Board, Todo, TodoList } from "@/app/types";
 import { ChangeEvent, Dispatch, SetStateAction } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 export type Context = {
   todo: TodoList;
-  setTodo?: Dispatch<SetStateAction<TodoList>>;
+  setTodo: Dispatch<SetStateAction<TodoList>>;
   inputValue?: string | null;
   addTodo?: (title: string, item: Board) => void;
   handleChange?: (e: ChangeEvent<HTMLInputElement, Element>) => void;
   deleteTodo?: (id: string) => Promise<void>;
   handleSubmit?: (
-    e: ChangeEvent<HTMLInputElement, Element>,
+    e: React.FormEvent<HTMLFormElement>,
     item: Board,
   ) => Promise<void>;
   isEdit?: boolean;
@@ -39,8 +40,8 @@ export type Context = {
   uiBoard?: Board[];
   saveBoard?: (id: string) => Promise<void>;
   handleUpdateTodo?: (list: Todo, title: string) => Promise<void>;
-  systemBoards?: Record<string, Board>;
-  setSystemBoards?: Dispatch<SetStateAction<Record<string, Board>>>;
+  systemBoards?: Record<string, SystemBoard>;
+  setSystemBoards?: Dispatch<SetStateAction<Record<string, SystemBoard>>>;
   newBoardKey?: string | null;
   setNewBoardKey?: React.Dispatch<React.SetStateAction<string | null>>;
   removeFromMyDay?: (id: string) => Promise<void>;

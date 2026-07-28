@@ -8,40 +8,44 @@ import { useTodos } from "../../hooks/useTodos";
 import { useBoardView } from "../../hooks/useBoardView";
 import { userPreferenceService } from "../../services";
 
+export type SystemBoard = Board & {
+  filter: (todo: Todo, searchText?: string) => boolean;
+};
 export const TodoProvider = ({ children }: { children: React.ReactNode }) => {
   const [activeBoard, setActiveBoard] = useState<string>("myDay");
   const [searchText, setSearchText] = useState("");
-  const [systemBoards, setSystemBoards] = useState<Record<string, Board>>({
-    important: {
-      _id: BOARD_KEYS.IMPORTANT,
-      title: BOARD_LABELS.important,
-      boardKey: BOARD_KEYS.IMPORTANT,
-      icon: "Star1",
-      color: BOARD_KEYS.IMPORTANT,
-      order: 2,
-      editable: false,
-      isEdit: false,
-      theme: "fire",
-      state: false,
-      filter: (todo: Todo) => todo.isImportant,
-    },
+  const [systemBoards, setSystemBoards] = useState<Record<string, SystemBoard>>(
+    {
+      important: {
+        _id: BOARD_KEYS.IMPORTANT,
+        title: BOARD_LABELS.important,
+        boardKey: BOARD_KEYS.IMPORTANT,
+        icon: "Star1",
+        color: BOARD_KEYS.IMPORTANT,
+        order: 2,
+        editable: false,
+        isEdit: false,
+        theme: "fire",
+        state: false,
+        filter: (todo: Todo) => todo.isImportant,
+      },
 
-    search: {
-      _id: BOARD_KEYS.SEARCH,
-      title: BOARD_LABELS.search,
-      boardKey: BOARD_KEYS.SEARCH,
-      icon: "SearchNormal1",
-      color: BOARD_KEYS.SEARCH,
-      order: 0,
-      editable: false,
-      isEdit: false,
-      theme: "purple",
-      state: false,
-      filter: (todo: Todo) =>
-        searchText &&
-        todo.title.toLowerCase().includes(searchText.toLowerCase()),
+      search: {
+        _id: BOARD_KEYS.SEARCH,
+        title: BOARD_LABELS.search,
+        boardKey: BOARD_KEYS.SEARCH,
+        icon: "SearchNormal1",
+        color: BOARD_KEYS.SEARCH,
+        order: 0,
+        editable: false,
+        isEdit: false,
+        theme: "purple",
+        state: false,
+        filter: (todo, searchText = "") =>
+          todo.title.toLowerCase().includes(searchText.toLowerCase()),
+      },
     },
-  });
+  );
 
   const todos = useTodos(activeBoard);
   const boards = useBoards(activeBoard, setActiveBoard);

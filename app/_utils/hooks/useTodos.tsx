@@ -6,7 +6,7 @@ import { Board } from "@/app/types/board";
 import { BOARD_KEYS } from "../constants";
 import { getDateKey } from "../date";
 
-export function useTodos(activeBoard: string) {
+export const useTodos = (activeBoard: string) => {
   const [todo, setTodo] = useState<TodoList>([]);
   const [inputValue, setInputValue] = useState<string>("");
 
@@ -89,7 +89,7 @@ export function useTodos(activeBoard: string) {
   ) => {
     await updateTodo(id, {
       status: value,
-      completedAt: value ? (completedAt ?? new Date()) : null,
+      completedAt: value ? completedAt : null,
     });
   };
 
@@ -112,7 +112,7 @@ export function useTodos(activeBoard: string) {
   };
 
   const handleSubmit = async (
-    e: React.ChangeEvent<HTMLInputElement>,
+    e: React.FormEvent<HTMLFormElement>,
     item: Board,
   ) => {
     e.preventDefault();
@@ -121,7 +121,7 @@ export function useTodos(activeBoard: string) {
   };
 
   const handleUpdateTodo = async (list: Todo, title: string) => {
-     await updateTodo(list._id, {
+    await updateTodo(list._id, {
       title: title,
       isEdit: false,
     });
@@ -230,4 +230,4 @@ export function useTodos(activeBoard: string) {
     toggleStatus,
     removeLink,
   };
-}
+};

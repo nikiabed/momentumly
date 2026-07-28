@@ -42,7 +42,6 @@ export const TodoEditInput = ({ list }: { list: Todo }) => {
   const [isCompleteMenuOpen, setIsCompleteMenuOpen] = useState(false);
   const completeMenuRef = useRef<HTMLDivElement>(null);
 
-
   const systemBoards = [
     BOARD_KEYS.ALL,
     BOARD_KEYS.IMPORTANT,
@@ -112,7 +111,9 @@ export const TodoEditInput = ({ list }: { list: Todo }) => {
                 <CompletedDatePicker
                   value={list.completedAt}
                   onChange={(date) => {
-                    toggleStatus?.(list._id, true, date);
+                    if (!date) return;
+                    const newDate = date.toDate() || null;
+                    toggleStatus?.(list._id, true, newDate);
                   }}
                 />
               </div>
@@ -212,7 +213,10 @@ export const TodoEditInput = ({ list }: { list: Todo }) => {
           {
             <DeadlinePicker
               value={list.deadline}
-              onChange={(date: Date) => setDeadline?.(list._id, date)}
+              onChange={(date) => {
+                const newDate = date?.toDate() || null;
+                setDeadline?.(list._id, newDate);
+              }}
               onClear={() => setDeadline?.(list._id, null)}
               className={"justify-center hover:hover:bg-black/5"}
             />

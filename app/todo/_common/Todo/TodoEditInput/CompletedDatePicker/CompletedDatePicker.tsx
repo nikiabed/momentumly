@@ -3,6 +3,9 @@ import {
   DatePickerFieldProps,
 } from "../../../DatePickerField";
 
-export const CompletedDatePicker = (props: DatePickerFieldProps) => {
-  return <DatePickerField {...props} label="تاریخ انجام" />;
+export const CompletedDatePicker = ({
+  onChange,
+  ...props
+}: DatePickerFieldProps) => {
+  return <DatePickerField {...props} label="تاریخ انجام" onChange={onChange} />;
 };

@@ -1,6 +1,6 @@
 "use client";
 
-import { TodoContext } from "@/app/_utils/hooks";
+import { TodoContext, useTodoContext } from "@/app/_utils/hooks";
 import { ArrowDown2, Calendar, Clock, Moon, Sun1 } from "iconsax-reactjs";
 import { useContext, useState } from "react";
 import { TodoList } from "../TodoList";
@@ -10,7 +10,7 @@ import { Todo, TodoList as TodoListType } from "@/app/types";
 
 export const Lists = ({ todo, list }: { todo: TodoListType; list: string }) => {
   const [isOpen, setOpen] = useState(false);
-  const { setTodo } = useContext(TodoContext);
+  const { setTodo } = useTodoContext();
 
   const groupedByDate = todo.reduce(
     (acc: Record<string, typeof todo>, item: Todo) => {

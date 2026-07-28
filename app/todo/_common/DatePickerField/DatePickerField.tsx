@@ -5,10 +5,11 @@ import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
 import { Calendar, Clock, CloseCircle } from "iconsax-reactjs";
 import { FC, HTMLAttributes } from "react";
+import DateObject from "react-date-object";
 
 export type DatePickerFieldProps = Omit<HTMLAttributes<HTMLDivElement>, "onChange"> & {
   value?: string | Date | null;
-  onChange: (date: Date) => void;
+  onChange:  (date: DateObject | null) => void;
   onClear?: () => void;
   label?: string;
 };

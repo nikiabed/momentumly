@@ -109,7 +109,7 @@ export const Board = ({ item, sidebarOpen, setSidebarOpen }: boardProps) => {
           <Progress />
         ) : (
           <div className=" grow flex flex-col gap-5 px-16 pb-5">
-            {currentBoard?.boardKey === BOARD_KEYS.MY_DAY && (
+            {currentBoard?.boardKey === BOARD_KEYS.MY_DAY && setTodo && (
               <>
                 <TodoList todo={activeTodos} setTodo={setTodo} />
                 {completedTodos.length > 0 && (

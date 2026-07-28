@@ -56,7 +56,7 @@ export const TodoListItems: FC<itemProps> = ({ list, ...props }) => {
           }}
           onSubmit={(e) => {
             e.preventDefault();
-            handleUpdateTodo?.(list._id, localTitle);
+            handleUpdateTodo?.(list, localTitle);
           }}
           className="flex items-center justify-center w-full"
         >
