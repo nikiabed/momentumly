@@ -5,14 +5,22 @@ import { todoService, uploadService } from "../services";
 import { Board } from "@/app/types/board";
 import { BOARD_KEYS } from "../constants";
 import { getDateKey } from "../date";
+import { useSession } from "next-auth/react";
 
 export const useTodos = (activeBoard: string) => {
   const [todo, setTodo] = useState<TodoList>([]);
   const [inputValue, setInputValue] = useState<string>("");
+  const { status } = useSession();
 
   useEffect(() => {
-    loadTodos();
-  }, []);
+    if (status === "authenticated") {
+      loadTodos();
+    }
+
+    if (status === "unauthenticated") {
+      setTodo([]);
+    }
+  }, [status]);
 
   const loadTodos = async () => {
     try {
