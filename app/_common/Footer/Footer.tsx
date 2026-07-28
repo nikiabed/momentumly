@@ -45,10 +45,7 @@ export const Footer = () => {
          relative
     overflow-hidden
       p-2
-      bg-gradient-to-br
-from-[#020617]
-via-[#312E81]
-to-[#7E22CE]
+bg-[#312e81]
       flex
       items-center
       justify-center
