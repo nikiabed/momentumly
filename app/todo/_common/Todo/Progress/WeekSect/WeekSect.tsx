@@ -23,25 +23,15 @@ export const WeekSect = () => {
     border border-gray-100
     rounded-4xl
     shadow-sm
-    p-6 md:p-8
+    p-6
     mb-5
     min-h-55
     flex items-center
+    justify-around
   "
     >
-      <div className="absolute left-5 top-5 opacity-80">
-        <Image
-          src="/images/bulb.png"
-          alt=""
-          width={80}
-          height={80}
-          className="object-contain"
-        />
-      </div>
-
       <div
         className="
-      flex-1
       flex flex-col
       items-center
       justify-center
@@ -76,8 +66,7 @@ export const WeekSect = () => {
         </div>
       </div>
 
-      {/* Mood */}
-      <div className="w-37.5 md:w-55 flex justify-center">
+      <div className="w-37.5 md:w-55 ">
         <Image
           src={mood.image}
           alt=""

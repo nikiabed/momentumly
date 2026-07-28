@@ -4,7 +4,7 @@ import { TodoList } from "@/app/types";
 export const getStreak = (todos: TodoList) => {
   const completed = todos.filter((t) => t.status && t.boardKey === "myDay");
   const completedDays = new Set(completed.map((t) => getDateKey(t.createdAt)));
-  let streak = 0;
+  let streak = 1;
   const current = new Date();
 
   if (!completedDays.has(getDateKey(current))) {
@@ -53,9 +53,9 @@ export const RecordSect = () => {
       </div>
 
       <p className="text-sm text-gray-500 mt-2">
-        {streak === 0
+        {streak === 1
           ? "امروز شروع یک رکورد جدیده 🌱"
-          : streak === 1
+          : streak === 2
             ? "شروعش کردی! فردا ادامه بده 🔥"
             : `${streak} روزه که داری ادامه میدی!`}
       </p>
