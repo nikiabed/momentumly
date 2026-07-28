@@ -1,9 +1,10 @@
 import { getDateKey, useTodoContext } from "@/app/_utils";
+import { TodoList } from "@/app/types";
 
-export const getStreak = (todos: any[]) => {
+export const getStreak = (todos: TodoList) => {
   const completed = todos.filter((t) => t.status && t.boardKey === "myDay");
   const completedDays = new Set(completed.map((t) => getDateKey(t.createdAt)));
-  let streak = 0;
+  let streak = 1;
   const current = new Date();
 
   if (!completedDays.has(getDateKey(current))) {
@@ -20,17 +21,48 @@ export const getStreak = (todos: any[]) => {
   }
   return streak;
 };
-const RecordSect = () => {
+export const RecordSect = () => {
   const { todo } = useTodoContext();
   const streak = getStreak(todo);
+
   return (
-    <div className="bg-white rounded-3xl shadow flex-1/5 items-center justify-center flex flex-col">
-      <h2 className="font-semibold ">رکورد فعلی</h2>
-      <h1 className="text-2xl">🔥</h1>
-      <h1 className="text-5xl font-bold ">{streak}</h1>
-      <h2>روز متوالی</h2>
+    <div
+      className="
+        bg-white
+        rounded-4xl
+        shadow-sm
+        border border-gray-100
+        p-6
+        lg:flex-1
+        flex flex-col
+        items-center
+        justify-center
+        text-center
+        min-h-55
+      "
+    >
+      <div className="flex items-center gap-2 text-gray-500">
+        <span>رکورد فعلی</span>
+        <span>🔥</span>
+      </div>
+
+      <div className="flex items-baseline gap-2 mt-3">
+        <span className="text-5xl font-black text-orange-500">{streak}</span>
+
+        <span className="text-sm font-bold text-gray-400">روز</span>
+      </div>
+
+      <p className="text-sm text-gray-500 mt-2">
+        {streak === 1
+          ? "امروز شروع یک رکورد جدیده 🌱"
+          : streak === 2
+            ? "شروعش کردی! فردا ادامه بده 🔥"
+            : `${streak} روزه که داری ادامه میدی!`}
+      </p>
+
+      <div className="mt-5 px-4 py-2 rounded-full bg-orange-50 text-orange-600 text-xs font-bold">
+        🔥 رکوردت رو حفظ کن
+      </div>
     </div>
   );
 };
-
-export default RecordSect;

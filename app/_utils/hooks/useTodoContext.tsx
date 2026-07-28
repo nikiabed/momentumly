@@ -1,21 +1,16 @@
 "use client";
+
 import { Context } from "@/app/todo/_common";
 import { createContext, useContext } from "react";
 
-export const TodoContext = createContext<Context>({
-  todo: [
-    {
-      _id: "",
-      title: "This is A Default Value",
-      status: false,
-      isImportant: false,
-      boardKey: "",
-      item: "",
-      createdAt: "",
-    },
-  ],
-  focused: [],
-  boardList: []
-});
+export const TodoContext = createContext<Context | undefined>(undefined);
 
-export const useTodoContext = () => useContext(TodoContext);
+export const useTodoContext = () => {
+  const context = useContext(TodoContext);
+
+  if (!context) {
+    throw new Error("useTodoContext must be used inside TodoContext.Provider");
+  }
+
+  return context;
+};

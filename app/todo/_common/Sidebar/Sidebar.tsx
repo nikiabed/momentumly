@@ -1,18 +1,22 @@
 "use client";
 import Image from "next/image";
-import { ListItemProps } from "../Todo/Todo.const";
 import { Add } from "iconsax-reactjs";
-import { useTodoContext } from "@/app/_utils/hooks/useTodoContext";
 import { Search } from "./Search";
 import { ListItem } from "./ListItem";
 import { sidebar } from "./Sidebar.const";
 import { signOut } from "next-auth/react";
 import { useSession } from "next-auth/react";
+import { Board } from "@/app/types";
+import { useTodoContext } from "@/app/_utils";
 
-export const Sidebar = ({ sidebarOpen, setSidebarOpen }: any) => {
+export type SidebarProps = {
+  sidebarOpen: boolean;
+  setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+export const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   const { handleNewList, uiBoard } = useTodoContext();
   const { data } = useSession();
-
   return (
     <div
       className={`
@@ -45,7 +49,7 @@ ${sidebarOpen ? "translate-x-0" : "translate-x-full"}
       </div>
 
       <div className="overflow-auto grow flex flex-col gap-2 text-gray-800 text-md pb-1.5 shadow-gray-600">
-        {uiBoard?.map((list: ListItemProps) => {
+        {uiBoard?.map((list: Board) => {
           const isProgress = list.boardKey === "progress";
           return (
             <div key={list._id} onClick={() => setSidebarOpen(!sidebarOpen)}>
@@ -63,7 +67,7 @@ ${sidebarOpen ? "translate-x-0" : "translate-x-full"}
         }
         className="px-4 py-2 bg-rose-400 text-rose-50 rounded-lg cursor-pointer"
       >
-        خارج شدن
+        {sidebar.signOut}
       </button>
 
       <button

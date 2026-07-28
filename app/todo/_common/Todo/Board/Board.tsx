@@ -6,53 +6,60 @@ import {
   BOARD_KEYS,
   BOARD_LABELS,
   getDateKey,
+  isInMyDay,
   useTodoContext,
 } from "@/app/_utils";
 import { colors, Header } from "../../Header";
 import { Lists } from "../Lists";
-import { ListItemProps } from "../Todo.const";
 import { HamburgerMenu } from "iconsax-reactjs";
+import { Board as BoardType } from "@/app/types";
+import { SidebarProps } from "../../Sidebar";
 
-export const Board = ({ item, sidebarOpen, setSidebarOpen }: any) => {
-  const { todo, setTodo, boardList, searchText, systemBoardsState } =
+type boardProps = {
+  item: BoardType;
+} & SidebarProps;
+
+export const Board = ({ item, sidebarOpen, setSidebarOpen }: boardProps) => {
+  const { todo, setTodo, boardList, searchText, systemBoards } =
     useTodoContext();
 
   const normalize = (key?: string) => key?.toLowerCase().replace(/\s/g, "");
   const currentBoard =
-    boardList.find((b) => b.boardKey === item.boardKey) ??
-    systemBoardsState?.[item.boardKey];
-  const todayKey = getDateKey(new Date());
+    systemBoards?.[item.boardKey] ??
+    boardList.find((b) => b.boardKey === item.boardKey);
   const isAll = currentBoard?.boardKey === BOARD_KEYS.ALL;
   const isImportant = currentBoard?.boardKey === BOARD_KEYS.IMPORTANT;
   const isComplete = currentBoard?.boardKey === BOARD_KEYS.COMPLETE;
   const isMyDay = currentBoard?.boardKey === BOARD_KEYS.MY_DAY;
+  const isSearch = currentBoard?.boardKey === BOARD_KEYS.SEARCH;
 
   const filteredTodos = todo.filter((t) => {
     if (!currentBoard) return false;
     if (isAll) return true;
     if (isImportant) return t.isImportant;
+    if (isSearch) {
+      return (
+        searchText && t.title.toLowerCase().includes(searchText.toLowerCase())
+      );
+    }
     if (isComplete) return t.status;
     if (isMyDay) {
-      return (
-        t.myDayDate === todayKey ||
-        (t.boardKey === BOARD_KEYS.MY_DAY &&
-          getDateKey(t.createdAt) === todayKey)
-      );
+      return isInMyDay(t);
     }
     return t.boardKey === currentBoard.boardKey;
   });
 
-  const activeTodos = filteredTodos.filter((t) => !t.status);
-  const completedTodos = filteredTodos.filter((t) => t.status);
-  const searchTodos = todo
-    .filter((t) => !t.status)
-    .filter(
-      (t) =>
-        searchText && t.title.toLowerCase().includes(searchText.toLowerCase()),
-    );
+  const activeTodos = isMyDay
+    ? todo.filter((t) => isInMyDay(t) && !t.status)
+    : filteredTodos.filter((t) => !t.status);
 
+  const today = getDateKey(new Date());
+  const completedTodos = isMyDay
+    ? todo.filter(
+        (t) => t.status && t.completedAt && getDateKey(t.completedAt) === today,
+      )
+    : filteredTodos.filter((t) => t.status);
   const isImage = currentBoard?.theme?.startsWith("img:");
-
   const bgStyle = isImage
     ? {
         backgroundImage: `url(${currentBoard?.theme.replace("img:", "")})`,
@@ -68,14 +75,10 @@ export const Board = ({ item, sidebarOpen, setSidebarOpen }: any) => {
 
   type BoardKey = keyof typeof BOARD_LABELS;
 
-  console.log("boardList:", boardList);
-  console.log("currentBoard:", currentBoard);
-
   if (!boardList?.length) {
     return <div>Loading boards...</div>;
   }
 
-  
   return (
     <div
       className={` flex-4 min-h-screen justify-center overflow-y-auto relative w-full ${bgClass}`}
@@ -106,8 +109,7 @@ export const Board = ({ item, sidebarOpen, setSidebarOpen }: any) => {
           <Progress />
         ) : (
           <div className=" grow flex flex-col gap-5 px-16 pb-5">
-            {/* MY DAY */}
-            {currentBoard?.boardKey === BOARD_KEYS.MY_DAY && (
+            {currentBoard?.boardKey === BOARD_KEYS.MY_DAY && setTodo && (
               <>
                 <TodoList todo={activeTodos} setTodo={setTodo} />
                 {completedTodos.length > 0 && (
@@ -117,9 +119,12 @@ export const Board = ({ item, sidebarOpen, setSidebarOpen }: any) => {
             )}
             {currentBoard?.boardKey === BOARD_KEYS.ALL && (
               <>
-                {boardList?.map((board: ListItemProps) => {
+                {boardList?.map((board: BoardType) => {
                   const grouped = activeTodos.filter((t) => {
-                    return normalize(t.boardKey) === normalize(board.boardKey);
+                    return (
+                      t.boardKey &&
+                      normalize(t.boardKey) === normalize(board.boardKey)
+                    );
                   });
                   if (!grouped.length) return null;
                   return (
@@ -140,9 +145,12 @@ export const Board = ({ item, sidebarOpen, setSidebarOpen }: any) => {
             )}
             {currentBoard?.boardKey === BOARD_KEYS.COMPLETE && (
               <>
-                {boardList?.map((board) => {
+                {boardList?.map((board: BoardType) => {
                   const grouped = completedTodos.filter((t) => {
-                    return normalize(t.boardKey) === normalize(board.boardKey);
+                    return (
+                      t.boardKey &&
+                      normalize(t.boardKey) === normalize(board.boardKey)
+                    );
                   });
                   if (!grouped.length) return null;
                   return (
@@ -166,11 +174,10 @@ export const Board = ({ item, sidebarOpen, setSidebarOpen }: any) => {
                   )}
                 </>
               )}
-            {searchText && <TodoList todo={searchTodos} setTodo={setTodo} />}
             {currentBoard?.boardKey === BOARD_LABELS[BOARD_KEYS.ALL] &&
               boardList
                 ?.slice()
-                .map((board: any) => (
+                .map((board: BoardType) => (
                   <Lists
                     key={board._id}
                     todo={todo}

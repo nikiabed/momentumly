@@ -1,34 +1,42 @@
 "use client";
-import { DetailedHTMLProps, FC, HTMLAttributes, memo, useState } from "react";
+import {
+  DetailedHTMLProps,
+  FC,
+  HTMLAttributes,
+  useEffect,
+  useState,
+} from "react";
 import { CloseCircle, TickCircle } from "iconsax-reactjs";
 import { useTodoContext } from "@/app/_utils/hooks";
 import { TodoEditInput } from "../TodoEditInput";
 import { getDateKey } from "@/app/_utils";
+import { Todo } from "@/app/types";
 
 type itemProps = DetailedHTMLProps<
   HTMLAttributes<HTMLDivElement>,
   HTMLDivElement
 > & {
-  list: string[];
+  list: Todo;
 };
 
-export const getTodoState = (todo: any, today: string) => {
-  const todayDate = new Date(today);
-  const deadlineDate = new Date(todo.deadline);
-  
+export const getTodoState = (todo: Todo, today = getDateKey(new Date())) => {
   if (todo.status) return "done";
   if (!todo.deadline) return "normal";
-  const deadlineKey = getDateKey(todo.deadline);
-  if (deadlineKey === today) return "today";
-  if (deadlineDate < todayDate) return "overdue";
+  const deadline = getDateKey(todo.deadline);
+  if (!deadline) return "normal";
+  if (deadline === today) return "today";
+  if (today && deadline < today) return "overdue";
   return "normal";
 };
 
-export const TodoListItems: FC<itemProps> = ({ list, ...props }: any) => {
+export const TodoListItems: FC<itemProps> = ({ list, ...props }) => {
   const [localTitle, setLocalTitle] = useState(list.title);
   const { handleUpdateTodo, handleIsEdit } = useTodoContext();
 
   const todayKey = getDateKey(new Date()) || "normal";
+  useEffect(() => {
+    setLocalTitle(list.title);
+  }, [list.title]);
   const state = getTodoState(list, todayKey);
 
   return (
@@ -41,14 +49,14 @@ export const TodoListItems: FC<itemProps> = ({ list, ...props }: any) => {
       {list.isEdit ? (
         <form
           name="edited task"
-          onKeyDown={(e: any) => {
+          onKeyDown={(e) => {
             if (e.key === "Escape") {
-              handleIsEdit?.(list._id);
+              handleIsEdit?.(list._id, false);
             }
           }}
           onSubmit={(e) => {
             e.preventDefault();
-            handleUpdateTodo?.(list._id, localTitle);
+            handleUpdateTodo?.(list, localTitle);
           }}
           className="flex items-center justify-center w-full"
         >
@@ -56,7 +64,7 @@ export const TodoListItems: FC<itemProps> = ({ list, ...props }: any) => {
             type="button"
             className="pr-5 px-1"
             onClick={() => {
-              handleIsEdit?.(list._id);
+              handleIsEdit?.(list._id, false);
             }}
           >
             <CloseCircle size={20} />

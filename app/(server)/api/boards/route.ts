@@ -6,9 +6,7 @@ import { auth } from "@/app/lib/auth";
 export async function GET(req: Request) {
   try {
     await connectDB();
-
     const session = await auth();
-
     if (!session?.user?.id) {
       return NextResponse.json([], { status: 200 });
     }
@@ -17,7 +15,6 @@ export async function GET(req: Request) {
       userId: session.user.id,
     });
 
-    // 🔥 اگر کاربر جدید بود
     if (!boards.length) {
       const defaultBoards = [
         {
@@ -84,9 +81,7 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     await connectDB();
-
     const session = await auth();
-
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -97,7 +92,6 @@ export async function POST(req: Request) {
     } catch {
       return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
     }
-
     if (!body?.title) {
       return NextResponse.json({ error: "Title is required" }, { status: 400 });
     }

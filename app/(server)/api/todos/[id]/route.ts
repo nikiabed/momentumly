@@ -3,22 +3,66 @@ import { connectDB } from "@/app/lib/mongodb";
 import Todo from "@/app/models/Todo";
 import { NextResponse } from "next/server";
 
-export async function PATCH(req: Request, context: any) {
+type RouteContext = {
+  params: Promise<{
+    id: string;
+  }>;
+};
+
+type TodoUpdate = {
+  title?: string;
+  status?: boolean;
+  completedAt?: Date | null;
+  isImportant?: boolean;
+  boardKey?: string | null;
+  myDayDate?: string | null;
+  deadline?: Date | null;
+  attachment?: string | null;
+  isEdit?: boolean;
+};
+
+export async function PATCH(req: Request, context: RouteContext) {
   await connectDB();
-
   const session = await auth();
-
   if (!session?.user?.id) {
-    return NextResponse.json(
-      { error: "Unauthorized" },
-      { status: 401 }
-    );
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  const { id } = await context.params;
+  const body = await req.json();
+  const update: TodoUpdate = {};
+
+  if (body.title !== undefined) {
+    update.title = body.title;
   }
 
-  const { params } = context;
-  const { id } = params;
+  if (body.status !== undefined) {
+    update.status = body.status;
+    update.completedAt = body.status ? new Date() : null;
+  }
 
-  const body = await req.json();
+  if (body.isImportant !== undefined) {
+    update.isImportant = body.isImportant;
+  }
+
+  if (body.boardKey !== undefined) {
+    update.boardKey = body.boardKey;
+  }
+
+  if (body.myDayDate !== undefined) {
+    update.myDayDate = body.myDayDate;
+  }
+
+  if (body.deadline !== undefined) {
+    update.deadline = body.deadline;
+  }
+
+  if (body.attachment !== undefined) {
+    update.attachment = body.attachment;
+  }
+
+  if (body.isEdit !== undefined) {
+    update.isEdit = body.isEdit;
+  }
 
   const result = await Todo.findOneAndUpdate(
     {
@@ -26,22 +70,38 @@ export async function PATCH(req: Request, context: any) {
       userId: session.user.id,
     },
     {
-      $set: {
-        attachment: body.attachment,
-      },
+      $set: update,
     },
-    { new: true }
+    {
+      returnDocument: "after",
+    },
   );
 
   if (!result) {
-    return NextResponse.json(
-      { error: "Todo not found" },
-      { status: 404 }
-    );
+    return NextResponse.json({ error: "Todo not found" }, { status: 404 });
   }
 
   return NextResponse.json({
     ok: true,
     todo: result,
+  });
+}
+
+export async function DELETE(req: Request, context: RouteContext) {
+  await connectDB();
+  const session = await auth();
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  const { id } = await context.params;
+  const result = await Todo.findOneAndDelete({
+    _id: id,
+    userId: session.user.id,
+  });
+  if (!result) {
+    return NextResponse.json({ error: "Todo not found" }, { status: 404 });
+  }
+  return NextResponse.json({
+    ok: true,
   });
 }

@@ -1,15 +1,28 @@
 "use client";
 
-import { TodoContext } from "@/app/_utils/hooks";
-import { ArrowDown2 } from "iconsax-reactjs";
+import { TodoContext, useTodoContext } from "@/app/_utils/hooks";
+import { ArrowDown2, Calendar, Clock, Moon, Sun1 } from "iconsax-reactjs";
 import { useContext, useState } from "react";
 import { TodoList } from "../TodoList";
-import { t } from "@/app/i18n/t";
-import { titleToKey } from "../../Sidebar";
+import { formatGroupDate } from "@/app/_utils/date";
+import { getTodoDisplayDate } from "@/app/_utils/todo";
+import { Todo, TodoList as TodoListType } from "@/app/types";
 
-export const Lists = ({ todo, list }: any) => {
+export const Lists = ({ todo, list }: { todo: TodoListType; list: string }) => {
   const [isOpen, setOpen] = useState(false);
-  const { setTodo } = useContext(TodoContext);
+  const { setTodo } = useTodoContext();
+
+  const groupedByDate = todo.reduce(
+    (acc: Record<string, typeof todo>, item: Todo) => {
+      const date = getTodoDisplayDate(item);
+      if (!acc[date || ""]) {
+        acc[date || ""] = [];
+      }
+      acc[date || ""].push(item);
+      return acc;
+    },
+    {} as Record<string, typeof todo>,
+  );
 
   return (
     <div className="flex flex-col gap-2">
@@ -28,7 +41,42 @@ export const Lists = ({ todo, list }: any) => {
           {todo.length}
         </span>
       </div>
-      {isOpen && <TodoList todo={todo} setTodo={setTodo} />}
+      {isOpen &&
+        Object.entries(groupedByDate).map(([date, todos]) => {
+          const formatted = formatGroupDate(date);
+          const icon =
+            formatted.label === "امروز" ? (
+              <Sun1 size={16} />
+            ) : formatted.label === "دیروز" ? (
+              <Moon size={16} />
+            ) : formatted.label === "فردا" ? (
+              <Clock size={16} />
+            ) : (
+              <Calendar size={16} />
+            );
+          return (
+            <div key={date} className="ml-5 mb-3">
+              <div
+                className="inline-flex items-center gap-2 mb-1
+                px-3 py-1.5
+                rounded-full
+                bg-white/10
+                backdrop-blur-md
+                border border-white/20
+                text-white"
+              >
+                {icon}
+                {formatted.label && (
+                  <span className="font-semibold text-white">
+                    {formatted.label}
+                  </span>
+                )}
+                <span className="text-sm text-gray-200">{formatted.date}</span>
+              </div>
+              <TodoList todo={todos} setTodo={setTodo} />
+            </div>
+          );
+        })}
     </div>
   );
 };

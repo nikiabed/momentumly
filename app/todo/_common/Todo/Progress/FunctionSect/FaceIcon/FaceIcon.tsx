@@ -1,4 +1,4 @@
-const FaceIcon = ({ score }: { score: number }) => {
+export const FaceIcon = ({ score }: { score: number }) => {
   const moods = [
     {
       bg: "#FCA5A5",
@@ -28,11 +28,10 @@ const FaceIcon = ({ score }: { score: number }) => {
   const mood = moods[normalized];
 
   return (
-    <svg width="60" height="60" viewBox="0 0 80 80">
+    <svg width="68" height="68" viewBox="0 0 80 80" className="drop-shadow-sm">
       <circle cx="40" cy="40" r="32" fill={mood.bg} />
 
       <circle cx="30" cy="32" r="3" fill="#0F172A" />
-
       <circle cx="50" cy="32" r="3" fill="#0F172A" />
 
       <path
@@ -45,5 +44,3 @@ const FaceIcon = ({ score }: { score: number }) => {
     </svg>
   );
 };
-
-export default FaceIcon;

@@ -12,17 +12,16 @@ import {
   ArrowUp2,
   Folder,
   Link21,
-  Clock,
 } from "iconsax-reactjs";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { titleToKey } from "../../Sidebar";
 import { t } from "@/app/i18n/t";
-import { BOARD_KEYS } from "@/app/_utils";
-import DatePicker from "react-multi-date-picker";
-import persian from "react-date-object/calendars/persian";
-import persian_fa from "react-date-object/locales/persian_fa";
+import { BOARD_KEYS, isInMyDay, isManuallyInMyDay } from "@/app/_utils";
+import { DeadlinePicker } from "./DeadlinePicker";
+import { CompletedDatePicker } from "./CompletedDatePicker";
+import { Todo } from "@/app/types";
 
-export const TodoEditInput = ({ list }: any) => {
+export const TodoEditInput = ({ list }: { list: Todo }) => {
   const {
     toggleImportant,
     toggleStatus,
@@ -39,20 +38,10 @@ export const TodoEditInput = ({ list }: any) => {
 
   const [isOpen, setOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isDeadLineOpen, setDeadlineOpen] = useState(false);
   const todoRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (todoRef.current && !todoRef.current.contains(event.target as Node)) {
-        setOpen(false);
-      }
-    };
+  const [isCompleteMenuOpen, setIsCompleteMenuOpen] = useState(false);
+  const completeMenuRef = useRef<HTMLDivElement>(null);
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
   const systemBoards = [
     BOARD_KEYS.ALL,
     BOARD_KEYS.IMPORTANT,
@@ -69,22 +58,67 @@ export const TodoEditInput = ({ list }: any) => {
   const fileRef = useRef<HTMLInputElement>(null);
 
   return (
-    <div className="w-full z-50 relative" ref={todoRef}>
-      {/* Todo Row */}
-      <div className="flex items-center gap-2 px-4 py-2  min-w-0 text-wrap">
+    <div className="w-full relative" ref={todoRef}>
+      <div
+        className="flex items-center gap-2 px-4 py-2  min-w-0 text-wrap"
+        ref={completeMenuRef}
+      >
+        <ArrowDown2
+          size={14}
+          className="cursor-pointer text-black/50 hover:text-gray-600"
+          onClick={() => setIsCompleteMenuOpen((p) => !p)}
+        />
+
         {list.status ? (
           <TickCircle
             variant="Bold"
             size={24}
             className="text-rose-400 cursor-pointer shrink-0"
-            onClick={() => toggleStatus?.(list._id, !list.status)}
+            onClick={() => toggleStatus?.(list._id, !list.status, new Date())}
           />
         ) : (
           <Record
             size={24}
             className="text-black/50 cursor-pointer shrink-0"
-            onClick={() => toggleStatus?.(list._id, !list.status)}
+            onClick={() => toggleStatus?.(list._id, !list.status, new Date())}
           />
+        )}
+
+        {isCompleteMenuOpen && (
+          <div className="absolute top-12 right-0 w-48 bg-white z-50 ">
+            <button
+              className="w-full px-4 py-2 text-right hover:bg-gray-100 cursor-pointer shrink-0"
+              onClick={() => {
+                toggleStatus?.(list._id, true, new Date());
+                setIsCompleteMenuOpen(false);
+              }}
+            >
+              ✓ انجام امروز
+            </button>
+            <button
+              className="w-full px-4 py-2 text-right hover:bg-gray-100 cursor-pointer shrink-0"
+              onClick={() => {
+                const yesterday = new Date();
+                yesterday.setDate(yesterday.getDate() - 1);
+                toggleStatus?.(list._id, true, yesterday);
+                setIsCompleteMenuOpen(false);
+              }}
+            >
+              ✓ انجام دیروز
+            </button>
+            <div className="w-full px-4 py-2 text-right hover:bg-gray-100 cursor-pointer shrink-0">
+              <div className=" text-right">
+                <CompletedDatePicker
+                  value={list.completedAt}
+                  onChange={(date) => {
+                    if (!date) return;
+                    const newDate = date.toDate() || null;
+                    toggleStatus?.(list._id, true, newDate);
+                  }}
+                />
+              </div>
+            </div>
+          </div>
         )}
 
         <div
@@ -120,74 +154,73 @@ export const TodoEditInput = ({ list }: any) => {
       {isOpen && (
         <div
           className=" rounded-2xl border border-black/5 bg-white shadow-sm flex flex-col
-  overflow-hidden md:justify-evenly z-50 md:flex-row md:overflow-auto"
+   md:justify-evenly z-0 md:flex-row "
         >
-          <button
-            onClick={() => handleIsEdit?.(list._id)}
+          <div
+            onClick={() => handleIsEdit?.(list._id, true)}
             className="flex w-full items-center gap-3 px-4 py-3 cursor-pointer text-sm text-center justify-center hover:bg-black/5 transition"
           >
             <Edit size={18} />
             <span>ویرایش</span>
-          </button>
+          </div>
 
-          {!list.myDayDate && (
-            <button
+          {!isInMyDay(list) && (
+            <div
               onClick={() => moveToMyDay?.(list._id)}
               className="flex w-full items-center gap-3 px-4 py-3 cursor-pointer text-sm text-center justify-center hover:bg-black/5 transition"
             >
               <Calendar size={18} />
               <span>انتقال به امروز</span>
-            </button>
+            </div>
           )}
 
-          <button className="flex w-full items-center relative gap-3 px-4 py-3 cursor-pointer text-sm text-center justify-center hover:bg-black/5 transition">
-            <Folder size={18} />
-            <span onClick={() => setIsMenuOpen(!isMenuOpen)}>انتقال</span>
+          <div className="relative w-full flex item-center">
+            <div
+              onClick={() => setIsMenuOpen((prev) => !prev)}
+              className="flex w-full items-center gap-3 px-4 py-3
+      justify-center text-sm  hover:bg-black/5 transition cursor-pointer"
+            >
+              <Folder size={18} />
+              <span>انتقال</span>
+            </div>
+
             {isMenuOpen && (
-              <div className="absolute right-0 top-full bg-white shadow rounded-xl ">
+              <div
+                className=" w-full
+        absolute
+        top-full
+        left-1/2
+        -translate-x-1/2
+        mt-2
+        bg-white
+        shadow-lg
+        z-100
+      "
+              >
                 {moveTargets?.map((board) => (
                   <button
                     key={board._id}
                     onClick={() => moveTodo?.(list._id, board.boardKey)}
-                    className="block w-full text-right px-3 py-2 hover:bg-slate-50 cursor-pointer"
+                    className="block w-full whitespace-nowrap px-3 py-2 text-right hover:bg-black/5 transition cursor-pointer text-sm"
                   >
                     {t(titleToKey[board.title]) || board.title}
                   </button>
                 ))}
               </div>
             )}
-          </button>
-
-          <div className="w-full flex">
-            <div
-              onClick={() => setDeadlineOpen(!isDeadLineOpen)}
-              className="flex w-full items-center gap-3 px-4 py-3 text-sm text-center justify-center hover:bg-black/5 transition cursor-pointer"
-            >
-              <Clock size={18} />
-              <span>ددلاین</span>
-            </div>
-
-            {isDeadLineOpen && (
-              <div
-                className="absolute z-9999 bg-white border-none text-center"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <DatePicker
-                  calendar={persian}
-                  locale={persian_fa}
-                  value={list.deadline}
-                  onChange={(date) => {
-                    const d = date?.toDate?.();
-                    if (!d) return;
-
-                    void setDeadline?.(list._id, d.toDateString());
-                  }}
-                  inputMode="none"
-                  inputClass="w-full px-3 py-1 text-[12px] shadow bg-transparent border-none outline-none text-center cursor-pointer hover:bg-black/10"
-                />
-              </div>
-            )}
           </div>
+
+          {
+            <DeadlinePicker
+              value={list.deadline}
+              onChange={(date) => {
+                const newDate = date?.toDate() || null;
+                setDeadline?.(list._id, newDate);
+              }}
+              onClear={() => setDeadline?.(list._id, null)}
+              className={"justify-center hover:hover:bg-black/5"}
+            />
+          }
 
           <div className="flex w-full items-center gap-3 px-4 py-3 cursor-pointer text-sm text-center justify-center hover:bg-black/5 transition">
             <div
@@ -226,14 +259,14 @@ export const TodoEditInput = ({ list }: any) => {
             )}
           </div>
 
-          {list.myDayDate && (
-            <button
+          {isManuallyInMyDay(list) && list.boardKey !== BOARD_KEYS.MY_DAY && (
+            <div
               onClick={() => removeFromMyDay?.(list._id)}
               className="flex w-full items-center gap-3 px-4 py-3 cursor-pointer text-sm text-center justify-center hover:bg-black/5 transition"
             >
               <Trash size={18} />
               <span>حذف از امروز</span>
-            </button>
+            </div>
           )}
           <button
             onClick={() => deleteTodo?.(list._id)}

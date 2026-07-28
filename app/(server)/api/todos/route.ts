@@ -9,10 +9,7 @@ export async function GET() {
   const session = await auth();
 
   if (!session?.user?.id) {
-    return NextResponse.json(
-      { message: "Unauthorized" },
-      { status: 401 }
-    );
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
 
   const todos = await Todo.find({
@@ -28,10 +25,7 @@ export async function POST(req: Request) {
   const session = await auth();
 
   if (!session?.user?.id) {
-    return NextResponse.json(
-      { message: "Unauthorized" },
-      { status: 401 }
-    );
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
 
   const body = await req.json();

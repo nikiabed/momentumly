@@ -1,11 +1,11 @@
 "use client";
 import { useTodoContext } from "@/app/_utils/hooks";
 import { ItemIcon } from "../../Header";
-import { sidebar } from "../Sidebar.const";
 import { More } from "iconsax-reactjs";
 import { useEffect, useRef, useState } from "react";
 import { t } from "@/app/i18n/t";
-import { BOARD_KEYS, getDateKey } from "@/app/_utils";
+import { BOARD_KEYS, isInMyDay } from "@/app/_utils";
+import { Board } from "@/app/types";
 
 export const titleToKey: Record<string, string> = {
   "My Day": "myDay",
@@ -17,7 +17,7 @@ export const titleToKey: Record<string, string> = {
   Search: "search",
 };
 
-export const ListItem = ({ focused }: { focused: any }) => {
+export const ListItem = ({ focused }: { focused: Board }) => {
   const {
     handleBoardInput,
     removeList,
@@ -26,7 +26,7 @@ export const ListItem = ({ focused }: { focused: any }) => {
     saveBoard,
     todo,
     boardList,
-    systemBoardsState,
+    systemBoards,
     setNewBoardKey,
     newBoardKey,
   } = useTodoContext();
@@ -57,8 +57,7 @@ export const ListItem = ({ focused }: { focused: any }) => {
   const value = t(titleToKey[focused.title] ?? focused.title);
   const currentBoard =
     boardList.find((b) => b.boardKey === focused.boardKey) ??
-    systemBoardsState?.[focused.boardKey];
-  const todayKey = getDateKey(new Date());
+    systemBoards?.[focused.boardKey];
   const isAll = currentBoard?.boardKey === BOARD_KEYS.ALL;
   const isImportant = currentBoard?.boardKey === BOARD_KEYS.IMPORTANT;
   const isComplete = currentBoard?.boardKey === BOARD_KEYS.COMPLETE;
@@ -83,7 +82,7 @@ export const ListItem = ({ focused }: { focused: any }) => {
     if (isImportant) return t.isImportant;
     if (isComplete) return t.status;
     if (isMyDay) {
-      return t.myDayDate === todayKey;
+      return isInMyDay(t);
     }
     return t.boardKey === currentBoard.boardKey;
   });
@@ -127,7 +126,7 @@ export const ListItem = ({ focused }: { focused: any }) => {
             {notCompletedTodos}
           </span>
         )}
-        {focused.title == sidebar.progress && (
+        {focused.title == BOARD_KEYS.PROGRESS && (
           <div className="border-b border-gray-300 p absolute -bottom-1 w-full"></div>
         )}
       </div>

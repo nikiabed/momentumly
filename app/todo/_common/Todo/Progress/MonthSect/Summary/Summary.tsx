@@ -1,37 +1,18 @@
-import { getDateKey, toFa, useTodoContext } from "@/app/_utils";
+import { toFa, useTodoContext } from "@/app/_utils";
+import { getMonthStats } from "@/app/_utils/progress";
 
-const Summary = () => {
+export const Summary = () => {
   const { todo } = useTodoContext();
-  const now = new Date();
-
-  const monthTodos = todo.filter((t: any) => {
-    const date = new Date(t.createdAt);
-    return (
-      date.getMonth() === now.getMonth() &&
-      date.getFullYear() === now.getFullYear() &&
-      t.boardKey === "myDay"
-    );
-  });
-
-  const completed = monthTodos.filter((t: any) => t.status);
-  const coinsByDay: Record<string, number> = {};
-  completed.forEach((t: any) => {
-    const key = getDateKey(t.createdAt);
-    if (!key) return;
-    coinsByDay[key] = (coinsByDay[key] || 0) + (t.status ? 10 : 0);
-  });
-
-  const maxCoins = Math.max(...Object.values(coinsByDay), 0);
-  const activeDays = Object.keys(coinsByDay).length;
-  const completedCount = completed.length;
-  const progress =
-    monthTodos.length === 0
-      ? 0
-      : Math.round((completedCount / monthTodos.length) * 100);
+  const monthStats = getMonthStats(todo);
 
   return (
     <div className="bg-white rounded-3xl shadow p-6 flex-1">
-      <h1 className="text-2xl font-bold mb-6">خلاصه این ماه</h1>
+      <div className="flex items-center gap-2 mb-6">
+        <span className="text-2xl">📊</span>
+        <h1 className="text-2xl font-bold text-gray-800">
+          خلاصه <span className="text-violet-600">{monthStats.monthName}</span>
+        </h1>
+      </div>
       <div className="grid grid-cols-2 gap-4">
         {/* Card 1 */}
         <div className="bg-[#f8fafc] rounded-2xl p-5 flex items-center gap-3">
@@ -73,7 +54,9 @@ const Summary = () => {
             <h2 className="text-gray-500 text-sm font-semibold">
               بیشترین سکه در روز
             </h2>
-            <h1 className="text-3xl font-semibold">{toFa(maxCoins)}</h1>
+            <h1 className="text-3xl font-semibold">
+              {toFa(monthStats.maxDailyCoins)}
+            </h1>
           </div>
         </div>
 
@@ -81,7 +64,7 @@ const Summary = () => {
         <div className="bg-[#f8fafc] rounded-2xl p-5 text-center">
           <div className="text-center font-semibold">
             <h2 className="text-gray-500 text-sm">روزهای فعال</h2>
-            <h1 className="text-3xl">{toFa(activeDays)}</h1>
+            <h1 className="text-3xl">{toFa(monthStats.activeDays)}</h1>
             <h2 className="text-gray-500 text-sm ">از 30 روز</h2>
           </div>
         </div>
@@ -102,7 +85,7 @@ const Summary = () => {
 
           <div className="text-center font-semibold">
             <h2 className="text-gray-500 text-sm">تسک های انجام شده</h2>
-            <h1 className="text-3xl "> {toFa(completedCount)}</h1>
+            <h1 className="text-3xl "> {toFa(monthStats.completedTasks)}</h1>
           </div>
         </div>
 
@@ -122,12 +105,10 @@ const Summary = () => {
 
           <div className="text-center font-semibold">
             <h2 className="text-gray-500 text-sm">میانگین پیشرفت</h2>
-            <h1 className="text-3xl"> {toFa(progress)}٪</h1>
+            <h1 className="text-3xl"> {toFa(monthStats.averageProgress)}٪</h1>
           </div>
         </div>
       </div>
     </div>
   );
 };
-
-export default Summary;

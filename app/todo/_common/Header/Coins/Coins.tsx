@@ -1,16 +1,17 @@
+"use client";
 import { useTodoContext } from "@/app/_utils";
-import { ListItemProps, TodoType } from "../../Todo";
+import { getCoinStats } from "@/app/_utils/progress";
+import { TodoList, Board } from "@/app/types";
 
-const Coins = ({
-  item,
+export const Coins = ({
   filterTodo,
 }: {
-  item: ListItemProps;
-  filterTodo:  TodoType[];
+  item: Board;
+  filterTodo: TodoList;
 }) => {
   const { todo } = useTodoContext();
-  const globalCoins = todo.filter((t) => t.status).length * 10;
-  const boardCoins = filterTodo.filter((t) => t.status).length * 10;
+  const globalStats = getCoinStats(todo);
+  const boardStats = getCoinStats(filterTodo);
   return (
     <div className="flex gap-1">
       <div
@@ -25,7 +26,7 @@ const Coins = ({
       >
         <span>🪙</span>
 
-        <span className="font-semibold">{globalCoins}</span>
+        <span className="font-semibold">{globalStats.globalCoins}</span>
       </div>
 
       <div
@@ -38,10 +39,8 @@ const Coins = ({
       >
         <span>✨</span>
 
-        <span className="font-semibold">{boardCoins}</span>
+        <span className="font-semibold">{boardStats.globalCoins}</span>
       </div>
     </div>
   );
 };
-
-export default Coins;
