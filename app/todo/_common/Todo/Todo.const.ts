@@ -1,54 +1,25 @@
-import { TodoList } from "@/app/types/todo";
-import {
-  ChangeEvent,
-  ChangeEventHandler,
-  Dispatch,
-  SetStateAction,
-} from "react";
+import { Board, Todo, TodoList } from "@/app/types";
+import { ChangeEvent, Dispatch, SetStateAction } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { Board } from "@/app/types/board";
-
-// export type ListItemProps = {
-//   _id: string;
-//   title: string;
-//   state: boolean;
-//   icon: string;
-//   color: string;
-//   boardKey: string;
-//   theme: string;
-//   isEdit?: boolean;
-//   editable?: boolean;
-//   filter: (todo: TodoType) => boolean;
-//   order: number;
-// };
 
 export type Context = {
   todo: TodoList;
-  setTodo?: any;
+  setTodo?: Dispatch<SetStateAction<TodoList>>;
   inputValue?: string | null;
   addTodo?: (title: string, item: Board) => void;
   handleChange?: (e: ChangeEvent<HTMLInputElement, Element>) => void;
   deleteTodo?: (id: string) => Promise<void>;
-  changeTaskState?: (index: string) => void;
-  handleSubmit?: (e: any, item: Board) => Promise<void>;
+  handleSubmit?: (
+    e: ChangeEvent<HTMLInputElement, Element>,
+    item: Board,
+  ) => Promise<void>;
   isEdit?: boolean;
-  setEdit?: any;
-  editedTask?: string | null;
-  handleNewChange?: (id: string, title: string) => Promise<void>;
-  setEditedTask?: any;
-  handleEditedTask?: (e: any) => void;
-  setFocused?: Dispatch<SetStateAction<Board[]>>;
   handleIsEdit?: (id: string, value: boolean) => void;
-  handleImportant?: (index: string) => void;
-  handleBoardSubmit?: (index: string, text: string) => void;
-  boardValue?: string;
-  handleBoardInput?: (e: any) => void;
-  handleBoardClick?: (index: string) => void;
+  handleBoardInput?: (e: ChangeEvent<HTMLInputElement, Element>) => void;
   handleNewList?: () => void;
-  handleBoardIsEdit?: (index: string) => void;
-  handleBoardEditable?: (index: string) => void;
-  removeList?: (index: string) => void;
-  moveToMyDay?: (index: string) => void;
+  handleBoardEditable?: (id: string) => void;
+  removeList?: (id: string) => Promise<void>;
+  moveToMyDay?: (id: string) => Promise<void>;
   boardList: Board[];
   setBoardList?: Dispatch<SetStateAction<Board[]>>;
   loadBoards?: () => Promise<void>;
@@ -56,7 +27,7 @@ export type Context = {
   activeBoard?: string;
   setActiveBoard?: Dispatch<SetStateAction<string>>;
   selectBoard?: (board: Board, id: string) => void;
-  toggleImportant?: (id: string, value: boolean) => Promise<void>;
+  toggleImportant?: (id: string, value: boolean) => Promise<boolean>;
   toggleStatus?: (
     id: string,
     value: boolean,
@@ -67,7 +38,7 @@ export type Context = {
   setSearchText?: Dispatch<SetStateAction<string>>;
   uiBoard?: Board[];
   saveBoard?: (id: string) => Promise<void>;
-  handleUpdateTodo?: (id: string, title: string) => Promise<void>;
+  handleUpdateTodo?: (list: Todo, title: string) => Promise<void>;
   systemBoards?: Record<string, Board>;
   setSystemBoards?: Dispatch<SetStateAction<Record<string, Board>>>;
   newBoardKey?: string | null;

@@ -2,7 +2,7 @@ import Image from "next/image";
 import { useTodoContext } from "@/app/_utils";
 import { getCoinStats } from "@/app/_utils/progress";
 
-const CoinSect = () => {
+export const CoinSect = () => {
   const { todo } = useTodoContext();
 
   const { globalCoins, weekCoins, todayCoins, weekRecovery, todayRecovery } =
@@ -13,7 +13,7 @@ const CoinSect = () => {
       className="
         w-full max-w-980
         bg-white
-        rounded-[32px]
+        rounded-4xl
         shadow-sm
         border border-gray-100
         p-6 md:p-8
@@ -23,7 +23,6 @@ const CoinSect = () => {
         overflow-hidden
       "
     >
-      {/* LEFT — Wallet */}
       <div className="w-full lg:w-1/3 flex flex-col gap-2">
         <div className="flex items-center gap-2 text-gray-500 justify-center">
           <span className="text-xl">🪙</span>
@@ -38,7 +37,6 @@ const CoinSect = () => {
           <span className="text-xl font-bold text-gray-400">سکه</span>
         </div>
 
-        {/* Weekly stats */}
         <div className="grid grid-cols-2 gap-3 mt-6">
           <div className="bg-violet-50 rounded-2xl p-4">
             <div className="text-md text-violet-400 font-semibold text-center">
@@ -54,7 +52,9 @@ const CoinSect = () => {
           </div>
 
           <div className="bg-emerald-50 rounded-2xl p-4">
-            <div className="text-md text-emerald-500 font-semibold text-center">نجات</div>
+            <div className="text-md text-emerald-500 font-semibold text-center">
+              نجات
+            </div>
 
             <div className="flex items-center gap-1 mt-1 justify-center">
               <span className="text-lg">🔄</span>
@@ -66,7 +66,6 @@ const CoinSect = () => {
         </div>
       </div>
 
-      {/* CENTER — Piggy */}
       <div className="flex-1 flex justify-center items-center">
         <div className="relative">
           <div
@@ -75,7 +74,7 @@ const CoinSect = () => {
               inset-4
               rounded-full
               bg-yellow-50
-              -z-0
+              z-0
             "
           />
 
@@ -89,7 +88,6 @@ const CoinSect = () => {
         </div>
       </div>
 
-      {/* RIGHT — Today */}
       <div className="w-full lg:w-1/3">
         <div className="mb-5">
           <div className="flex items-center gap-2">
@@ -105,7 +103,6 @@ const CoinSect = () => {
           </p>
         </div>
 
-        {/* Today rewards */}
         <div className="flex flex-col gap-3">
           <div
             className="
@@ -163,5 +160,3 @@ const CoinSect = () => {
     </div>
   );
 };
-
-export default CoinSect;

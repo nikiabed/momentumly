@@ -1,10 +1,10 @@
 import { DateObject } from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian";
-
 import { calculateCoin } from "./CalculateCoin";
 import { calculateXP } from "./calculateXP";
+import { TodoList } from "@/app/types";
 
-export function getMonthStats(todos: any[], monthOffset = 0) {
+export const getMonthStats = (todos: TodoList, monthOffset = 0) => {
   const now = new DateObject({
     calendar: persian,
   }).add(monthOffset, "month");
@@ -38,7 +38,7 @@ export function getMonthStats(todos: any[], monthOffset = 0) {
   const completedTodos = todos.filter((t) => t.status && t.completedAt);
 
   const monthTodos = completedTodos.filter((todo) => {
-    const date = new Date(todo.completedAt);
+    const date = new Date(todo.completedAt || "");
 
     return date >= start && date < nextMonth;
   });
@@ -49,23 +49,18 @@ export function getMonthStats(todos: any[], monthOffset = 0) {
 
   const completedTasks = monthTodos.length;
 
-  // روزهای فعال
   const activeDays = new Set(
     monthTodos.map((todo) => {
-      const d = new Date(todo.completedAt);
+      const d = new Date(todo.completedAt || "");
 
       return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
     }),
   ).size;
 
-  // بیشترین سکه در یک روز
   const dailyCoins: Record<string, number> = {};
-
   monthTodos.forEach((todo) => {
-    const d = new Date(todo.completedAt);
-
+    const d = new Date(todo.completedAt || "");
     const key = `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
-
     dailyCoins[key] = (dailyCoins[key] || 0) + calculateCoin(todo);
   });
 
@@ -73,21 +68,15 @@ export function getMonthStats(todos: any[], monthOffset = 0) {
     ? Math.max(...Object.values(dailyCoins))
     : 0;
 
-  // میانگین پیشرفت
   const dailyProgress: Record<string, { planned: number; completed: number }> =
     {};
 
   todos.forEach((todo) => {
     const plannedDate = todo.myDayDate ?? todo.deadline;
-
     if (!plannedDate) return;
-
     const date = new Date(plannedDate);
-
     if (date < start || date >= nextMonth) return;
-
     const key = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
-
     if (!dailyProgress[key]) {
       dailyProgress[key] = {
         planned: 0,
@@ -128,4 +117,4 @@ export function getMonthStats(todos: any[], monthOffset = 0) {
     maxDailyCoins,
     averageProgress: count === 0 ? 0 : Math.round(totalScore / count),
   };
-}
+};

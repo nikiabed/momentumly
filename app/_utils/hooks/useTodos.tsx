@@ -1,7 +1,6 @@
 "use client";
-import { Todo, TodoList } from "@/app/types/todo";
+import { Todo, TodoList, TodoUpdate } from "@/app/types/todo";
 import { useEffect, useState } from "react";
-import { TodoUpdate } from "../ui";
 import { todoService, uploadService } from "../services";
 import { Board } from "@/app/types/board";
 import { BOARD_KEYS } from "../constants";
@@ -49,7 +48,7 @@ export function useTodos(activeBoard: string) {
       const isMyDay =
         activeBoard === BOARD_KEYS.MY_DAY ||
         activeBoard === BOARD_KEYS.IMPORTANT;
-      const result = await todoService.create({
+      await todoService.create({
         ...todo,
         boardKey:
           activeBoard === BOARD_KEYS.IMPORTANT
@@ -112,14 +111,17 @@ export function useTodos(activeBoard: string) {
     setInputValue(e.target.value);
   };
 
-  const handleSubmit = async (e: any, item: Board) => {
+  const handleSubmit = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+    item: Board,
+  ) => {
     e.preventDefault();
     if (!inputValue.trim()) return;
     await addTodo(inputValue, item);
   };
 
   const handleUpdateTodo = async (list: Todo, title: string) => {
-    const result = await updateTodo(list._id, {
+     await updateTodo(list._id, {
       title: title,
       isEdit: false,
     });

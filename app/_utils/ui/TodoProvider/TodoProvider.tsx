@@ -7,22 +7,8 @@ import { useBoards } from "../../hooks/useBoards";
 import { useTodos } from "../../hooks/useTodos";
 import { useBoardView } from "../../hooks/useBoardView";
 import { userPreferenceService } from "../../services";
-export type TodoUpdate = Partial<
-  Pick<
-    Todo,
-    | "title"
-    | "status"
-    | "isImportant"
-    | "boardKey"
-    | "myDayDate"
-    | "deadline"
-    | "attachment"
-    | "completedAt"
-    | "isEdit"
-  >
->;
 
-export function TodoProvider({ children }: { children: React.ReactNode }) {
+export const TodoProvider = ({ children }: { children: React.ReactNode }) => {
   const [activeBoard, setActiveBoard] = useState<string>("myDay");
   const [searchText, setSearchText] = useState("");
   const [systemBoards, setSystemBoards] = useState<Record<string, Board>>({
@@ -37,7 +23,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       isEdit: false,
       theme: "fire",
       state: false,
-      filter: (todo: any) => todo.isImportant,
+      filter: (todo: Todo) => todo.isImportant,
     },
 
     search: {
@@ -51,7 +37,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       isEdit: false,
       theme: "purple",
       state: false,
-      filter: (todo: any) =>
+      filter: (todo: Todo) =>
         searchText &&
         todo.title.toLowerCase().includes(searchText.toLowerCase()),
     },
@@ -140,4 +126,4 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
   );
 
   return <TodoContext.Provider value={value}>{children}</TodoContext.Provider>;
-}
+};

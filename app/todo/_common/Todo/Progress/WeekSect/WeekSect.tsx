@@ -1,5 +1,5 @@
 import { useTodoContext } from "@/app/_utils";
-import { buildWeeklyProgress } from "@/app/_utils/progress";
+import { buildWeeklyProgress, getWeekMood } from "@/app/_utils/progress";
 import Image from "next/image";
 
 export const WeekSect = () => {
@@ -14,46 +14,78 @@ export const WeekSect = () => {
             activeDays.length,
         );
 
-  function getWeekMood(progress: number) {
-    if (progress < 20)
-      return {
-        image: "/images/stormy.png",
-        title: "هفته آرومی بوده 🌧️",
-        text: "هفته بعد هنوز فرصت داری، بهترین ها در انتظارت هستن!",
-      };
-
-    if (progress < 50)
-      return {
-        image: "/images/rainy.png",
-        title: "کم کم داری جلو میری ☁️",
-        text: "ادامه بده، بهترین ها در انتظارت هستن!",
-      };
-
-    if (progress < 80)
-      return {
-        image: "/images/cloudy.png",
-        title: "هفته خوبی داشتی ⛅",
-        text: "روندت رو حفظ کن، بهترین ها در انتظارت هستن!",
-      };
-
-    return {
-      image: "/images/sunny.png",
-      title: "درخشیدی ☀️",
-      text: "به همین مسیر ادامه بده، بهترین ها در انتظارت هستن!",
-    };
-  }
-
   const mood = getWeekMood(progress);
   return (
-    <div className="bg-[#f8fafc] flex justify-between p-5 rounded-3xl shadow mb-5">
-      <div className="flex items-center">
-        <Image src="/images/bulb.png" alt="cloudy" width={120} height={10} />
+    <div
+      className="
+    relative overflow-hidden
+    bg-white
+    border border-gray-100
+    rounded-4xl
+    shadow-sm
+    p-6 md:p-8
+    mb-5
+    min-h-55
+    flex items-center
+  "
+    >
+      <div className="absolute left-5 top-5 opacity-80">
+        <Image
+          src="/images/bulb.png"
+          alt=""
+          width={80}
+          height={80}
+          className="object-contain"
+        />
       </div>
-      <div className="flex flex-col gap-4 justify-center text-center">
-        <h1 className="text-2xl font-semibold">{mood.title}</h1>
-        <h1 className="text-gray-600 font-semibold">{mood.text}</h1>
+
+      <div
+        className="
+      flex-1
+      flex flex-col
+      items-center
+      justify-center
+      text-center
+      gap-3
+      z-10
+    "
+      >
+        <span className="text-sm font-semibold text-gray-400">
+          خلاصه این هفته
+        </span>
+
+        <h2 className="text-2xl md:text-3xl font-black text-gray-800">
+          {mood.title}
+        </h2>
+
+        <p className="text-sm md:text-base text-gray-500 font-medium">
+          {mood.text}
+        </p>
+
+        <div className="flex items-center gap-3 mt-2">
+          <div className="w-32 h-2 bg-gray-100 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-violet-500 rounded-full transition-all"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+
+          <span className="text-sm font-black text-violet-600">
+            {progress}%
+          </span>
+        </div>
       </div>
-      <Image src={mood.image} alt="cloudy" width={250} height={100} />
+
+      {/* Mood */}
+      <div className="w-37.5 md:w-55 flex justify-center">
+        <Image
+          src={mood.image}
+          alt=""
+          width={250}
+          height={180}
+          className="object-contain"
+        />
+      </div>
     </div>
   );
 };

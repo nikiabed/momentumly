@@ -1,9 +1,8 @@
-import { TodoUpdate } from './../ui/TodoProvider/TodoProvider';
+import { CreateTodoData, TodoUpdate } from "@/app/types";
 
 const headers = {
   "Content-Type": "application/json",
 };
-
 export const todoService = {
   async getTodos() {
     const res = await fetch("/api/todos");
@@ -12,7 +11,7 @@ export const todoService = {
     }
     return res.json();
   },
-  async create(data: any) {
+  async create(data: CreateTodoData) {
     const res = await fetch("/api/todos", {
       method: "POST",
       headers,

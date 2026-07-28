@@ -16,3 +16,28 @@ export type Todo = {
 };
 
 export type TodoList = Todo[];
+
+export type TodoUpdate = Partial<
+  Pick<
+    Todo,
+    | "title"
+    | "status"
+    | "isImportant"
+    | "boardKey"
+    | "myDayDate"
+    | "deadline"
+    | "attachment"
+    | "completedAt"
+    | "isEdit"
+  >
+>;
+
+export type CreateTodoData = {
+  title: string;
+  status: boolean;
+  isImportant: boolean;
+  item: string;
+  boardKey?: string;
+  isEdit: boolean;
+  myDayDate?: string | null;
+};

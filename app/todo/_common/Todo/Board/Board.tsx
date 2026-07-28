@@ -13,8 +13,13 @@ import { colors, Header } from "../../Header";
 import { Lists } from "../Lists";
 import { HamburgerMenu } from "iconsax-reactjs";
 import { Board as BoardType } from "@/app/types";
+import { SidebarProps } from "../../Sidebar";
 
-export const Board = ({ item, sidebarOpen, setSidebarOpen }: any) => {
+type boardProps = {
+  item: BoardType;
+} & SidebarProps;
+
+export const Board = ({ item, sidebarOpen, setSidebarOpen }: boardProps) => {
   const { todo, setTodo, boardList, searchText, systemBoards } =
     useTodoContext();
 
@@ -54,14 +59,7 @@ export const Board = ({ item, sidebarOpen, setSidebarOpen }: any) => {
         (t) => t.status && t.completedAt && getDateKey(t.completedAt) === today,
       )
     : filteredTodos.filter((t) => t.status);
-  const searchTodos = todo
-    .filter((t) => !t.status)
-    .filter((t) =>
-      t.title.toLowerCase().includes((searchText ?? "").toLowerCase()),
-    );
-
   const isImage = currentBoard?.theme?.startsWith("img:");
-
   const bgStyle = isImage
     ? {
         backgroundImage: `url(${currentBoard?.theme.replace("img:", "")})`,
@@ -111,7 +109,6 @@ export const Board = ({ item, sidebarOpen, setSidebarOpen }: any) => {
           <Progress />
         ) : (
           <div className=" grow flex flex-col gap-5 px-16 pb-5">
-            {/* MY DAY */}
             {currentBoard?.boardKey === BOARD_KEYS.MY_DAY && (
               <>
                 <TodoList todo={activeTodos} setTodo={setTodo} />
@@ -129,24 +126,6 @@ export const Board = ({ item, sidebarOpen, setSidebarOpen }: any) => {
                       normalize(t.boardKey) === normalize(board.boardKey)
                     );
                   });
-                  const groupByDate = (todos: any[]) => {
-                    return todos.reduce(
-                      (acc, todo) => {
-                        const date = getDateKey(todo.createdAt);
-
-                        if (!acc[date || ""]) {
-                          acc[date || ""] = [];
-                        }
-
-                        acc[date || ""].push(todo);
-
-                        return acc;
-                      },
-                      {} as Record<string, any[]>,
-                    );
-                  };
-
-                  const groupedByDate = groupByDate(grouped);
                   if (!grouped.length) return null;
                   return (
                     <Lists
@@ -198,7 +177,7 @@ export const Board = ({ item, sidebarOpen, setSidebarOpen }: any) => {
             {currentBoard?.boardKey === BOARD_LABELS[BOARD_KEYS.ALL] &&
               boardList
                 ?.slice()
-                .map((board: any) => (
+                .map((board: BoardType) => (
                   <Lists
                     key={board._id}
                     todo={todo}

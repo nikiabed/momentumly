@@ -1,7 +1,6 @@
 "use client";
 import { useTodoContext } from "@/app/_utils/hooks";
 import { ItemIcon } from "../../Header";
-import { sidebar } from "../Sidebar.const";
 import { More } from "iconsax-reactjs";
 import { useEffect, useRef, useState } from "react";
 import { t } from "@/app/i18n/t";

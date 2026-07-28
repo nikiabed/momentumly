@@ -1,83 +1,14 @@
 "use client";
 import { More } from "iconsax-reactjs";
 import { useEffect, useRef, useState } from "react";
-import { useTodoContext } from "@/app/_utils/hooks/useTodoContext";
 import { Board } from "@/app/types";
-import { boardService, userPreferenceService } from "@/app/_utils";
-
-export const themeIconFill: Record<string, string> = {
-  fire: "#ffffff",
-  sunset: "#ffffff",
-  lavender: "#ffffff",
-  ocean: "#ffffff",
-  mint: "#ffffff",
-  purple: "#ffffff",
-
-  "pink-soft": "#364153",
-  "blue-soft": "#364153",
-  "purple-soft": "#364153",
-  "green-soft": "#364153",
-  "red-soft": "#364153",
-};
-export const colors = [
-  {
-    key: "sunset",
-    name: "Sunset",
-    className: "bg-linear-45 from-purple-300 to-rose-400",
-  },
-  {
-    key: "lavender",
-    name: "Lavender",
-    className: "bg-linear-45 from-purple-300 to-purple-400",
-  },
-  {
-    key: "ocean",
-    name: "Ocean",
-    className: "bg-linear-45 from-[#a4cbce] to-blue-400",
-  },
-  {
-    key: "mint",
-    name: "Mint",
-    className: "bg-linear-45 from-[#cac8d8] to-[#239e9a]",
-  },
-  {
-    key: "fire",
-    name: "Fire",
-    className: "bg-linear-45 from-red-300 to-red-400",
-  },
-  {
-    key: "purple",
-    name: "Purple",
-    className: "bg-linear-45 from-purple-400 to-purple-600",
-  },
-
-  // solid / bordered themes
-  {
-    key: "pink-soft",
-    name: "Pink Soft",
-    className: "bg-pink-100 ",
-  },
-  {
-    key: "purple-soft",
-    name: "Purple Soft",
-    className: "bg-purple-100 ",
-  },
-  {
-    key: "blue-soft",
-    name: "Blue Soft",
-    className: "bg-blue-100 ",
-  },
-  {
-    key: "green-soft",
-    name: "Green Soft",
-    className: "bg-green-100 ",
-  },
-  {
-    key: "red-soft",
-    name: "Red Soft",
-    className: "bg-red-100 ",
-  },
-];
+import {
+  boardService,
+  userPreferenceService,
+  useTodoContext,
+} from "@/app/_utils";
+import { colors, Theme, themeIconFill } from "./paletteData";
+import { getImageTheme, isMongoBoard } from "./paletteUtil";
 
 export const Palette = ({ item }: { item: Board }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -103,22 +34,13 @@ export const Palette = ({ item }: { item: Board }) => {
 
   const handleColorChange = async (key: string) => {
     setSelectedColor(key);
-
-    const isMongoBoard = /^[a-f\d]{24}$/i.test(item._id);
-    console.log({
-      id: item._id,
-      boardKey: item.boardKey,
-      isMongoBoard,
-    });
-    if (isMongoBoard) {
+    if (isMongoBoard(item._id)) {
       setBoardList?.((prev: Board[]) =>
         prev.map((b: Board) => (b._id === item._id ? { ...b, theme: key } : b)),
       );
       try {
-        console.log(item._id);
         await boardService.updateTheme(item._id, key);
         const board = await boardService.getBoards();
-        console.log(board);
       } catch (err) {
         console.log(err);
       }
@@ -144,11 +66,6 @@ export const Palette = ({ item }: { item: Board }) => {
   };
 
   const isImage = item.theme?.startsWith("img:");
-
-  const handleImageChange = (src: string) => {
-    handleColorChange(`img:${src}`);
-  };
-
   const iconFill = isImage ? "#374151" : themeIconFill[item.theme];
 
   useEffect(() => {
@@ -170,7 +87,7 @@ export const Palette = ({ item }: { item: Board }) => {
         <div className="absolute left-0 w-70 z-500 bg-rose-50 text-gray-600 rounded shadow flex flex-col flex-wrap gap-4 p-4">
           <div className="pr-2">تم ها</div>
           <div className="flex gap-2 flex-wrap p-2">
-            {colors.map((theme: any, i: number) => (
+            {colors.map((theme: Theme, i: number) => (
               <div
                 key={i}
                 onClick={() => handleColorChange(theme.key)}
@@ -186,7 +103,7 @@ export const Palette = ({ item }: { item: Board }) => {
 
             <div
               className=" cursor-pointer h-10 w-10 "
-              onClick={() => handleImageChange("/images/background2.jpg")}
+              onClick={() => getImageTheme("/images/background2.jpg")}
             >
               <img
                 src="/images/background2.jpg"
@@ -202,7 +119,7 @@ export const Palette = ({ item }: { item: Board }) => {
             </div>
             <div
               className=" cursor-pointer  h-10 w-10 "
-              onClick={() => handleImageChange("/images/background3.jpg")}
+              onClick={() => getImageTheme("/images/background3.jpg")}
             >
               <img
                 src="/images/background3.jpg"
@@ -218,7 +135,7 @@ export const Palette = ({ item }: { item: Board }) => {
             </div>
             <div
               className=" cursor-pointer  h-10 w-10 "
-              onClick={() => handleImageChange("/images/background4.jpg")}
+              onClick={() => getImageTheme("/images/background4.jpg")}
             >
               <img
                 src="/images/background4.jpg"
@@ -234,7 +151,7 @@ export const Palette = ({ item }: { item: Board }) => {
             </div>
             <div
               className=" cursor-pointer  h-10 w-10 "
-              onClick={() => handleImageChange("/images/background5.jpg")}
+              onClick={() => getImageTheme("/images/background5.jpg")}
             >
               <img
                 src="/images/background5.jpg"
@@ -250,7 +167,7 @@ export const Palette = ({ item }: { item: Board }) => {
             </div>
             <div
               className=" cursor-pointer  h-10 w-10 "
-              onClick={() => handleImageChange("/images/background6.jpg")}
+              onClick={() => getImageTheme("/images/background6.jpg")}
             >
               <img
                 src="/images/background6.jpg"
@@ -266,7 +183,7 @@ export const Palette = ({ item }: { item: Board }) => {
             </div>
             <div
               className=" cursor-pointer  h-10 w-10 "
-              onClick={() => handleImageChange("/images/background7.jpg")}
+              onClick={() => getImageTheme("/images/background7.jpg")}
             >
               <img
                 src="/images/background7.jpg"

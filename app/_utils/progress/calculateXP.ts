@@ -1,4 +1,6 @@
-export const calculateXP = (todo: any) => {
+import { Todo } from "@/app/types";
+
+export const calculateXP = (todo: Todo) => {
   if (!todo.status || !todo.completedAt) return 0;
 
   const planned = todo.myDayDate ?? todo.deadline;

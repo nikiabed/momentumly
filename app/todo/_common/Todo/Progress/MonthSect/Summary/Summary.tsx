@@ -1,9 +1,8 @@
-import { getDateKey, toFa, useTodoContext } from "@/app/_utils";
+import { toFa, useTodoContext } from "@/app/_utils";
 import { getMonthStats } from "@/app/_utils/progress";
 
 export const Summary = () => {
   const { todo } = useTodoContext();
-  const now = new Date();
   const monthStats = getMonthStats(todo);
 
   return (

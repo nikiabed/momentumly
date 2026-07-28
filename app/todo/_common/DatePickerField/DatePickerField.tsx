@@ -6,7 +6,7 @@ import persian_fa from "react-date-object/locales/persian_fa";
 import { Calendar, Clock, CloseCircle } from "iconsax-reactjs";
 import { FC, HTMLAttributes } from "react";
 
-type DatePickerFieldProps = Omit<HTMLAttributes<HTMLDivElement>, "onChange"> & {
+export type DatePickerFieldProps = Omit<HTMLAttributes<HTMLDivElement>, "onChange"> & {
   value?: string | Date | null;
   onChange: (date: Date) => void;
   onClear?: () => void;
@@ -37,13 +37,7 @@ export const DatePickerField: FC<DatePickerFieldProps> = ({
         calendar={persian}
         locale={persian_fa}
         value={value ?? ""}
-        onChange={(date) => {
-          const d = date?.toDate?.();
-
-          if (!d) return;
-
-          onChange(d);
-        }}
+        onChange={onChange}
         render={(value, openCalendar) => (
           <button
             type="button"

@@ -1,4 +1,4 @@
-import { items } from "@/app/todo/_common/Sidebar/Sidebar.const";
+"use client";
 import { Board, BoardList } from "@/app/types";
 import { useSession } from "next-auth/react";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
@@ -32,8 +32,18 @@ export function useBoards(
 
   const createBoard = async (name: string) => {
     try {
+      const last = Math.max(...boardList.map((b: Board) => b.order ?? 0), 0);
+      const key = `board-${Date.now()}`;
       await boardService.create({
-        name,
+        title: BOARD_LABELS.untitled,
+        boardKey: key,
+        state: false,
+        icon: "HamburgerMenu",
+        color: "newList",
+        editable: true,
+        isEdit: true,
+        order: last + 1,
+        theme: "purple",
       });
       await loadBoards();
     } catch (err) {
@@ -51,7 +61,7 @@ export function useBoards(
     }
   };
 
-  const handleBoardInput = (e: any) => {
+  const handleBoardInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEditedBoard(e.target.value);
   };
 
@@ -83,7 +93,6 @@ export function useBoards(
       isEdit: true,
       order: last + 1,
       theme: "purple",
-      userId: session?.user?.id,
     });
 
     setNewBoardKey(key);

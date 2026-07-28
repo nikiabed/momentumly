@@ -1,6 +1,5 @@
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
-
 import { connectDB } from "@/app/lib/mongodb";
 import User from "@/app/models/User";
 import Todo from "@/app/models/Todo";

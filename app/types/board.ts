@@ -8,8 +8,19 @@ export type Board = {
   order: number;
   editable: boolean;
   isEdit: boolean;
-  filter: (todo: any) => any;
   theme: string;
 };
 
 export type BoardList = Board[];
+
+export type CreateBoardData = {
+  title: string;
+  boardKey: string;
+  state: boolean;
+  icon: string;
+  color: string;
+  editable: boolean;
+  isEdit: boolean;
+  order: number;
+  theme: string;
+};

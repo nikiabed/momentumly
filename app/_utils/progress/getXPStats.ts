@@ -1,6 +1,7 @@
+import { TodoList } from "@/app/types";
 import { calculateXP } from "./calculateXP";
 
-export function getXPStats(todos: any[]) {
+export function getXPStats(todos: TodoList) {
   const completedTodos = todos.filter((t) => t.status && t.completedAt);
 
   const globalXP = completedTodos.reduce(

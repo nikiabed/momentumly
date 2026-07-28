@@ -18,10 +18,10 @@ import { titleToKey } from "../../Sidebar";
 import { t } from "@/app/i18n/t";
 import { BOARD_KEYS, isInMyDay, isManuallyInMyDay } from "@/app/_utils";
 import { DeadlinePicker } from "./DeadlinePicker";
-import { useClickOutside } from "@/app/_utils/hooks/useClickOutside";
 import { CompletedDatePicker } from "./CompletedDatePicker";
+import { Todo } from "@/app/types";
 
-export const TodoEditInput = ({ list }: any) => {
+export const TodoEditInput = ({ list }: { list: Todo }) => {
   const {
     toggleImportant,
     toggleStatus,
@@ -39,14 +39,9 @@ export const TodoEditInput = ({ list }: any) => {
   const [isOpen, setOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const todoRef = useRef<HTMLDivElement>(null);
-  const menuRef = useRef<HTMLDivElement>(null);
   const [isCompleteMenuOpen, setIsCompleteMenuOpen] = useState(false);
   const completeMenuRef = useRef<HTMLDivElement>(null);
 
-  useClickOutside([todoRef, menuRef, completeMenuRef], () => {
-    setOpen(false);
-    setIsCompleteMenuOpen(false);
-  });
 
   const systemBoards = [
     BOARD_KEYS.ALL,
@@ -62,11 +57,9 @@ export const TodoEditInput = ({ list }: any) => {
   ];
 
   const fileRef = useRef<HTMLInputElement>(null);
-  const isToday = isInMyDay(list);
 
   return (
     <div className="w-full relative" ref={todoRef}>
-      {/* Todo Row */}
       <div
         className="flex items-center gap-2 px-4 py-2  min-w-0 text-wrap"
         ref={completeMenuRef}
@@ -118,10 +111,8 @@ export const TodoEditInput = ({ list }: any) => {
               <div className=" text-right">
                 <CompletedDatePicker
                   value={list.completedAt}
-                  onChange={(date: any) => {
-                    const d = date?.toDate?.();
-                    if (!d) return;
-                    toggleStatus?.(list._id, true, d);
+                  onChange={(date) => {
+                    toggleStatus?.(list._id, true, date);
                   }}
                 />
               </div>

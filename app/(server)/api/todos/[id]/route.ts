@@ -3,7 +3,25 @@ import { connectDB } from "@/app/lib/mongodb";
 import Todo from "@/app/models/Todo";
 import { NextResponse } from "next/server";
 
-export async function PATCH(req: Request, context: any) {
+type RouteContext = {
+  params: Promise<{
+    id: string;
+  }>;
+};
+
+type TodoUpdate = {
+  title?: string;
+  status?: boolean;
+  completedAt?: Date | null;
+  isImportant?: boolean;
+  boardKey?: string | null;
+  myDayDate?: string | null;
+  deadline?: Date | null;
+  attachment?: string | null;
+  isEdit?: boolean;
+};
+
+export async function PATCH(req: Request, context: RouteContext) {
   await connectDB();
   const session = await auth();
   if (!session?.user?.id) {
@@ -11,7 +29,7 @@ export async function PATCH(req: Request, context: any) {
   }
   const { id } = await context.params;
   const body = await req.json();
-  const update: Record<string, any> = {};
+  const update: TodoUpdate = {};
 
   if (body.title !== undefined) {
     update.title = body.title;
@@ -69,7 +87,7 @@ export async function PATCH(req: Request, context: any) {
   });
 }
 
-export async function DELETE(req: Request, context: any) {
+export async function DELETE(req: Request, context: RouteContext) {
   await connectDB();
   const session = await auth();
   if (!session?.user?.id) {

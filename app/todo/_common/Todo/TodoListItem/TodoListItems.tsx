@@ -3,7 +3,6 @@ import {
   DetailedHTMLProps,
   FC,
   HTMLAttributes,
-  memo,
   useEffect,
   useState,
 } from "react";
@@ -17,7 +16,7 @@ type itemProps = DetailedHTMLProps<
   HTMLAttributes<HTMLDivElement>,
   HTMLDivElement
 > & {
-  list: string[];
+  list: Todo;
 };
 
 export const getTodoState = (todo: Todo, today = getDateKey(new Date())) => {
@@ -30,7 +29,7 @@ export const getTodoState = (todo: Todo, today = getDateKey(new Date())) => {
   return "normal";
 };
 
-export const TodoListItems: FC<itemProps> = ({ list, ...props }: any) => {
+export const TodoListItems: FC<itemProps> = ({ list, ...props }) => {
   const [localTitle, setLocalTitle] = useState(list.title);
   const { handleUpdateTodo, handleIsEdit } = useTodoContext();
 
@@ -50,14 +49,14 @@ export const TodoListItems: FC<itemProps> = ({ list, ...props }: any) => {
       {list.isEdit ? (
         <form
           name="edited task"
-          onKeyDown={(e: any) => {
+          onKeyDown={(e) => {
             if (e.key === "Escape") {
               handleIsEdit?.(list._id, false);
             }
           }}
           onSubmit={(e) => {
             e.preventDefault();
-            handleUpdateTodo?.(list, localTitle);
+            handleUpdateTodo?.(list._id, localTitle);
           }}
           className="flex items-center justify-center w-full"
         >

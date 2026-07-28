@@ -1,15 +1,20 @@
 "use client";
 import Image from "next/image";
 import { Add } from "iconsax-reactjs";
-import { useTodoContext } from "@/app/_utils/hooks/useTodoContext";
 import { Search } from "./Search";
 import { ListItem } from "./ListItem";
 import { sidebar } from "./Sidebar.const";
 import { signOut } from "next-auth/react";
 import { useSession } from "next-auth/react";
 import { Board } from "@/app/types";
+import { useTodoContext } from "@/app/_utils";
 
-export const Sidebar = ({ sidebarOpen, setSidebarOpen }: any) => {
+export type SidebarProps = {
+  sidebarOpen: boolean;
+  setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+export const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   const { handleNewList, uiBoard } = useTodoContext();
   const { data } = useSession();
   return (

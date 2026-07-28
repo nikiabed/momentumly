@@ -1,10 +1,11 @@
+import { TodoList } from "@/app/types";
 import { calculateCoin } from "./CalculateCoin";
 import { calculateDailyScore } from "./calculateDailyScore";
 import { calculateXP } from "./calculateXP";
 import { getCompletionType } from "./completion";
 import { isCompletedOn, isPlannedForDay } from "./todoAnalytics";
 
-export const calculateDailyProgress = (todos: any[], day: Date) => {
+export const calculateDailyProgress = (todos: TodoList, day: Date) => {
   const plannedTodos = todos.filter((todo) => isPlannedForDay(todo, day));
 
   const completedTodos = todos.filter((todo) => isCompletedOn(todo, day));

@@ -1,6 +1,7 @@
+import { Todo } from "@/app/types";
 import { getDateKey } from "../date";
 
-export const getCompletionType = (todo: any) => {
+export const getCompletionType = (todo: Todo) => {
   if (!todo.status || !todo.completedAt) {
     return "pending";
   }

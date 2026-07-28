@@ -1,4 +1,4 @@
-import { Board } from "@/app/types/board";
+import { Board, CreateBoardData } from "@/app/types/board";
 
 const headers = {
   "Content-Type": "application/json",
@@ -13,7 +13,7 @@ export const boardService = {
     return res.json();
   },
 
-  async create(data: any) {
+  async create(data: CreateBoardData) {
     const res = await fetch("/api/boards", {
       method: "POST",
       headers,
@@ -52,7 +52,7 @@ export const boardService = {
   },
 
   async updateTheme(boardId: string, theme: string) {
-    console.log(boardId)
+    console.log(boardId);
     const res = await fetch("/api/boards/theme", {
       method: "PATCH",
       headers,

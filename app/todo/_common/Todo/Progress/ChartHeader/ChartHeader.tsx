@@ -7,10 +7,7 @@ type ChartHeaderProps = {
   active: number;
 };
 
-export const ChartHeader: FC<ChartHeaderProps> = ({
-  onChangeWeek,
-  active,
-}: any) => {
+export const ChartHeader: FC<ChartHeaderProps> = ({ onChangeWeek, active }) => {
   const [open, setOpen] = useState(false);
   const selectWeek = (offset: number) => {
     onChangeWeek(offset);
@@ -20,7 +17,6 @@ export const ChartHeader: FC<ChartHeaderProps> = ({
   return (
     <div className="flex items-center justify-between mb-1 px-10 text-gray-700 font-bold text-lg">
       <h2>{CHART_HEADER.title}</h2>
-
       <div
         className="relative flex gap-2 px-3 py-1.5 justify-center items-center
             rounded-xl
@@ -35,7 +31,6 @@ export const ChartHeader: FC<ChartHeaderProps> = ({
       >
         <ArrowDown2 size={16} />
         <button>{WEEK_OPTIONS.find((w) => w.value === active)?.label}</button>
-
         {open && (
           <div
             className="
@@ -47,7 +42,6 @@ export const ChartHeader: FC<ChartHeaderProps> = ({
             shadow-lg
             overflow-hidden
             z-80
-            
           "
           >
             <button
