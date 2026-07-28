@@ -5,7 +5,7 @@ import Image from "next/image";
 
 export const LoginScene = () => {
   return (
-    <div className="relative w-72 h-72">
+    <div className="relative md:w-40 lg:w-80 aspect-square ">
       {/* Sun */}
       <motion.div
         animate={{
