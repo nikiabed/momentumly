@@ -93,11 +93,21 @@ export const useTodos = (activeBoard: string) => {
   const toggleStatus = async (
     id: string,
     value: boolean,
-    completedAt: Date,
+    completedAt: Date | null = null,
+    completionSource: "realtime" | "manual" = "realtime",
   ) => {
     await updateTodo(id, {
       status: value,
-      completedAt: value ? completedAt : null,
+      completedAt: value ? (completedAt ?? new Date()) : null,
+      completionSource: value ? completionSource : "realtime",
+    });
+  };
+
+  const completeTodoManually = async (id: string, completedAt: Date) => {
+    await updateTodo(id, {
+      status: true,
+      completedAt,
+      completionSource: "manual",
     });
   };
 
@@ -237,5 +247,6 @@ export const useTodos = (activeBoard: string) => {
     toggleImportant,
     toggleStatus,
     removeLink,
+    completeTodoManually,
   };
 };

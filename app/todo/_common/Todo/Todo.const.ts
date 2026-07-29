@@ -29,10 +29,11 @@ export type Context = {
   setActiveBoard?: Dispatch<SetStateAction<string>>;
   selectBoard?: (board: Board, id: string) => void;
   toggleImportant?: (id: string, value: boolean) => Promise<boolean>;
-  toggleStatus?: (
+  toggleStatus: (
     id: string,
     value: boolean,
-    completedAt: Date,
+    completedAt?: Date | null,
+    completionSource?: "manual" | "realtime",
   ) => Promise<void>;
   finalBoard?: Board[];
   searchText?: string;
@@ -51,6 +52,7 @@ export type Context = {
   uploadFile?: (file: File) => Promise<any>;
   removeLink?: (id: string) => Promise<void>;
   handleToggleImportant?: (id: string, value: boolean) => Promise<void>;
+  completeTodoManually: (id: string, completedAt: Date) => Promise<void>;
 };
 
 export const header = {

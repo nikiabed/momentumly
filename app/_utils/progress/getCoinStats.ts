@@ -33,10 +33,11 @@ export function getCoinStats(todos: TodoList) {
     0,
   );
 
+  const todayEnd = new Date(todayStart);
+  todayEnd.setDate(todayEnd.getDate() + 1);
   const todayTodos = completedTodos.filter((todo) => {
-    const date = new Date(todo.completedAt || "");
-
-    return date >= todayStart;
+    const date = new Date(todo.completedAt!);
+    return date >= todayStart && date < todayEnd;
   });
 
   const todayCoins = todayTodos.reduce(

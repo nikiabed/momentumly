@@ -12,7 +12,6 @@ export function useBoards(
   const [editedBoard, setEditedBoard] = useState("");
   const [boardList, setBoardList] = useState<BoardList>([]);
   const [loading, setLoading] = useState(true);
-  const { data: session } = useSession();
 
   useEffect(() => {
     loadBoards();

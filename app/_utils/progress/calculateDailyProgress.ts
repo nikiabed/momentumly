@@ -6,7 +6,10 @@ import { getCompletionType } from "./completion";
 import { isCompletedOn, isPlannedForDay } from "./todoAnalytics";
 
 export const calculateDailyProgress = (todos: TodoList, day: Date) => {
-  const plannedTodos = todos.filter((todo) => isPlannedForDay(todo, day));
+  const plannedTodos = todos.filter((todo) => {
+    if (isPlannedForDay(todo, day)) return true;
+    return isCompletedOn(todo, day) && getCompletionType(todo) === "delayed";
+  });
 
   const completedTodos = todos.filter((todo) => isCompletedOn(todo, day));
 

@@ -13,6 +13,7 @@ export type Todo = {
   createdAt: string;
   updatedAt?: string;
   completedAt: Date | null;
+  completionSource: "realtime" | "manual" | null;
 };
 
 export type TodoList = Todo[];
@@ -29,6 +30,7 @@ export type TodoUpdate = Partial<
     | "attachment"
     | "completedAt"
     | "isEdit"
+    | "completionSource"
   >
 >;
 

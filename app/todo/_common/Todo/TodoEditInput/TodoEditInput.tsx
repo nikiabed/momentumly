@@ -89,7 +89,7 @@ export const TodoEditInput = ({ list }: { list: Todo }) => {
             <button
               className="w-full px-4 py-2 text-right hover:bg-gray-100 cursor-pointer shrink-0"
               onClick={() => {
-                toggleStatus?.(list._id, true, new Date());
+                toggleStatus?.(list._id, true, new Date(), "manual");
                 setIsCompleteMenuOpen(false);
               }}
             >
@@ -100,23 +100,27 @@ export const TodoEditInput = ({ list }: { list: Todo }) => {
               onClick={() => {
                 const yesterday = new Date();
                 yesterday.setDate(yesterday.getDate() - 1);
-                toggleStatus?.(list._id, true, yesterday);
+                console.log("MANUAL YESTERDAY:", yesterday);
+                toggleStatus?.(list._id, true, yesterday, "manual");
                 setIsCompleteMenuOpen(false);
               }}
             >
               ✓ انجام دیروز
             </button>
-            <div className="w-full px-4 py-2 text-right hover:bg-gray-100 cursor-pointer shrink-0">
-              <div className=" text-right">
-                <CompletedDatePicker
-                  value={list.completedAt}
-                  onChange={(date) => {
-                    if (!date) return;
-                    const newDate = date.toDate() || null;
-                    toggleStatus?.(list._id, true, newDate);
-                  }}
-                />
-              </div>
+            <div
+              className="w-full px-4 py-2 text-right hover:bg-gray-100 cursor-pointer"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <CompletedDatePicker
+                value={list.completedAt}
+                onChange={(date) => {
+                  if (!date) return;
+
+                  toggleStatus?.(list._id, true, date, "manual");
+
+                  setIsCompleteMenuOpen(false);
+                }}
+              />
             </div>
           </div>
         )}
