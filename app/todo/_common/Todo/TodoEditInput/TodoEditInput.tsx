@@ -41,6 +41,8 @@ export const TodoEditInput = ({ list }: { list: Todo }) => {
   const todoRef = useRef<HTMLDivElement>(null);
   const [isCompleteMenuOpen, setIsCompleteMenuOpen] = useState(false);
   const completeMenuRef = useRef<HTMLDivElement>(null);
+  const [selectedCompletionDate, setSelectedCompletionDate] =
+    useState<Date | null>(list.completedAt);
 
   const systemBoards = [
     BOARD_KEYS.ALL,
@@ -56,6 +58,10 @@ export const TodoEditInput = ({ list }: { list: Todo }) => {
   ];
 
   const fileRef = useRef<HTMLInputElement>(null);
+  const closeCompleteMenu = () => {
+    console.log("🔴 COMPLETE MENU CLOSED");
+    setIsCompleteMenuOpen(false);
+  };
 
   return (
     <div className="w-full relative" ref={todoRef}>
@@ -66,7 +72,9 @@ export const TodoEditInput = ({ list }: { list: Todo }) => {
         <ArrowDown2
           size={14}
           className="cursor-pointer text-black/50 hover:text-gray-600"
-          onClick={() => setIsCompleteMenuOpen((p) => !p)}
+          onClick={() => {
+            setIsCompleteMenuOpen((p) => true);
+          }}
         />
 
         {list.status ? (
@@ -85,9 +93,14 @@ export const TodoEditInput = ({ list }: { list: Todo }) => {
         )}
 
         {isCompleteMenuOpen && (
-          <div className="absolute top-12 right-0 w-48 bg-white z-50 ">
+          <div
+            className="absolute top-12 right-0 w-48 bg-white z-50 shadow-lg rounded-xl"
+            onMouseDown={(e) => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
+          >
             <button
-              className="w-full px-4 py-2 text-right hover:bg-gray-100 cursor-pointer shrink-0"
+              type="button"
+              className="w-full px-4 py-2 text-right hover:bg-gray-100 cursor-pointer"
               onClick={() => {
                 toggleStatus?.(list._id, true, new Date(), "manual");
                 setIsCompleteMenuOpen(false);
@@ -95,36 +108,52 @@ export const TodoEditInput = ({ list }: { list: Todo }) => {
             >
               ✓ انجام امروز
             </button>
+
             <button
-              className="w-full px-4 py-2 text-right hover:bg-gray-100 cursor-pointer shrink-0"
+              type="button"
+              className="w-full px-4 py-2 text-right hover:bg-gray-100 cursor-pointer"
               onClick={() => {
                 const yesterday = new Date();
                 yesterday.setDate(yesterday.getDate() - 1);
-                console.log("MANUAL YESTERDAY:", yesterday);
                 toggleStatus?.(list._id, true, yesterday, "manual");
                 setIsCompleteMenuOpen(false);
               }}
             >
               ✓ انجام دیروز
             </button>
-            <div
-              className="w-full px-4 py-2 text-right hover:bg-gray-100 cursor-pointer"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <CompletedDatePicker
-                value={list.completedAt}
-                onChange={(date) => {
-                  if (!date) return;
+            <div className="flex justify-around">
+              <div
+                className="flex-2 w-full"
+                onMouseDown={(e) => e.stopPropagation()}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <CompletedDatePicker
+                  value={selectedCompletionDate}
+                  onChange={(date) => {
+                    setSelectedCompletionDate(date);
+                  }}
+                />
+              </div>
 
-                  toggleStatus?.(list._id, true, date, "manual");
-
+              <button
+                className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-right text-sm w-full flex-1"
+                type="button"
+                onClick={() => {
+                  if (!selectedCompletionDate) return;
+                  toggleStatus?.(
+                    list._id,
+                    true,
+                    selectedCompletionDate,
+                    "manual",
+                  );
                   setIsCompleteMenuOpen(false);
                 }}
-              />
+              >
+                ثبت{" "}
+              </button>
             </div>
           </div>
         )}
-
         <div
           onClick={() => setOpen((prev) => !prev)}
           className="flex flex-1 min-w-0 items-center justify-between text-right cursor-pointer"
