@@ -10,14 +10,11 @@ export const getDateKey = (date: string | Date) => {
 
 export const formatGroupDate = (date: string) => {
   const target = new Date(date);
-
   const today = new Date();
   const yesterday = new Date();
   yesterday.setDate(today.getDate() - 1);
-
   const tomorrow = new Date();
   tomorrow.setDate(today.getDate() + 1);
-
   const targetKey = getDateKey(target);
 
   let label = "";
