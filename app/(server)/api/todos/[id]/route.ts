@@ -20,7 +20,7 @@ type TodoUpdate = {
   attachment?: string | null;
   isEdit?: boolean;
   completionSource?: "realtime" | "manual" | null;
-  trackedTimeSeconds: number;
+  trackedTimeSeconds?: number;
 };
 
 export async function PATCH(req: Request, context: RouteContext) {
