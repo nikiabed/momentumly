@@ -21,76 +21,97 @@ export const TodoTimer = ({
   todoId,
   trackedTimeSeconds = 0,
 }: TodoTimerProps) => {
-  const [elapsedSeconds, setElapsedSeconds] = useState(trackedTimeSeconds);
-  const [isRunning, setIsRunning] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
-  const elapsedRef = useRef(trackedTimeSeconds);
 
-  const { saveTrackedTime, saveTodoTimeEntry } = useTodoContext();
+  const {
+    activeTimer,
+    startTimer,
+    pauseTimer,
+    resumeTimer,
+    resetTimer,
+    saveTrackedTime,
+    saveTodoTimeEntry,
+  } = useTodoContext();
 
-  useEffect(() => {
-    if (!isRunning) return;
-    const interval = setInterval(() => {
-      setElapsedSeconds((prev) => prev + 1);
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [isRunning]);
+  const isThisTodo = activeTimer?.todoId === todoId;
+
+  const isRunning = isThisTodo && activeTimer.status === "running";
+
+  const elapsedSeconds = isThisTodo
+    ? activeTimer.elapsedSeconds
+    : trackedTimeSeconds;
+
+  const elapsedRef = useRef(elapsedSeconds);
 
   useEffect(() => {
     elapsedRef.current = elapsedSeconds;
   }, [elapsedSeconds]);
 
+  const saveDailyEntry = async (seconds: number) => {
+    if (seconds <= 0) return;
+
+    const today = new Date().toISOString().slice(0, 10);
+
+    await saveTodoTimeEntry?.(todoId, today, seconds);
+  };
+
+  // Autosave
   useEffect(() => {
     if (!isRunning) return;
 
-    const autosaveInterval = setInterval(() => {
-      saveTrackedTime?.(todoId, elapsedRef.current);
-      saveDailyEntry(elapsedRef.current);
+    const interval = setInterval(() => {
+      const seconds = elapsedRef.current;
+
+      saveTrackedTime?.(todoId, seconds);
+      saveDailyEntry(seconds);
     }, 30_000);
 
-    return () => clearInterval(autosaveInterval);
-  }, [isRunning, todoId, saveTrackedTime]);
+    return () => clearInterval(interval);
+  }, [isRunning, todoId]);
 
+  // وقتی tab مخفی می‌شود
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.visibilityState === "hidden" && isRunning) {
-        saveTrackedTime?.(todoId, elapsedRef.current);
+        const seconds = elapsedRef.current;
+
+        saveTrackedTime?.(todoId, seconds);
+        saveDailyEntry(seconds);
       }
     };
+
     document.addEventListener("visibilitychange", handleVisibilityChange);
+
     return () => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [isRunning, todoId, saveTrackedTime]);
+  }, [isRunning, todoId]);
 
   const handleStart = () => {
-    setIsRunning(true);
+    startTimer(todoId, trackedTimeSeconds);
   };
 
   const handlePause = () => {
-    setIsRunning(false);
+    pauseTimer();
+
     setIsPaused(true);
+
     saveTrackedTime?.(todoId, elapsedSeconds);
+
     saveDailyEntry(elapsedSeconds);
   };
 
   const handlePauseFinish = () => {
     setIsPaused(false);
-    setIsRunning(true);
+    resumeTimer();
   };
 
   const handleReset = () => {
-    setIsRunning(false);
-    setIsPaused(false);
-    setElapsedSeconds(0);
-    elapsedRef.current = 0;
-    saveTrackedTime?.(todoId, 0);
-  };
+    resetTimer();
 
-  const saveDailyEntry = async (seconds: number) => {
-    if (seconds <= 0) return;
-    const today = new Date().toISOString().slice(0, 10);
-    await saveTodoTimeEntry?.(todoId, today, seconds);
+    setIsPaused(false);
+
+    saveTrackedTime?.(todoId, 0);
   };
 
   return (
@@ -99,7 +120,7 @@ export const TodoTimer = ({
         className="flex items-center gap-1.5 transition-all duration-300"
         data-todo-id={todoId}
       >
-        {!isRunning && elapsedSeconds === 0 ? (
+        {!isThisTodo && elapsedSeconds === 0 ? (
           <button
             type="button"
             onClick={handleStart}
@@ -113,7 +134,9 @@ export const TodoTimer = ({
         ) : (
           <div
             className="flex items-center gap-1 rounded-xl bg-white/70 px-4 py-1 shadow-sm"
-            style={{ border: "1px solid #d1d5dc" }}
+            style={{
+              border: "1px solid #d1d5dc",
+            }}
           >
             <button
               type="button"
