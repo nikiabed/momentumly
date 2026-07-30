@@ -19,6 +19,8 @@ type TodoUpdate = {
   deadline?: Date | null;
   attachment?: string | null;
   isEdit?: boolean;
+  completionSource?: "realtime" | "manual" | null;
+  trackedTimeSeconds?: number;
 };
 
 export async function PATCH(req: Request, context: RouteContext) {
@@ -37,7 +39,16 @@ export async function PATCH(req: Request, context: RouteContext) {
 
   if (body.status !== undefined) {
     update.status = body.status;
-    update.completedAt = body.status ? new Date() : null;
+    if (body.status) {
+      update.completedAt = body.completedAt
+        ? new Date(body.completedAt)
+        : new Date();
+    } else {
+      update.completedAt = null;
+    }
+  }
+  if (body.completionSource !== undefined) {
+    update.completionSource = body.completionSource;
   }
 
   if (body.isImportant !== undefined) {
@@ -62,6 +73,10 @@ export async function PATCH(req: Request, context: RouteContext) {
 
   if (body.isEdit !== undefined) {
     update.isEdit = body.isEdit;
+  }
+
+  if (body.trackedTimeSeconds !== undefined) {
+    update.trackedTimeSeconds = body.trackedTimeSeconds;
   }
 
   const result = await Todo.findOneAndUpdate(

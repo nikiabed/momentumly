@@ -1,7 +1,13 @@
 import { SystemBoard } from "@/app/_utils";
-import { Board, Todo, TodoList } from "@/app/types";
+import { Board, Todo, TodoEntry, TodoList } from "@/app/types";
 import { ChangeEvent, Dispatch, SetStateAction } from "react";
 import { v4 as uuidv4 } from "uuid";
+export type ActiveTimer = {
+  todoId: string;
+  elapsedSeconds: number;
+  startedAt: number;
+  status: "running" | "paused";
+} | null;
 
 export type Context = {
   todo: TodoList;
@@ -29,10 +35,11 @@ export type Context = {
   setActiveBoard?: Dispatch<SetStateAction<string>>;
   selectBoard?: (board: Board, id: string) => void;
   toggleImportant?: (id: string, value: boolean) => Promise<boolean>;
-  toggleStatus?: (
+  toggleStatus: (
     id: string,
     value: boolean,
-    completedAt: Date,
+    completedAt?: Date | null,
+    completionSource?: "manual" | "realtime",
   ) => Promise<void>;
   finalBoard?: Board[];
   searchText?: string;
@@ -51,6 +58,21 @@ export type Context = {
   uploadFile?: (file: File) => Promise<any>;
   removeLink?: (id: string) => Promise<void>;
   handleToggleImportant?: (id: string, value: boolean) => Promise<void>;
+  completeTodoManually: (id: string, completedAt: Date) => Promise<void>;
+  saveTrackedTime?: (id: string, seconds: number) => Promise<void>;
+  saveTodoTimeEntry: (
+    todoId: string,
+    date: string,
+    durationSeconds: number,
+  ) => Promise<any>;
+  todoEntries: TodoEntry[];
+  setTodoEntries: Dispatch<SetStateAction<TodoEntry[]>>;
+  startTimer: (todoId: string, initialSeconds?: number) => void;
+  pauseTimer: () => void;
+  resumeTimer: () => void;
+  resetTimer: () => void;
+  activeTimer: ActiveTimer;
+  setActiveTimer: Dispatch<SetStateAction<ActiveTimer>>;
 };
 
 export const header = {

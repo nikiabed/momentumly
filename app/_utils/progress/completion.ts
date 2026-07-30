@@ -5,20 +5,15 @@ export const getCompletionType = (todo: Todo) => {
   if (!todo.status || !todo.completedAt) {
     return "pending";
   }
-  const completedDate = getDateKey(todo.completedAt);
-  const plannedDate = todo.myDayDate
-    ? getDateKey(todo.myDayDate)
-    : todo.deadline
-      ? getDateKey(todo.deadline)
-      : null;
 
-  if (!plannedDate) {
-    return "completed";
-  }
-
-  if (completedDate === plannedDate) {
+  if (!todo.myDayDate && !todo.deadline) {
     return "onTime";
   }
 
-  return "delayed";
+  const completedDate = getDateKey(todo.completedAt);
+  const plannedDate = todo.myDayDate
+    ? getDateKey(todo.myDayDate)
+    : getDateKey(todo.deadline!);
+
+  return completedDate === plannedDate ? "onTime" : "delayed";
 };

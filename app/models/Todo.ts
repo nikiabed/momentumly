@@ -57,6 +57,15 @@ const TodoSchema = new mongoose.Schema(
       type: Date,
       default: null,
     },
+    completionSource: {
+      type: String,
+      enum: ["realtime", "manual"],
+      default: null,
+    },
+    trackedTimeSeconds: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,

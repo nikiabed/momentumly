@@ -6,10 +6,12 @@ import { Board } from "@/app/types/board";
 import { BOARD_KEYS } from "../constants";
 import { getDateKey } from "../date";
 import { useSession } from "next-auth/react";
+import { TodoEntry } from "@/app/types";
 
 export const useTodos = (activeBoard: string) => {
   const [todo, setTodo] = useState<TodoList>([]);
   const [inputValue, setInputValue] = useState<string>("");
+  const [todoEntries, setTodoEntries] = useState<TodoEntry[]>([]);
   const { status } = useSession();
 
   useEffect(() => {
@@ -93,11 +95,21 @@ export const useTodos = (activeBoard: string) => {
   const toggleStatus = async (
     id: string,
     value: boolean,
-    completedAt: Date,
+    completedAt: Date | null = null,
+    completionSource: "realtime" | "manual" = "realtime",
   ) => {
     await updateTodo(id, {
       status: value,
-      completedAt: value ? completedAt : null,
+      completedAt: value ? (completedAt ?? new Date()) : null,
+      completionSource: value ? completionSource : "realtime",
+    });
+  };
+
+  const completeTodoManually = async (id: string, completedAt: Date) => {
+    await updateTodo(id, {
+      status: true,
+      completedAt,
+      completionSource: "manual",
     });
   };
 
@@ -217,6 +229,79 @@ export const useTodos = (activeBoard: string) => {
     }
   };
 
+  const saveTrackedTime = async (id: string, seconds: number) => {
+    console.log("🔥 SAVE TRACKED TIME:", {
+      id,
+      seconds,
+    });
+
+    try {
+      const res = await fetch(`/api/todos/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          trackedTimeSeconds: seconds,
+        }),
+      });
+
+      const data = await res.json();
+
+      console.log("🔥 SAVE RESPONSE:", res.status, data);
+
+      if (!res.ok) {
+        throw new Error("Failed to save tracked time");
+      }
+    } catch (error) {
+      console.error("❌ Error saving tracked time:", error);
+    }
+  };
+
+  const saveTodoTimeEntry = async (
+    todoId: string,
+    date: string,
+    durationSeconds: number,
+  ) => {
+    const res = await fetch("/api/time-entries", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        todoId,
+        date,
+        durationSeconds,
+      }),
+    });
+
+    if (!res.ok) {
+      throw new Error("Failed to save todo time entry");
+    }
+
+    return res.json();
+  };
+
+  const fetchTodoTimeEntries = async () => {
+    try {
+      const res = await fetch("/api/time-entries");
+
+      if (!res.ok) {
+        throw new Error("Failed to fetch todo time entries");
+      }
+
+      const data = await res.json();
+
+      setTodoEntries(data.entries ?? []);
+    } catch (error) {
+      console.error("Error fetching todo time entries:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchTodoTimeEntries();
+  }, []);
+
   return {
     todo,
     setTodo,
@@ -237,5 +322,10 @@ export const useTodos = (activeBoard: string) => {
     toggleImportant,
     toggleStatus,
     removeLink,
+    completeTodoManually,
+    saveTrackedTime,
+    saveTodoTimeEntry,
+    todoEntries,
+    setTodoEntries
   };
 };

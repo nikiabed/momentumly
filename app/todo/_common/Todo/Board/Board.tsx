@@ -14,14 +14,14 @@ import { Lists } from "../Lists";
 import { HamburgerMenu } from "iconsax-reactjs";
 import { Board as BoardType } from "@/app/types";
 import { SidebarProps } from "../../Sidebar";
+import { TodoDateList } from "../TodoDateList";
 
 type boardProps = {
   item: BoardType;
 } & SidebarProps;
 
 export const Board = ({ item, sidebarOpen, setSidebarOpen }: boardProps) => {
-  const { todo, setTodo, boardList, searchText, systemBoards } =
-    useTodoContext();
+  const { todo, boardList, searchText, systemBoards } = useTodoContext();
 
   const normalize = (key?: string) => key?.toLowerCase().replace(/\s/g, "");
   const currentBoard =
@@ -109,9 +109,9 @@ export const Board = ({ item, sidebarOpen, setSidebarOpen }: boardProps) => {
           <Progress />
         ) : (
           <div className=" grow flex flex-col gap-5 px-16 pb-5">
-            {currentBoard?.boardKey === BOARD_KEYS.MY_DAY && setTodo && (
+            {currentBoard?.boardKey === BOARD_KEYS.MY_DAY && (
               <>
-                <TodoList todo={activeTodos} setTodo={setTodo} />
+                <TodoDateList todo={activeTodos} />
                 {completedTodos.length > 0 && (
                   <Lists todo={completedTodos} list="انجام شده" />
                 )}
@@ -166,9 +166,12 @@ export const Board = ({ item, sidebarOpen, setSidebarOpen }: boardProps) => {
               </>
             )}
             {currentBoard &&
-              !["myDay", "all", "complete"].includes(currentBoard.boardKey) && (
+              currentBoard.boardKey !== BOARD_KEYS.MY_DAY &&
+              currentBoard.boardKey !== BOARD_KEYS.ALL &&
+              currentBoard.boardKey !== BOARD_KEYS.COMPLETE && (
                 <>
-                  <TodoList todo={activeTodos} setTodo={setTodo} />
+                  <TodoDateList todo={activeTodos} />
+
                   {completedTodos.length > 0 && (
                     <Lists todo={completedTodos} list="انجام شده" />
                   )}

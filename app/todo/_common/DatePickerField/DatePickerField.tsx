@@ -7,17 +7,23 @@ import { Calendar, Clock, CloseCircle } from "iconsax-reactjs";
 import { FC, HTMLAttributes } from "react";
 import DateObject from "react-date-object";
 
-export type DatePickerFieldProps = Omit<HTMLAttributes<HTMLDivElement>, "onChange"> & {
+export type DatePickerFieldProps = Omit<
+  HTMLAttributes<HTMLDivElement>,
+  "onChange"
+> & {
   value?: string | Date | null;
-  onChange:  (date: DateObject | null) => void;
+  onChange: (date: DateObject | null) => void;
   onClear?: () => void;
   label?: string;
+  portal?: boolean;
 };
+
 export const DatePickerField: FC<DatePickerFieldProps> = ({
   value,
   onChange,
   onClear,
   label = "انتخاب تاریخ",
+  portal = true,
   className,
   ...props
 }) => {
@@ -33,7 +39,7 @@ export const DatePickerField: FC<DatePickerFieldProps> = ({
       `}
     >
       <DatePicker
-        portal
+        portal={portal}
         calendarPosition="bottom-center"
         calendar={persian}
         locale={persian_fa}

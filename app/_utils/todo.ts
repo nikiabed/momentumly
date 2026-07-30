@@ -21,5 +21,11 @@ export const isInDay = (todo: Todo, date: Date | string) => {
 };
 
 export const getTodoDisplayDate = (todo: Todo) => {
-  return getDateKey(todo.deadline || todo.createdAt);
+  if (todo.status && todo.completedAt) {
+    return getDateKey(todo.completedAt);
+  }
+  if (todo.deadline) {
+    return getDateKey(todo.deadline);
+  }
+  return getDateKey(todo.createdAt);
 };
