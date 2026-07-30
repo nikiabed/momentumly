@@ -59,19 +59,11 @@ export const TodoEditInput = ({ list }: { list: Todo }) => {
 
   const fileRef = useRef<HTMLInputElement>(null);
   return (
-    <div className="w-full relative" ref={todoRef}>
+    <div className="w-full relative " ref={todoRef}>
       <div
-        className="flex items-center gap-2 px-4 py-2  min-w-0 text-wrap"
+        className="flex items-center z-40 gap-2 pl-4  py-2  min-w-0 text-wrap"
         ref={completeMenuRef}
       >
-        <ArrowDown2
-          size={14}
-          className="cursor-pointer text-black/50 hover:text-gray-600"
-          onClick={() => {
-            setIsCompleteMenuOpen((p) => !p);
-          }}
-        />
-
         {list.status ? (
           <TickCircle
             variant="Bold"
@@ -86,6 +78,13 @@ export const TodoEditInput = ({ list }: { list: Todo }) => {
             onClick={() => toggleStatus?.(list._id, !list.status, new Date())}
           />
         )}
+        <ArrowDown2
+          size={14}
+          className="cursor-pointer text-black/50 hover:text-gray-600"
+          onClick={() => {
+            setIsCompleteMenuOpen((p) => !p);
+          }}
+        />
 
         {isCompleteMenuOpen && (
           <div

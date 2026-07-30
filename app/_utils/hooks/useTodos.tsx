@@ -227,6 +227,35 @@ export const useTodos = (activeBoard: string) => {
     }
   };
 
+  const saveTrackedTime = async (id: string, seconds: number) => {
+    console.log("🔥 SAVE TRACKED TIME:", {
+      id,
+      seconds,
+    });
+
+    try {
+      const res = await fetch(`/api/todos/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          trackedTimeSeconds: seconds,
+        }),
+      });
+
+      const data = await res.json();
+
+      console.log("🔥 SAVE RESPONSE:", res.status, data);
+
+      if (!res.ok) {
+        throw new Error("Failed to save tracked time");
+      }
+    } catch (error) {
+      console.error("❌ Error saving tracked time:", error);
+    }
+  };
+
   return {
     todo,
     setTodo,
@@ -248,5 +277,6 @@ export const useTodos = (activeBoard: string) => {
     toggleStatus,
     removeLink,
     completeTodoManually,
+    saveTrackedTime,
   };
 };

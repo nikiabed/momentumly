@@ -20,6 +20,7 @@ type TodoUpdate = {
   attachment?: string | null;
   isEdit?: boolean;
   completionSource?: "realtime" | "manual" | null;
+  trackedTimeSeconds: number;
 };
 
 export async function PATCH(req: Request, context: RouteContext) {
@@ -72,6 +73,10 @@ export async function PATCH(req: Request, context: RouteContext) {
 
   if (body.isEdit !== undefined) {
     update.isEdit = body.isEdit;
+  }
+
+  if (body.trackedTimeSeconds !== undefined) {
+    update.trackedTimeSeconds = body.trackedTimeSeconds;
   }
 
   const result = await Todo.findOneAndUpdate(

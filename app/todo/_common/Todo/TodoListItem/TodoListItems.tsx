@@ -43,7 +43,7 @@ export const TodoListItems: FC<itemProps> = ({ list, ...props }) => {
   return (
     <div
       {...props}
-      className={`flex text-wrap justify-center items-center gap-1 bg-pink-100 rounded-lg hover:bg-pink-50 group py-2 pl-2  ${state === "overdue" ? "bg-red-100 text-red-600" : ""}
+      className={`flex text-wrap justify-center items-center gap-1  bg-pink-100 rounded-lg hover:bg-pink-50 group py-2 p-2  ${state === "overdue" ? "bg-red-100 text-red-600" : ""}
     ${state === "today" ? "bg-blue-100!" : ""}
     ${state === "done" ? "opacity-50" : ""}`}
     >
@@ -82,8 +82,8 @@ export const TodoListItems: FC<itemProps> = ({ list, ...props }) => {
           />
         </form>
       ) : (
-        <div className="flex items-center w-full">
-          {!list.status && <TodoTimer todoId={list._id} initialMinutes={2} />}
+        <div className="flex items-center w-full gap-1">
+          {!list.status && <TodoTimer todoId={list._id} trackedTimeSeconds={list.trackedTimeSeconds}/>}
           <div className="flex-1 min-w-0">
             <TodoEditInput list={list} />
           </div>

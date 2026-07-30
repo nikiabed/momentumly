@@ -53,6 +53,7 @@ export type Context = {
   removeLink?: (id: string) => Promise<void>;
   handleToggleImportant?: (id: string, value: boolean) => Promise<void>;
   completeTodoManually: (id: string, completedAt: Date) => Promise<void>;
+  saveTrackedTime?: (id: string, seconds: number) => Promise<void>
 };
 
 export const header = {

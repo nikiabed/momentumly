@@ -14,6 +14,7 @@ export type Todo = {
   updatedAt?: string;
   completedAt: Date | null;
   completionSource: "realtime" | "manual" | null;
+  trackedTimeSeconds: number;
 };
 
 export type TodoList = Todo[];
@@ -31,6 +32,7 @@ export type TodoUpdate = Partial<
     | "completedAt"
     | "isEdit"
     | "completionSource"
+    | "trackedTimeSeconds"
   >
 >;
 
