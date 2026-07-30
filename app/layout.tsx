@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { dana, iranSansX, TodoProvider } from "./_utils";
+import { dana, TodoProvider } from "./_utils";
 import { SessionProvider } from "next-auth/react";
+import { FeedbackProvider } from "./feedback";
 
 export const metadata: Metadata = {
   title: "Niki Portfolio",
@@ -18,9 +19,11 @@ export default function RootLayout({
     <html lang={locale} dir="rtl">
       <body className={dana.className}>
         <SessionProvider>
-          <TodoProvider>
-            <main className="min-h-screen overflow-y-auto">{children}</main>
-          </TodoProvider>
+          <FeedbackProvider>
+            <TodoProvider>
+              <main className="min-h-screen overflow-y-auto">{children}</main>
+            </TodoProvider>
+          </FeedbackProvider>
         </SessionProvider>
       </body>
     </html>
