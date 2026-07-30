@@ -11,6 +11,7 @@ import { useTodoContext } from "@/app/_utils/hooks";
 import { TodoEditInput } from "../TodoEditInput";
 import { getDateKey } from "@/app/_utils";
 import { Todo } from "@/app/types";
+import { TodoTimer } from "../TodoTimer";
 
 type itemProps = DetailedHTMLProps<
   HTMLAttributes<HTMLDivElement>,
@@ -81,7 +82,12 @@ export const TodoListItems: FC<itemProps> = ({ list, ...props }) => {
           />
         </form>
       ) : (
-        <TodoEditInput list={list} />
+        <div className="flex items-center w-full">
+          {!list.status && <TodoTimer todoId={list._id} initialMinutes={2} />}
+          <div className="flex-1 min-w-0">
+            <TodoEditInput list={list} />
+          </div>
+        </div>
       )}
     </div>
   );

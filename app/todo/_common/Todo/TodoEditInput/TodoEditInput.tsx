@@ -58,11 +58,6 @@ export const TodoEditInput = ({ list }: { list: Todo }) => {
   ];
 
   const fileRef = useRef<HTMLInputElement>(null);
-  const closeCompleteMenu = () => {
-    console.log("🔴 COMPLETE MENU CLOSED");
-    setIsCompleteMenuOpen(false);
-  };
-
   return (
     <div className="w-full relative" ref={todoRef}>
       <div
@@ -73,7 +68,7 @@ export const TodoEditInput = ({ list }: { list: Todo }) => {
           size={14}
           className="cursor-pointer text-black/50 hover:text-gray-600"
           onClick={() => {
-            setIsCompleteMenuOpen((p) => true);
+            setIsCompleteMenuOpen((p) => !p);
           }}
         />
 
