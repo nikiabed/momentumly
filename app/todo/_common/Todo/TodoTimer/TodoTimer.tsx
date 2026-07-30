@@ -26,7 +26,7 @@ export const TodoTimer = ({
   const [isPaused, setIsPaused] = useState(false);
   const elapsedRef = useRef(trackedTimeSeconds);
 
-  const { saveTrackedTime } = useTodoContext();
+  const { saveTrackedTime, saveTodoTimeEntry } = useTodoContext();
 
   useEffect(() => {
     if (!isRunning) return;
@@ -45,6 +45,7 @@ export const TodoTimer = ({
 
     const autosaveInterval = setInterval(() => {
       saveTrackedTime?.(todoId, elapsedRef.current);
+      saveDailyEntry(elapsedRef.current);
     }, 30_000);
 
     return () => clearInterval(autosaveInterval);
@@ -70,6 +71,7 @@ export const TodoTimer = ({
     setIsRunning(false);
     setIsPaused(true);
     saveTrackedTime?.(todoId, elapsedSeconds);
+    saveDailyEntry(elapsedSeconds);
   };
 
   const handlePauseFinish = () => {
@@ -83,6 +85,12 @@ export const TodoTimer = ({
     setElapsedSeconds(0);
     elapsedRef.current = 0;
     saveTrackedTime?.(todoId, 0);
+  };
+
+  const saveDailyEntry = async (seconds: number) => {
+    if (seconds <= 0) return;
+    const today = new Date().toISOString().slice(0, 10);
+    await saveTodoTimeEntry?.(todoId, today, seconds);
   };
 
   return (

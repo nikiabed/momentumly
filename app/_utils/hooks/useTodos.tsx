@@ -6,10 +6,12 @@ import { Board } from "@/app/types/board";
 import { BOARD_KEYS } from "../constants";
 import { getDateKey } from "../date";
 import { useSession } from "next-auth/react";
+import { TodoEntry } from "@/app/types";
 
 export const useTodos = (activeBoard: string) => {
   const [todo, setTodo] = useState<TodoList>([]);
   const [inputValue, setInputValue] = useState<string>("");
+  const [todoEntries, setTodoEntries] = useState<TodoEntry[]>([]);
   const { status } = useSession();
 
   useEffect(() => {
@@ -256,6 +258,50 @@ export const useTodos = (activeBoard: string) => {
     }
   };
 
+  const saveTodoTimeEntry = async (
+    todoId: string,
+    date: string,
+    durationSeconds: number,
+  ) => {
+    const res = await fetch("/api/time-entries", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        todoId,
+        date,
+        durationSeconds,
+      }),
+    });
+
+    if (!res.ok) {
+      throw new Error("Failed to save todo time entry");
+    }
+
+    return res.json();
+  };
+
+  const fetchTodoTimeEntries = async () => {
+    try {
+      const res = await fetch("/api/time-entries");
+
+      if (!res.ok) {
+        throw new Error("Failed to fetch todo time entries");
+      }
+
+      const data = await res.json();
+
+      setTodoEntries(data.entries ?? []);
+    } catch (error) {
+      console.error("Error fetching todo time entries:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchTodoTimeEntries();
+  }, []);
+
   return {
     todo,
     setTodo,
@@ -278,5 +324,8 @@ export const useTodos = (activeBoard: string) => {
     removeLink,
     completeTodoManually,
     saveTrackedTime,
+    saveTodoTimeEntry,
+    todoEntries,
+    setTodoEntries
   };
 };

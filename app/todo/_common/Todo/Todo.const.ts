@@ -1,5 +1,5 @@
 import { SystemBoard } from "@/app/_utils";
-import { Board, Todo, TodoList } from "@/app/types";
+import { Board, Todo, TodoEntry, TodoList } from "@/app/types";
 import { ChangeEvent, Dispatch, SetStateAction } from "react";
 import { v4 as uuidv4 } from "uuid";
 
@@ -53,7 +53,14 @@ export type Context = {
   removeLink?: (id: string) => Promise<void>;
   handleToggleImportant?: (id: string, value: boolean) => Promise<void>;
   completeTodoManually: (id: string, completedAt: Date) => Promise<void>;
-  saveTrackedTime?: (id: string, seconds: number) => Promise<void>
+  saveTrackedTime?: (id: string, seconds: number) => Promise<void>;
+  saveTodoTimeEntry: (
+    todoId: string,
+    date: string,
+    durationSeconds: number,
+  ) => Promise<any>;
+  todoEntries: TodoEntry[];
+  setTodoEntries: Dispatch<SetStateAction<TodoEntry[]>>;
 };
 
 export const header = {
