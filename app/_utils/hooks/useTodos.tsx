@@ -7,12 +7,14 @@ import { BOARD_KEYS } from "../constants";
 import { getDateKey } from "../date";
 import { useSession } from "next-auth/react";
 import { TodoEntry } from "@/app/types";
+import { useFeedback } from "@/app/feedback";
 
 export const useTodos = (activeBoard: string) => {
   const [todo, setTodo] = useState<TodoList>([]);
   const [inputValue, setInputValue] = useState<string>("");
   const [todoEntries, setTodoEntries] = useState<TodoEntry[]>([]);
   const { status } = useSession();
+  const { todoCompleted, coinEarned } = useFeedback();
 
   useEffect(() => {
     if (status === "authenticated") {
@@ -98,19 +100,31 @@ export const useTodos = (activeBoard: string) => {
     completedAt: Date | null = null,
     completionSource: "realtime" | "manual" = "realtime",
   ) => {
-    await updateTodo(id, {
+    const success = await updateTodo(id, {
       status: value,
       completedAt: value ? (completedAt ?? new Date()) : null,
       completionSource: value ? completionSource : "realtime",
     });
+
+    if (success && value) {
+      todoCompleted();
+
+      setTimeout(() => {
+        coinEarned(10);
+      }, 2000);
+    }
   };
 
   const completeTodoManually = async (id: string, completedAt: Date) => {
-    await updateTodo(id, {
+    const success = await updateTodo(id, {
       status: true,
       completedAt,
       completionSource: "manual",
     });
+
+    if (success) {
+      todoCompleted();
+    }
   };
 
   type AddTodoBoard = Pick<Board, "_id" | "title">;
@@ -326,6 +340,6 @@ export const useTodos = (activeBoard: string) => {
     saveTrackedTime,
     saveTodoTimeEntry,
     todoEntries,
-    setTodoEntries
+    setTodoEntries,
   };
 };
