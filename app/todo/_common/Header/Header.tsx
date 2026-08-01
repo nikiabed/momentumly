@@ -42,7 +42,7 @@ export const Header = ({ item, todo }: { item: Board; todo: TodoList }) => {
         <div
           className={`flex gap-5 items-center ${themeTextColor[item.theme]}`}
         >
-          <ItemIcon item={item} size={30} />
+          <ItemIcon item={item} size={30} className={`${themeTextColor[item.theme]}`}/>
           <h2 className="font-semibold text-3xl">
             {t(titleToKey[item.title] ?? item.title)}
           </h2>

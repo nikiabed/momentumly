@@ -12,16 +12,17 @@ export const ThemeToggle = () => {
         setTheme(theme === "dark" ? "light" : "dark")
       }
       className="
-      rounded-full
-      p-2
-      bg-white/20
+      px-3 py-1
+      rounded-2xl
+      bg-background
       backdrop-blur
+      border border-border
       "
     >
       {theme === "dark" ? (
-        <Sun size={20}/>
+        <Sun size={22}/>
       ) : (
-        <Moon size={20}/>
+        <Moon size={22}/>
       )}
     </button>
   );
