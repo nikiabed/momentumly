@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { dana, TodoProvider } from "./_utils";
+import { dana, ThemeProvider, TodoProvider } from "./_utils";
 import { SessionProvider } from "next-auth/react";
 import { FeedbackProvider } from "./feedback";
 
@@ -18,13 +18,15 @@ export default function RootLayout({
   return (
     <html lang={locale} dir="rtl">
       <body className={dana.className}>
-        <SessionProvider>
-          <FeedbackProvider>
-            <TodoProvider>
-              <main className="min-h-screen overflow-y-auto">{children}</main>
-            </TodoProvider>
-          </FeedbackProvider>
-        </SessionProvider>
+        <ThemeProvider>
+          <SessionProvider>
+            <FeedbackProvider>
+              <TodoProvider>
+                <main className="min-h-screen overflow-y-auto">{children}</main>
+              </TodoProvider>
+            </FeedbackProvider>
+          </SessionProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
