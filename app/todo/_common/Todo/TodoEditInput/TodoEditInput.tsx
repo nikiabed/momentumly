@@ -20,6 +20,7 @@ import { BOARD_KEYS, isInMyDay, isManuallyInMyDay } from "@/app/_utils";
 import { DeadlinePicker } from "./DeadlinePicker";
 import { CompletedDatePicker } from "./CompletedDatePicker";
 import { Todo } from "@/app/types";
+import { TodoTimer } from "../TodoTimer";
 
 export const TodoEditInput = ({ list }: { list: Todo }) => {
   const {
@@ -64,6 +65,13 @@ export const TodoEditInput = ({ list }: { list: Todo }) => {
         className="flex items-center z-40 gap-2 pl-4  py-2  min-w-0 text-wrap"
         ref={completeMenuRef}
       >
+        {!list.status && (
+          <TodoTimer
+            todoId={list._id}
+            trackedTimeSeconds={list.trackedTimeSeconds}
+          />
+        )}
+
         {list.status ? (
           <TickCircle
             variant="Bold"
@@ -74,13 +82,13 @@ export const TodoEditInput = ({ list }: { list: Todo }) => {
         ) : (
           <Record
             size={24}
-            className="text-black/50 cursor-pointer shrink-0"
+            className="text-foreground cursor-pointer shrink-0"
             onClick={() => toggleStatus?.(list._id, !list.status, new Date())}
           />
         )}
         <ArrowDown2
           size={14}
-          className="cursor-pointer text-black/50 hover:text-gray-600"
+          className="cursor-pointer text-foreground hover:text-foreground"
           onClick={() => {
             setIsCompleteMenuOpen((p) => !p);
           }}
@@ -88,13 +96,13 @@ export const TodoEditInput = ({ list }: { list: Todo }) => {
 
         {isCompleteMenuOpen && (
           <div
-            className="absolute top-12 right-0 w-48 bg-white z-50 shadow-lg rounded-xl"
+            className="absolute top-12 right-0 w-48 bg-background z-50 shadow-lg rounded-xl"
             onMouseDown={(e) => e.stopPropagation()}
             onClick={(e) => e.stopPropagation()}
           >
             <button
               type="button"
-              className="w-full px-4 py-2 text-right hover:bg-gray-100 cursor-pointer"
+              className="w-full px-4 py-2 text-right hover:bg-foreground/10 cursor-pointer"
               onClick={() => {
                 toggleStatus?.(list._id, true, new Date(), "manual");
                 setIsCompleteMenuOpen(false);
@@ -105,7 +113,7 @@ export const TodoEditInput = ({ list }: { list: Todo }) => {
 
             <button
               type="button"
-              className="w-full px-4 py-2 text-right hover:bg-gray-100 cursor-pointer"
+              className="w-full px-4 py-2 text-right hover:bg-foreground/10 cursor-pointer"
               onClick={() => {
                 const yesterday = new Date();
                 yesterday.setDate(yesterday.getDate() - 1);
@@ -130,7 +138,7 @@ export const TodoEditInput = ({ list }: { list: Todo }) => {
               </div>
 
               <button
-                className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-right text-sm w-full flex-1"
+                className="px-4 py-2 hover:bg-foreground/10 cursor-pointer text-right text-sm w-full flex-1"
                 type="button"
                 onClick={() => {
                   if (!selectedCompletionDate) return;
@@ -153,15 +161,15 @@ export const TodoEditInput = ({ list }: { list: Todo }) => {
           className="flex flex-1 min-w-0 items-center justify-between text-right cursor-pointer"
         >
           <span
-            className={`${list.status ? "line-through text-black/30" : ""} wrap-break-word flex-1 min-w-0`}
+            className={`${list.status ? "line-through text-foreground/30" : ""} wrap-break-word flex-1 min-w-0`}
           >
             {list.title}
           </span>
 
           {isOpen ? (
-            <ArrowUp2 size={18} className="text-black/40" />
+            <ArrowUp2 size={18} className="text-foreground/40" />
           ) : (
-            <ArrowDown2 size={18} className="text-black/40" />
+            <ArrowDown2 size={18} className="text-foreground/40" />
           )}
         </div>
 
@@ -180,12 +188,12 @@ export const TodoEditInput = ({ list }: { list: Todo }) => {
       {/* Details Panel */}
       {isOpen && (
         <div
-          className=" rounded-2xl border border-black/5 bg-white shadow-sm flex flex-col
+          className=" rounded-2xl border border-foreground/20 bg-background shadow-sm flex flex-col
    md:justify-evenly z-0 md:flex-row "
         >
           <div
             onClick={() => handleIsEdit?.(list._id, true)}
-            className="flex w-full items-center gap-3 px-4 py-3 cursor-pointer text-sm text-center justify-center hover:bg-black/5 transition"
+            className="flex w-full items-center gap-3 px-4 py-3 cursor-pointer text-sm text-center justify-center hover:rounded-2xl hover:bg-foreground/10 transition"
           >
             <Edit size={18} />
             <span>ویرایش</span>
@@ -194,7 +202,7 @@ export const TodoEditInput = ({ list }: { list: Todo }) => {
           {!isInMyDay(list) && (
             <div
               onClick={() => moveToMyDay?.(list._id)}
-              className="flex w-full items-center gap-3 px-4 py-3 cursor-pointer text-sm text-center justify-center hover:bg-black/5 transition"
+              className="flex w-full items-center gap-3 px-4 py-3 cursor-pointer text-sm text-center justify-center hover:bg-foreground/10 transition"
             >
               <Calendar size={18} />
               <span>انتقال به امروز</span>
@@ -205,7 +213,7 @@ export const TodoEditInput = ({ list }: { list: Todo }) => {
             <div
               onClick={() => setIsMenuOpen((prev) => !prev)}
               className="flex w-full items-center gap-3 px-4 py-3
-      justify-center text-sm  hover:bg-black/5 transition cursor-pointer"
+      justify-center text-sm  hover:bg-foreground/10 transition cursor-pointer"
             >
               <Folder size={18} />
               <span>انتقال</span>
@@ -219,7 +227,7 @@ export const TodoEditInput = ({ list }: { list: Todo }) => {
         left-1/2
         -translate-x-1/2
         mt-2
-        bg-white
+        bg-background
         shadow-lg
         z-100
       "
@@ -228,7 +236,7 @@ export const TodoEditInput = ({ list }: { list: Todo }) => {
                   <button
                     key={board._id}
                     onClick={() => moveTodo?.(list._id, board.boardKey)}
-                    className="block w-full whitespace-nowrap px-3 py-2 text-right hover:bg-black/5 transition cursor-pointer text-sm"
+                    className="block w-full whitespace-nowrap px-3 py-2 text-right hover:bg-foreground/10 transition cursor-pointer text-sm"
                   >
                     {t(titleToKey[board.title]) || board.title}
                   </button>
@@ -245,11 +253,11 @@ export const TodoEditInput = ({ list }: { list: Todo }) => {
                 setDeadline?.(list._id, newDate);
               }}
               onClear={() => setDeadline?.(list._id, null)}
-              className={"justify-center hover:hover:bg-black/5"}
+              className={"justify-center hover:bg-foreground/10"}
             />
           }
 
-          <div className="flex w-full items-center gap-3 px-4 py-3 cursor-pointer text-sm text-center justify-center hover:bg-black/5 transition">
+          <div className="flex w-full items-center gap-3 px-4 py-3 cursor-pointer text-sm text-center justify-center hover:bg-foreground/10 transition">
             <div
               onClick={() => fileRef.current?.click()}
               className="flex gap-3"
@@ -289,7 +297,7 @@ export const TodoEditInput = ({ list }: { list: Todo }) => {
           {isManuallyInMyDay(list) && list.boardKey !== BOARD_KEYS.MY_DAY && (
             <div
               onClick={() => removeFromMyDay?.(list._id)}
-              className="flex w-full items-center gap-3 px-4 py-3 cursor-pointer text-sm text-center justify-center hover:bg-black/5 transition"
+              className="flex w-full items-center gap-3 px-4 py-3 cursor-pointer text-sm text-center justify-center hover:bg-foreground/10 transition"
             >
               <Trash size={18} />
               <span>حذف از امروز</span>
@@ -297,7 +305,7 @@ export const TodoEditInput = ({ list }: { list: Todo }) => {
           )}
           <button
             onClick={() => deleteTodo?.(list._id)}
-            className="flex w-full items-center gap-3 px-4 py-3 cursor-pointer text-sm text-center justify-center text-red-500 hover:bg-red-50 transition"
+            className="flex w-full items-center gap-3 px-4 py-3 cursor-pointer text-sm text-center justify-center text-rose-400 hover:rounded-2xl hover:bg-foreground/10 transition"
           >
             <Trash size={18} />
             <span>حذف</span>

@@ -45,10 +45,10 @@ export const TodoDateList = ({ todo }: { todo: TodoListType }) => {
                 inline-flex items-center gap-2 mb-1
                 px-3 py-1.5
                 rounded-full
-                bg-white/10
+                bg-background/10
                 backdrop-blur-md
-                border border-white/20
-                text-white
+                border border-border
+                text-foreground
               "
             >
               {icon}
@@ -57,7 +57,7 @@ export const TodoDateList = ({ todo }: { todo: TodoListType }) => {
                 <span className="font-semibold">{formatted.label}</span>
               )}
 
-              <span className="text-sm text-gray-200">{formatted.date}</span>
+              <span className="text-sm text-text-muted">{formatted.date}</span>
             </div>
 
             <TodoList todo={todos} setTodo={setTodo} />

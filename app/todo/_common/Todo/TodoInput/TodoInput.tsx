@@ -19,15 +19,15 @@ export const TodoInput: FC<InputProps> = ({ item }) => {
       onSubmit={(e) => {
         handleSubmit?.(e, item);
       }}
-      className="py-2 pl-2 items-center flex w-full bg-pink-100 rounded-lg group hover:bg-white"
+      className="py-2 pl-2 items-center flex w-full bg-background rounded-lg group hover:bg-background/50"
     >
-      <button type="submit" className={`pl-4 pr-5 h-10 text-black/55`}>
+      <button type="submit" className={`pl-4 pr-5 h-10 text-foreground/80`}>
         <Add size={20} />
       </button>
       <input
         onChange={handleChange ?? undefined}
         type="text"
-        className=" p-2 rounded-lg bg-pink-100 group-hover:bg-white w-full text-black focus:outline-none focus:bg-white"
+        className=" p-2 rounded-lg bg-background group-hover:bg-background/90 w-full text-foreground/80 focus:outline-none focus:bg-background/50"
         placeholder={input.placeholder}
         value={inputValue ?? ""}
         name="task"
