@@ -7,6 +7,25 @@
   --border: #dfd6db;
   --border-focus: #0d3ff7;
   --border-gray: #e5e7eb;
+  --coin-primary: #7c3aed;
+  --coin-soft: #f5f3ff;
+  --reward-soft: #fef3c7;
+  --success-soft: #fffbeb;
+  --chart-bg: #ffffff;
+  --chart-grid: #e5e7eb;
+  --chart-text: #475569;
+  --chart-muted: #94a3b8;
+  --chart-primary: #8b5cf6;
+  --chart-secondary: #ec4899;
+  --chart-tooltip-bg: #ffffff;
+  --chart-card: #f8fafc;
+  --overdue-soft: #fee2e2;
+  --overdue-text: #dc2626;
+
+  --today-soft: #e0f2fe;
+  --today-text: #0284c7;
+
+  --done-opacity: 0.5;
 }
 
 .dark {
@@ -14,8 +33,27 @@
   --foreground: #fdf2f8;
   --text-muted: #9ca3af;
   --border: #a2a6ad;
-  --border-focus: #4d8dee;
-  --border-gray: #666d76;
+  --border-focus: #8db3ed;
+  --border-gray: #3a3e43;
+  --coin-primary: #8144f1;
+  --coin-soft: #c4b5fd;
+  --reward-soft: #106565;
+  --success-soft: #3b61e0;
+  --chart-bg: #1f2937;
+  --chart-grid: #374151;
+  --chart-text: #e5e7eb;
+  --chart-muted: #9ca3af;
+  --chart-primary: #c4b5fd;
+  --chart-secondary: #f9a8d4;
+  --chart-tooltip-bg: #111827;
+  --chart-card: #273449;
+  --overdue-soft: #450a0a;
+  --overdue-text: #fca5a5;
+
+  --today-soft: #082f49;
+  --today-text: #7dd3fc;
+
+  --done-opacity: 0.5;
 }
 
 @theme inline {
@@ -25,6 +63,23 @@
   --color-border: var(--border);
   --color-border-focus: var(--border-focus);
   --color-border-gray: var(--border-gray);
+  --color-coin-primary: var(--coin-primary);
+  --color-coin-soft: var(--coin-soft);
+  --color-reward-soft: var(--reward-soft);
+  --color-success-soft: var(--success-soft);
+  --color-chart-bg: var(--chart-bg);
+  --color-chart-grid: var(--chart-grid);
+  --color-chart-text: var(--chart-text);
+  --color-chart-muted: var(--chart-muted);
+  --color-chart-primary: var(--chart-primary);
+  --color-chart-secondary: var(--chart-secondary);
+  --color-chart-tooltip-bg: var(--chart-tooltip-bg);
+  --color-chart-card: var(--chart-card);
+  --color-overdue-soft: var(--overdue-soft);
+  --color-overdue-text: var(--overdue-text);
+
+  --color-today-soft: var(--today-soft);
+  --color-today-text: var(--today-text);
 }
 
 @keyframes coin-flight {

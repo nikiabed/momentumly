@@ -141,7 +141,7 @@ export const ListItem = ({ focused }: { focused: Board }) => {
             <ul className="absolute left-5 top-5 w-40 z-20">
               <li
                 onClick={() => removeList?.(focused._id)}
-                className="bg-white rounded px-2 py-1 text-sm cursor-pointer shadow"
+                className="bg-border-gray text-foreground rounded px-2 py-1 text-sm cursor-pointer shadow"
               >
                 حذف لیست
               </li>

@@ -45,14 +45,14 @@ export const MonthSect = () => {
 
   return (
     <div className="flex flex-col md:flex-row gap-6 justify-center">
-      <div className="bg-white rounded-3xl shadow p-5 flex flex-col gap-2 flex-1">
+      <div className="bg-background rounded-3xl shadow p-5 flex flex-col gap-2 flex-1">
         <h2 className="text-2xl font-bold">سطح رشدت</h2>
         <div className="flex items-center justify-around">
           <div className="flex flex-col gap-2 ">
             <h1 className="text-4xl font-black text-[#34d399] ">
               {currentPlant.name}
             </h1>
-            <h2 className="text-gray-400 font-semibold ">سطح {level + 1} </h2>
+            <h2 className="text-muted font-semibold ">سطح {level + 1} </h2>
           </div>
           <div>
             <Image
@@ -67,7 +67,7 @@ export const MonthSect = () => {
         <LevelBar percent={percent} remaining={remaining} />
         {nextThreshold ? (
           <>
-            <div className="text-gray-400 font-semibold">
+            <div className="text-muted font-semibold">
               برای رسیدن به سطح بعدی
             </div>
             <div className="font-semibold">

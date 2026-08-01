@@ -41,6 +41,15 @@ export const TimeLineChart: FC<Props> = ({ data, width, height }) => {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    const styles = getComputedStyle(document.documentElement);
+
+    const chartBg = styles.getPropertyValue("--chart-bg").trim();
+    const chartGrid = styles.getPropertyValue("--chart-grid").trim();
+    const chartText = styles.getPropertyValue("--chart-text").trim();
+    const chartMuted = styles.getPropertyValue("--chart-muted").trim();
+    const chartPrimary = styles.getPropertyValue("--chart-primary").trim();
+    const chartSecondary = styles.getPropertyValue("--chart-secondary").trim();
+
     const dpr = window.devicePixelRatio || 1;
 
     canvas.width = width * dpr;
@@ -58,32 +67,26 @@ export const TimeLineChart: FC<Props> = ({ data, width, height }) => {
     const chartWidth = width - leftAxis - rightPadding;
     const chartHeight = height - padding * 2;
 
-    const stepX =
-      data.length > 1 ? chartWidth / (data.length - 1) : chartWidth;
+    const stepX = data.length > 1 ? chartWidth / (data.length - 1) : chartWidth;
 
-    const values = data.map((item) =>
-      Math.round(item.durationSeconds / 60),
-    );
+    const values = data.map((item) => Math.round(item.durationSeconds / 60));
 
     const maxValue = Math.max(...values, 60);
 
     // کمی فضای اضافه بالای نمودار
     const maxY = Math.ceil(maxValue / 30) * 30;
 
-    const mapX = (index: number) =>
-      width - rightPadding - index * stepX;
+    const mapX = (index: number) => width - rightPadding - index * stepX;
 
     const mapY = (value: number) =>
-      padding +
-      chartHeight -
-      (value / maxY) * chartHeight;
+      padding + chartHeight - (value / maxY) * chartHeight;
 
     // Background
-    ctx.fillStyle = "#ffffff";
+    ctx.fillStyle = chartBg;
     ctx.fillRect(0, 0, width, height);
 
     // Grid
-    ctx.strokeStyle = "#f1f5f9";
+    ctx.strokeStyle = chartGrid;
     ctx.lineWidth = 1;
 
     const gridCount = 4;
@@ -96,11 +99,9 @@ export const TimeLineChart: FC<Props> = ({ data, width, height }) => {
       ctx.lineTo(width - rightPadding, y);
       ctx.stroke();
 
-      const value = Math.round(
-        maxY - (maxY / gridCount) * i,
-      );
+      const value = Math.round(maxY - (maxY / gridCount) * i);
 
-      ctx.fillStyle = "#94a3b8";
+      ctx.fillStyle = chartText;
       ctx.font = "12px dana";
       ctx.textAlign = "left";
 
@@ -121,8 +122,7 @@ export const TimeLineChart: FC<Props> = ({ data, width, height }) => {
       const current = points[i];
       const previous = points[i - 1];
 
-      const middleX =
-        (previous.x + current.x) / 2;
+      const middleX = (previous.x + current.x) / 2;
 
       ctx.bezierCurveTo(
         middleX,
@@ -134,7 +134,7 @@ export const TimeLineChart: FC<Props> = ({ data, width, height }) => {
       );
     }
 
-    ctx.strokeStyle = "#f472b6";
+    ctx.strokeStyle = chartMuted;
     ctx.lineWidth = 3;
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
@@ -148,8 +148,7 @@ export const TimeLineChart: FC<Props> = ({ data, width, height }) => {
       const current = points[i];
       const previous = points[i - 1];
 
-      const middleX =
-        (previous.x + current.x) / 2;
+      const middleX = (previous.x + current.x) / 2;
 
       ctx.bezierCurveTo(
         middleX,
@@ -165,22 +164,10 @@ export const TimeLineChart: FC<Props> = ({ data, width, height }) => {
     ctx.lineTo(points[0].x, height - padding);
     ctx.closePath();
 
-    const gradient = ctx.createLinearGradient(
-      0,
-      padding,
-      0,
-      height,
-    );
+    const gradient = ctx.createLinearGradient(0, padding, 0, height);
 
-    gradient.addColorStop(
-      0,
-      "rgba(244,114,182,0.18)",
-    );
-
-    gradient.addColorStop(
-      1,
-      "rgba(244,114,182,0)",
-    );
+    gradient.addColorStop(0, "rgba(244,114,182,0.18)");
+    gradient.addColorStop(1, "rgba(244,114,182,0)");
 
     ctx.fillStyle = gradient;
     ctx.fill();
@@ -192,10 +179,10 @@ export const TimeLineChart: FC<Props> = ({ data, width, height }) => {
       ctx.beginPath();
       ctx.arc(point.x, point.y, 5, 0, Math.PI * 2);
 
-      ctx.fillStyle = "#f472b6";
+      ctx.fillStyle = chartPrimary;
       ctx.fill();
 
-      ctx.fillStyle = "#ec4899";
+      ctx.fillStyle = chartSecondary;
       ctx.font = "700 11px dana";
       ctx.textAlign = "center";
 
@@ -207,22 +194,12 @@ export const TimeLineChart: FC<Props> = ({ data, width, height }) => {
         );
       }
 
-      ctx.fillStyle = "#64748b";
+      ctx.fillStyle = chartText;
       ctx.font = width > 420 ? "14px dana" : "11px dana";
 
-      ctx.fillText(
-        data[index].label,
-        point.x,
-        height - 14,
-      );
+      ctx.fillText(data[index].label, point.x, height - 14);
     });
   }, [data, width, height]);
 
-  return (
-    <canvas
-      ref={canvasRef}
-      width={width}
-      height={height}
-    />
-  );
+  return <canvas ref={canvasRef} width={width} height={height} />;
 };

@@ -43,9 +43,9 @@ export const TodoListItems: FC<itemProps> = ({ list, ...props }) => {
   return (
     <div
       {...props}
-      className={`flex text-wrap justify-center items-center gap-1  bg-background rounded-lg hover:bg-background/50 group py-2 p-2  ${state === "overdue" ? "bg-background/30 text-red-400" : ""}
-    ${state === "today" ? "bg-background/50!" : ""}
-    ${state === "done" ? "opacity-50" : ""}`}
+      className={`flex text-wrap justify-center items-center gap-1  bg-background rounded-lg hover:bg-background/80 group py-2 p-2 ${state === "overdue" ? "bg-overdue-soft text-overdue-text" : ""}
+${state === "today" ? "bg-today-soft text-today-text" : ""}
+${state === "done" ? "opacity-50" : ""}`}
     >
       {list.isEdit ? (
         <form
