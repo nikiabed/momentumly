@@ -13,7 +13,7 @@ import { getImageTheme, isMongoBoard } from "./paletteUtil";
 export const Palette = ({ item }: { item: Board }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { setBoardList, setSystemBoards } = useTodoContext();
-  const [selectedColor, setSelectedColor] = useState(item.theme ?? "sunset");
+  const [selectedColor, setSelectedColor] = useState(item.theme);
   const paletteRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -33,6 +33,7 @@ export const Palette = ({ item }: { item: Board }) => {
   }, []);
 
   const handleColorChange = async (key: string) => {
+    console.log("changing theme to:", key);
     setSelectedColor(key);
     if (isMongoBoard(item._id)) {
       setBoardList?.((prev: Board[]) =>
@@ -40,7 +41,6 @@ export const Palette = ({ item }: { item: Board }) => {
       );
       try {
         await boardService.updateTheme(item._id, key);
-        const board = await boardService.getBoards();
       } catch (err) {
         console.log(err);
       }
@@ -68,8 +68,40 @@ export const Palette = ({ item }: { item: Board }) => {
   const isImage = item.theme?.startsWith("img:");
   const iconFill = isImage ? "#374151" : themeIconFill[item.theme];
 
+  const isDark = document.documentElement.classList.contains("dark");
+
+  const visibleThemes = colors.filter(
+    (theme) => theme.mode === (isDark ? "dark" : "light"),
+  );
   useEffect(() => {
-    setSelectedColor(item.theme ?? "sunset");
+    const handleThemeChange = () => {
+      const dark = document.documentElement.classList.contains("dark");
+
+      const availableThemes = colors.filter(
+        (theme) => theme.mode === (dark ? "dark" : "light"),
+      );
+
+      const isImageTheme = item.theme?.startsWith("img:");
+
+      const currentThemeExists =
+        isImageTheme ||
+        availableThemes.some((theme) => theme.key === item.theme);
+
+      if (!currentThemeExists && availableThemes.length > 0) {
+        handleColorChange(availableThemes[0].key);
+      }
+    };
+
+    handleThemeChange();
+
+    const observer = new MutationObserver(handleThemeChange);
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => observer.disconnect();
   }, [item.theme]);
 
   return (
@@ -78,19 +110,22 @@ export const Palette = ({ item }: { item: Board }) => {
         size={24}
         color="transparent"
         style={{
-          fill: iconFill,
+          fill: "var(--foreground)",
         }}
         className="cursor-pointer"
         onClick={togglePalette}
       />
       {isOpen && (
-        <div className="absolute left-0 w-70 z-500 bg-rose-50 text-gray-600 rounded shadow flex flex-col flex-wrap gap-4 p-4">
+        <div className="absolute left-0 w-70 z-500 bg-background text-foreground rounded shadow flex flex-col flex-wrap gap-4 p-4">
           <div className="pr-2">تم ها</div>
           <div className="flex gap-2 flex-wrap p-2">
-            {colors.map((theme: Theme, i: number) => (
+            {visibleThemes.map((theme: Theme, i: number) => (
               <div
                 key={i}
-                onClick={() => handleColorChange(theme.key)}
+                onClick={() => {
+                  console.log("CLICKED COLOR:", theme.key);
+                  handleColorChange(theme.key);
+                }}
                 className={`p-2 cursor-pointer ${theme.className} rounded h-10 w-10
                 ${
                   item.theme === theme.key
@@ -103,7 +138,7 @@ export const Palette = ({ item }: { item: Board }) => {
 
             <div
               className=" cursor-pointer h-10 w-10 "
-              onClick={() => getImageTheme("/images/background2.jpg")}
+              onClick={() => handleColorChange("img:/images/background2.jpg")}
             >
               <img
                 src="/images/background2.jpg"
@@ -119,7 +154,7 @@ export const Palette = ({ item }: { item: Board }) => {
             </div>
             <div
               className=" cursor-pointer  h-10 w-10 "
-              onClick={() => getImageTheme("/images/background3.jpg")}
+              onClick={() => handleColorChange("img:/images/background3.jpg")}
             >
               <img
                 src="/images/background3.jpg"
@@ -135,7 +170,7 @@ export const Palette = ({ item }: { item: Board }) => {
             </div>
             <div
               className=" cursor-pointer  h-10 w-10 "
-              onClick={() => getImageTheme("/images/background4.jpg")}
+              onClick={() => handleColorChange("img:/images/background4.jpg")}
             >
               <img
                 src="/images/background4.jpg"
@@ -151,7 +186,7 @@ export const Palette = ({ item }: { item: Board }) => {
             </div>
             <div
               className=" cursor-pointer  h-10 w-10 "
-              onClick={() => getImageTheme("/images/background5.jpg")}
+              onClick={() => handleColorChange("img:/images/background5.jpg")}
             >
               <img
                 src="/images/background5.jpg"
@@ -167,7 +202,7 @@ export const Palette = ({ item }: { item: Board }) => {
             </div>
             <div
               className=" cursor-pointer  h-10 w-10 "
-              onClick={() => getImageTheme("/images/background6.jpg")}
+              onClick={() => handleColorChange("img:/images/background6.jpg")}
             >
               <img
                 src="/images/background6.jpg"
@@ -183,7 +218,7 @@ export const Palette = ({ item }: { item: Board }) => {
             </div>
             <div
               className=" cursor-pointer  h-10 w-10 "
-              onClick={() => getImageTheme("/images/background7.jpg")}
+              onClick={() => handleColorChange("img:/images/background7.jpg")}
             >
               <img
                 src="/images/background7.jpg"

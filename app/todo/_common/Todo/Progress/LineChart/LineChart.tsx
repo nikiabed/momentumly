@@ -28,6 +28,16 @@ export const LineChart: FC<Props> = ({ data, width, height }) => {
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
+
+    const styles = getComputedStyle(document.documentElement);
+
+    const chartBg = styles.getPropertyValue("--chart-bg").trim();
+    const chartGrid = styles.getPropertyValue("--chart-grid").trim();
+    const chartText = styles.getPropertyValue("--chart-text").trim();
+    const chartMuted = styles.getPropertyValue("--chart-muted").trim();
+    const chartPrimary = styles.getPropertyValue("--chart-primary").trim();
+    const chartSecondary = styles.getPropertyValue("--chart-secondary").trim();
+
     const dpr = window.devicePixelRatio || 1;
     canvas.width = width * dpr;
     canvas.height = height * dpr;
@@ -55,11 +65,11 @@ export const LineChart: FC<Props> = ({ data, width, height }) => {
       y: mapY(v),
     }));
     // BG
-    ctx.fillStyle = "#ffffff";
+    ctx.fillStyle = chartBg;
     ctx.fillRect(0, 0, width, height);
 
     // GRID
-    ctx.strokeStyle = "#e5e7eb";
+    ctx.strokeStyle = chartGrid;
     ctx.lineWidth = 1;
 
     for (let i = 0; i <= 4; i++) {
@@ -70,7 +80,7 @@ export const LineChart: FC<Props> = ({ data, width, height }) => {
       ctx.lineTo(width - padding, y);
       ctx.stroke();
 
-      ctx.fillStyle = "#475569";
+      ctx.fillStyle = chartText;
       ctx.font = "16px dana";
       ctx.textAlign = "left";
 
@@ -95,7 +105,7 @@ export const LineChart: FC<Props> = ({ data, width, height }) => {
       ctx.bezierCurveTo(cp1X, prevY, cp2X, y, x, y);
     }
 
-    ctx.strokeStyle = "#8b5cf6";
+    ctx.strokeStyle = chartPrimary;
     ctx.lineWidth = 3;
     ctx.lineJoin = "round";
     ctx.lineCap = "round";
@@ -132,7 +142,7 @@ export const LineChart: FC<Props> = ({ data, width, height }) => {
     // gradient
     const gradient = ctx.createLinearGradient(0, padding, 0, height);
 
-    gradient.addColorStop(0, "rgba(139,92,246,0)");
+    gradient.addColorStop(0, "transparent");
     gradient.addColorStop(1, "rgba(139,92,246,0.25)");
 
     ctx.fillStyle = gradient;
@@ -147,9 +157,9 @@ export const LineChart: FC<Props> = ({ data, width, height }) => {
 
       ctx.arc(x, y, 5, 0, Math.PI * 2);
 
-      ctx.fillStyle = "#8b5cf6";
+      ctx.fillStyle = chartPrimary;
       ctx.fill();
-      const purple = "#8b5cf6";
+      const purple = chartPrimary;
       ctx.strokeStyle = purple;
       ctx.lineWidth = 1;
 
@@ -157,7 +167,7 @@ export const LineChart: FC<Props> = ({ data, width, height }) => {
 
       // value above point
       ctx.fillStyle = purple;
-      ctx.strokeStyle = "#ffffff";
+      ctx.strokeStyle = chartBg;
       ctx.lineWidth = 2;
       const font = getComputedStyle(document.body).getPropertyValue(
         "--font-sansx",
@@ -182,7 +192,7 @@ export const LineChart: FC<Props> = ({ data, width, height }) => {
       } else {
         ctx.font = "13px dana";
       }
-      ctx.fillStyle = "#475569";
+      ctx.fillStyle = chartText;
       ctx.fillText(data[i].label, x, height - 15);
     });
   }, [data, width, height]);
@@ -264,17 +274,17 @@ export const LineChart: FC<Props> = ({ data, width, height }) => {
         <div
           className="
       absolute
-      bg-white
+      bg-background
       shadow-xl
       border
-      border-black/10
+      border-border-gray
       rounded-2xl
       px-5
       py-4
       text-sm
-      text-gray-600
+      text-foreground
       pointer-events-none
-      min-w-[220px]
+      min-w-55
       z-100
     "
           style={{
@@ -285,38 +295,38 @@ export const LineChart: FC<Props> = ({ data, width, height }) => {
         >
           {/* Header */}
           <div className="text-center ">
-            <div className="font-bold text-gray-800 text-base">
+            <div className="font-bold text-foreground text-base">
               {tooltip.data.label}
             </div>
-            <div className="text-xs text-gray-400 mt-1">عملکرد روزانه</div>
+            <div className="text-xs text-muted mt-1">عملکرد روزانه</div>
           </div>
 
           {/* Stats */}
           <div className="grid grid-cols-2 gap-3">
-            <div className="bg-gray-50 rounded-xl p-3 text-center">
-              <div className="text-xs text-gray-400">✅ به موقع</div>
-              <div className="font-bold text-gray-700 mt-1">
+            <div className="bg-border-gray rounded-xl p-3 text-center">
+              <div className="text-xs text-muted">✅ به موقع</div>
+              <div className="font-bold text-foreground mt-1">
                 {tooltip.data.onTime}/{tooltip.data.planned}
               </div>
             </div>
 
-            <div className="bg-gray-50 rounded-xl p-3 text-center">
-              <div className="text-xs text-gray-400">↻ بازیابی</div>
-              <div className="font-bold text-gray-700 mt-1">
+            <div className="bg-border-gray rounded-xl p-3 text-center">
+              <div className="text-xs text-muted">↻ بازیابی</div>
+              <div className="font-bold text-foreground mt-1">
                 {tooltip.data.recovery}
               </div>
             </div>
 
-            <div className="bg-gray-50 rounded-xl p-3 text-center">
-              <div className="text-xs text-gray-400">🪙 سکه</div>
+            <div className="bg-border-gray rounded-xl p-3 text-center">
+              <div className="text-xs text-muted">🪙 سکه</div>
               <div className="font-bold text-yellow-600 mt-1">
                 {tooltip.data.coins}
               </div>
             </div>
 
-            <div className="bg-purple-50 rounded-xl p-3 text-center">
-              <div className="text-xs text-purple-400">⭐ امتیاز</div>
-              <div className="font-bold text-purple-600 mt-1">
+            <div className="bg-coin-primary rounded-xl p-3 text-center">
+              <div className="text-xs text-coin-soft">⭐ امتیاز</div>
+              <div className="font-bold text-foreground mt-1">
                 %{tooltip.data.score}
               </div>
             </div>

@@ -19,8 +19,8 @@ export const WeekSect = () => {
     <div
       className="
     relative overflow-hidden
-    bg-white
-    border border-gray-100
+    bg-background
+    border border-border-gray
     rounded-4xl
     shadow-sm
     p-6
@@ -40,27 +40,27 @@ export const WeekSect = () => {
       z-10
     "
       >
-        <span className="text-sm font-semibold text-gray-400">
+        <span className="text-sm font-semibold text-muted">
           خلاصه این هفته
         </span>
 
-        <h2 className="text-2xl md:text-3xl font-black text-gray-800">
+        <h2 className="text-2xl md:text-3xl font-black text-foreground">
           {mood.title}
         </h2>
 
-        <p className="text-sm md:text-base text-gray-500 font-medium">
+        <p className="text-sm md:text-base text-muted font-medium">
           {mood.text}
         </p>
 
         <div className="flex items-center gap-3 mt-2">
-          <div className="w-32 h-2 bg-gray-100 rounded-full overflow-hidden">
+          <div className="w-32 h-2 bg-border-gray rounded-full overflow-hidden">
             <div
-              className="h-full bg-violet-500 rounded-full transition-all"
+              className="h-full bg-coin-primary rounded-full transition-all"
               style={{ width: `${progress}%` }}
             />
           </div>
 
-          <span className="text-sm font-black text-violet-600">
+          <span className="text-sm font-black text-coin-primary">
             {progress}%
           </span>
         </div>

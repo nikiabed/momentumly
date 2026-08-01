@@ -7,7 +7,7 @@ export const Search = () => {
   return (
     <div className="relative w-full flex justify-center mt-2">
       <input
-        className="shadow-sm border-b-gray-500 focus:bg-white focus:border-b-blue-800 bg-gray-50 border w-[97%] border-gray-200 rounded-lg h-9.5 px-3 text-sm focus:outline-none"
+        className="shadow-sm border-b-border focus:bg-background focus:border-b-border-focus bg-background border w-[97%] border-border-gray rounded-lg h-9.5 px-3 text-sm focus:outline-none"
         placeholder={sidebar.placeholder}
         value={searchText}
         onChange={(e) => {
@@ -21,7 +21,7 @@ export const Search = () => {
       />
       <SearchNormal
         size={15}
-        className="absolute left-4 top-[30%] text-gray-400 transform -scale-x-100"
+        className="absolute left-4 top-[30%] text-muted transform -scale-x-100"
       />
     </div>
   );

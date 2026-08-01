@@ -21,11 +21,9 @@ export const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
     <div
       className={`
 fixed top-0 right-0 h-screen w-72 z-600
-bg-pink-50 flex flex-col gap-2 justify-between
+bg-background flex flex-col gap-2 justify-between
 transition-transform duration-300
-
 md:static md:translate-x-0 pt-15 p-2 md:p-2
-
 ${sidebarOpen ? "translate-x-0" : "translate-x-full"}
 `}
     >
@@ -42,19 +40,19 @@ ${sidebarOpen ? "translate-x-0" : "translate-x-full"}
           )}
           <div>
             <div className="font-semibold">{data?.user?.name}</div>
-            <div className="text-gray-500 text-sm">{data?.user?.email}</div>
+            <div className=" text-sm">{data?.user?.email}</div>
           </div>
         </div>
         <Search />
       </div>
 
-      <div className="overflow-auto grow flex flex-col gap-2 text-gray-800 text-md pb-1.5 shadow-gray-600">
+      <div className="overflow-auto grow flex flex-col gap-2  text-md pb-1.5 ">
         {uiBoard?.map((list: Board) => {
           const isProgress = list.boardKey === "progress";
           return (
             <div key={list._id} onClick={() => setSidebarOpen(!sidebarOpen)}>
               <ListItem key={list._id} focused={list} />
-              {isProgress && <div className=" mt-2 border-t border-gray-200" />}
+              {isProgress && <div className=" mt-2 border-t border-border-gray" />}
             </div>
           );
         })}
@@ -65,14 +63,14 @@ ${sidebarOpen ? "translate-x-0" : "translate-x-full"}
             callbackUrl: "/login",
           })
         }
-        className="px-4 py-2 bg-rose-400 text-rose-50 rounded-lg cursor-pointer"
+        className="px-4 py-2 bg-rose-400 rounded-lg cursor-pointer"
       >
         {sidebar.signOut}
       </button>
 
       <button
         onClick={handleNewList}
-        className="shrink-0 cursor-pointer flex items-center gap-4 px-2 text-gray-700 hover:bg-black/5 hover:rounded py-2 "
+        className="shrink-0 cursor-pointer flex items-center gap-4 px-2 hover:bg-foreground/10  hover:rounded py-2  "
       >
         <Add size={23} className="cursor-pointer text-xs" />
         {sidebar.button}

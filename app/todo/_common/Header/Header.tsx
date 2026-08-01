@@ -5,8 +5,11 @@ import { Palette } from "./Palette";
 import { Board, TodoList } from "@/app/types";
 import { BOARD_KEYS } from "@/app/_utils";
 import { Coins } from "./Coins";
+import { ThemeToggle } from "./ThemeToggle";
 
 export const themeTextColor: Record<string, string> = {
+  dark: "text-white",
+  navy: "text-white",
   fire: "text-white",
   sunset: "text-white",
   lavender: "text-white",
@@ -41,7 +44,11 @@ export const Header = ({ item, todo }: { item: Board; todo: TodoList }) => {
         <div
           className={`flex gap-5 items-center ${themeTextColor[item.theme]}`}
         >
-          <ItemIcon item={item} size={30} />
+          <ItemIcon
+            item={item}
+            size={30}
+            className={`${themeTextColor[item.theme]}`}
+          />
           <h2 className="font-semibold text-3xl">
             {t(titleToKey[item.title] ?? item.title)}
           </h2>
@@ -53,6 +60,7 @@ export const Header = ({ item, todo }: { item: Board; todo: TodoList }) => {
 
       <div className="flex gap-3 items-center w-full md:w-auto justify-between">
         <Coins item={item} filterTodo={todo} />
+        <ThemeToggle />
         <Palette item={item} />
       </div>
     </header>

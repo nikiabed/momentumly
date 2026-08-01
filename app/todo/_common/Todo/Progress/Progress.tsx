@@ -44,7 +44,7 @@ export const Progress = () => {
       <FunctionSect />
       <div
         ref={containerRef}
-        className="w-full overflow-hidden bg-white px-5 py-5 mt-5 mb-5 shadow rounded-4xl"
+        className="w-full overflow-hidden bg-background px-5 py-5 mt-5 mb-5 shadow rounded-4xl"
       >
         <ChartHeader onChangeWeek={setWeekOffset} active={weekOffset} />
         {chartWidth > 0 && (
@@ -52,7 +52,7 @@ export const Progress = () => {
         )}
       </div>
 
-      <div className="mt-5 mb-5 w-full overflow-hidden rounded-4xl bg-white px-5 py-5 shadow">
+      <div className="mt-5 mb-5 w-full overflow-hidden rounded-4xl bg-background px-5 py-5 shadow">
         <ChartHeader
           title="زمان صرف‌شده"
           onChangeWeek={setWeekOffset}

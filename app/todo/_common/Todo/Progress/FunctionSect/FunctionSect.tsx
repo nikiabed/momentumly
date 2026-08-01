@@ -18,17 +18,17 @@ export const FunctionSect = () => {
   return (
     <div className="flex flex-col lg:flex-row gap-5">
       {/* Weekly performance */}
-      <div className="bg-white rounded-4xl p-6 shadow-sm border border-gray-100 lg:flex-4">
+      <div className="bg-background rounded-4xl p-6 shadow-sm border border-border-gray lg:flex-4">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h2 className="text-xl font-bold text-gray-800">عملکرد این هفته</h2>
+            <h2 className="text-xl font-bold text-foreground">عملکرد این هفته</h2>
 
-            <p className="text-sm text-gray-400 mt-1">
+            <p className="text-sm text-muted mt-1">
               هر روز فقط یک قدم کوچیک 🌱
             </p>
           </div>
 
-          <div className="px-3 py-1.5 rounded-full bg-violet-50 text-violet-600 text-xs font-bold">
+          <div className="px-3 py-1.5 rounded-full bg-coin-soft text-coin-primary text-xs font-bold">
             ۷ روز
           </div>
         </div>
@@ -46,11 +46,11 @@ export const FunctionSect = () => {
                 rounded-2xl
                 py-3 px-1
                 transition
-                hover:bg-gray-50
+                hover:bg-background
               "
             >
               {/* Day */}
-              <span className="text-xs sm:text-sm font-semibold text-gray-500">
+              <span className="text-xs sm:text-sm font-semibold text-muted">
                 {day.label}
               </span>
 
@@ -86,7 +86,7 @@ export const FunctionSect = () => {
               </span>
 
               {/* Tiny message */}
-              <span className="hidden sm:block text-[10px] text-gray-400 text-center leading-4">
+              <span className="hidden sm:block text-[10px] text-muted text-center leading-4">
                 {getScoreMessage(day.score)}
               </span>
             </div>

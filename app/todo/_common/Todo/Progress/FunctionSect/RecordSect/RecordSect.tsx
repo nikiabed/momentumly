@@ -28,10 +28,10 @@ export const RecordSect = () => {
   return (
     <div
       className="
-        bg-white
+        bg-background
         rounded-4xl
         shadow-sm
-        border border-gray-100
+        border border-border-gray
         p-6
         lg:flex-1
         flex flex-col
@@ -41,18 +41,17 @@ export const RecordSect = () => {
         min-h-55
       "
     >
-      <div className="flex items-center gap-2 text-gray-500">
+      <div className="flex items-center gap-2 text-muted">
         <span>رکورد فعلی</span>
         <span>🔥</span>
       </div>
 
       <div className="flex items-baseline gap-2 mt-3">
         <span className="text-5xl font-black text-orange-500">{streak}</span>
-
-        <span className="text-sm font-bold text-gray-400">روز</span>
+        <span className="text-sm font-bold text-muted">روز</span>
       </div>
 
-      <p className="text-sm text-gray-500 mt-2">
+      <p className="text-sm text-muted mt-2">
         {streak === 1
           ? "امروز شروع یک رکورد جدیده 🌱"
           : streak === 2
@@ -60,7 +59,7 @@ export const RecordSect = () => {
             : `${streak} روزه که داری ادامه میدی!`}
       </p>
 
-      <div className="mt-5 px-4 py-2 rounded-full bg-orange-50 text-orange-600 text-xs font-bold">
+      <div className="mt-5 px-4 py-2 rounded-full bg-background text-reward-soft text-xs font-bold">
         🔥 رکوردت رو حفظ کن
       </div>
     </div>

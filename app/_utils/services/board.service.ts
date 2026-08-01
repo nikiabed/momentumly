@@ -52,7 +52,6 @@ export const boardService = {
   },
 
   async updateTheme(boardId: string, theme: string) {
-    console.log(boardId);
     const res = await fetch("/api/boards/theme", {
       method: "PATCH",
       headers,

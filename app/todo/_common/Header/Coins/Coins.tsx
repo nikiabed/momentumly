@@ -22,10 +22,10 @@ export const Coins = ({
           flex items-center gap-2
           px-3 py-1
           rounded-2xl
-          bg-white/20
+          bg-background
           backdrop-blur-md
-          border border-white/30
-          transition-transform duration-200
+          border border-border
+          text-foreground
         "
       >
         <span>🪙</span>
@@ -35,11 +35,12 @@ export const Coins = ({
 
       <div
         className="
-          flex items-center gap-2
+          flex items-center gap-2 justify-center
           px-3 py-1
           rounded-2xl
-          bg-white/15
-          border border-white/30
+          bg-background
+          border border-border
+          text-foreground
         "
       >
         <span>✨</span>

@@ -128,20 +128,20 @@ export const TodoTimer = ({
           >
             <Play
               size={16}
-              className="text-gray-800 transition-transform duration-200 group-hover:scale-125"
+              className="text-foreground transition-transform duration-200 group-hover:scale-125"
             />
           </button>
         ) : (
           <div
-            className="flex items-center gap-1 rounded-xl bg-white/70 px-4 py-1 shadow-sm"
+            className="flex items-center gap-1 rounded-xl bg-background/70 px-4 py-1 shadow-sm"
             style={{
-              border: "1px solid #d1d5dc",
+              border: "1px solid var(--border-gray)",
             }}
           >
             <button
               type="button"
               onClick={isRunning ? handlePause : handleStart}
-              className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-full text-rose-500 transition-all hover:bg-rose-50"
+              className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-full text-rose-500 transition-all hover:bg-background"
             >
               {isRunning ? <Pause size={13} /> : <Play size={13} />}
             </button>
@@ -153,7 +153,7 @@ export const TodoTimer = ({
             <button
               type="button"
               onClick={handleReset}
-              className="flex h-5 w-5 cursor-pointer items-center justify-center rounded-full text-black/25 transition-all hover:bg-black/5 hover:text-black/50"
+              className="flex h-5 w-5 cursor-pointer items-center justify-center rounded-full text-foreground transition-all hover:bg-foreground/5 hover:text-foreground/50"
             >
               <Refresh2 size={12} />
             </button>

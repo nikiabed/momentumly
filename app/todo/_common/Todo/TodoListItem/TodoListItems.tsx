@@ -43,9 +43,9 @@ export const TodoListItems: FC<itemProps> = ({ list, ...props }) => {
   return (
     <div
       {...props}
-      className={`flex text-wrap justify-center items-center gap-1  bg-pink-100 rounded-lg hover:bg-pink-50 group py-2 p-2  ${state === "overdue" ? "bg-red-100 text-red-600" : ""}
-    ${state === "today" ? "bg-blue-100!" : ""}
-    ${state === "done" ? "opacity-50" : ""}`}
+      className={`flex text-wrap justify-center items-center gap-1  bg-background rounded-lg hover:bg-background/80 group py-2 p-2 ${state === "overdue" ? "bg-overdue-soft text-overdue-text" : ""}
+${state === "today" ? "bg-today-soft text-today-text" : ""}
+${state === "done" ? "opacity-50" : ""}`}
     >
       {list.isEdit ? (
         <form
@@ -77,13 +77,12 @@ export const TodoListItems: FC<itemProps> = ({ list, ...props }) => {
             type="text"
             value={localTitle}
             autoFocus
-            className="h-10 px-2 w-full bg-pink-100 rounded-lg group-hover:bg-pink-50 focus:outline-none on focus:bg-white"
+            className="h-10 px-2 w-full bg-background rounded-lg group-hover:bg-background/90 focus:outline-none focus:bg-background/50"
             onChange={(e) => setLocalTitle(e.target.value)}
           />
         </form>
       ) : (
         <div className="flex items-center w-full gap-1">
-          {!list.status && <TodoTimer todoId={list._id} trackedTimeSeconds={list.trackedTimeSeconds}/>}
           <div className="flex-1 min-w-0">
             <TodoEditInput list={list} />
           </div>

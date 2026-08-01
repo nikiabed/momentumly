@@ -58,7 +58,7 @@ export const DatePickerField: FC<DatePickerFieldProps> = ({
               gap-3
               text-sm
               cursor-pointer
-              ${value ? "rounded-full bg-rose-100 text-rose-600" : ""}
+              ${value ? "rounded-full bg-background text-rose-400" : ""}
             `}
           >
             {value ? (
@@ -69,7 +69,7 @@ export const DatePickerField: FC<DatePickerFieldProps> = ({
 
                 <CloseCircle
                   size={16}
-                  className="text-gray-400 hover:text-red-500"
+                  className="text-text-muted hover:text-red-500"
                   onClick={(e) => {
                     e.stopPropagation();
                     onClear?.();
