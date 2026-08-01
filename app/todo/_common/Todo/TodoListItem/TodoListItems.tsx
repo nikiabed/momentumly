@@ -11,7 +11,6 @@ import { useTodoContext } from "@/app/_utils/hooks";
 import { TodoEditInput } from "../TodoEditInput";
 import { getDateKey } from "@/app/_utils";
 import { Todo } from "@/app/types";
-import { TodoTimer } from "../TodoTimer";
 
 type itemProps = DetailedHTMLProps<
   HTMLAttributes<HTMLDivElement>,

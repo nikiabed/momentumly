@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Pause, Play, Refresh2 } from "iconsax-reactjs";
+import { Pause, Play, Refresh2, Stop } from "iconsax-reactjs";
 import { PauseOverlay } from "./PauseOverlay";
 import { useTodoContext } from "@/app/_utils";
 
@@ -69,7 +69,6 @@ export const TodoTimer = ({
     return () => clearInterval(interval);
   }, [isRunning, todoId]);
 
-  // وقتی tab مخفی می‌شود
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.visibilityState === "hidden" && isRunning) {
@@ -93,12 +92,18 @@ export const TodoTimer = ({
 
   const handlePause = () => {
     pauseTimer();
-
     setIsPaused(true);
-
     saveTrackedTime?.(todoId, elapsedSeconds);
-
     saveDailyEntry(elapsedSeconds);
+  };
+
+  const handleStop = async () => {
+    const seconds = elapsedSeconds;
+    pauseTimer();
+    await saveTrackedTime?.(todoId, seconds);
+    await saveDailyEntry(seconds);
+    resetTimer();
+    setIsPaused(false);
   };
 
   const handlePauseFinish = () => {
@@ -108,9 +113,7 @@ export const TodoTimer = ({
 
   const handleReset = () => {
     resetTimer();
-
     setIsPaused(false);
-
     saveTrackedTime?.(todoId, 0);
   };
 
@@ -138,13 +141,25 @@ export const TodoTimer = ({
               border: "1px solid var(--border-gray)",
             }}
           >
-            <button
-              type="button"
-              onClick={isRunning ? handlePause : handleStart}
+            <div
               className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-full text-rose-500 transition-all hover:bg-background"
             >
-              {isRunning ? <Pause size={13} /> : <Play size={13} />}
-            </button>
+              {isRunning ? (
+                <div className="flex items-center gap-1">
+                  <button onClick={handleStop}>
+                    <Stop size={13} />
+                  </button>
+
+                  <button onClick={handlePause}>
+                    <Pause size={13} />
+                  </button>
+                </div>
+              ) : (
+                <button onClick={handleStart}>
+                  <Play size={13} />
+                </button>
+              )}
+            </div>
 
             <span className="min-w-10.5 text-center text-xs font-medium tabular-nums text-rose-500">
               {formatTime(elapsedSeconds)}
