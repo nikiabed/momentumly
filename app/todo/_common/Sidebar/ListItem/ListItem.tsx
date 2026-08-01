@@ -94,7 +94,7 @@ export const ListItem = ({ focused }: { focused: Board }) => {
       <div
         onClick={() => selectBoard?.(focused, focused._id)}
         onDoubleClick={() => handleBoardEditable?.(focused._id)}
-        className={` justify-between rounded cursor-pointer md:w-full flex gap-1 items-center group hover:bg-black/5 hover:rounded ${activeBoard === focused.boardKey ? "bg-black/5" : "bg-none"} `}
+        className={` justify-between rounded cursor-pointer md:w-full flex gap-1 items-center group hover:bg-foreground/10 hover:rounded ${activeBoard === focused.boardKey ? "bg-foreground/10" : "bg-none"} `}
       >
         <div
           className={`flex py-2 items-center gap-2 before:border-r-4 before:border-transparent before:rounded before:h-5 ${activeBoard === focused.boardKey ? " before:border-rose-700!" : ""}`}
@@ -126,18 +126,15 @@ export const ListItem = ({ focused }: { focused: Board }) => {
             {notCompletedTodos}
           </span>
         )}
-        {focused.title == BOARD_KEYS.PROGRESS && (
-          <div className="border-b border-gray-300 p absolute -bottom-1 w-full"></div>
-        )}
       </div>
       {!isSystemBoard && (
         <div className="relative" ref={itemRef}>
           <More
             color="transparent"
             style={{
-              fill: "#000",
+              fill: "var(--foreground)",
             }}
-            className=" max-h-4 text-gray-400 rotate-90 cursor-pointer"
+            className=" max-h-4 rotate-90 cursor-pointer"
             onClick={() => setIsOpen(!isOpen)}
           />
           {isOpen && (

@@ -1,5 +1,32 @@
 @import "tailwindcss";
 
+:root {
+  --background: #fdf2f8;
+  --foreground: #364153;
+  --text-muted: #6b7280;
+  --border: #9ba5b7;
+  --border-focus: #0d3ff7;
+  --border-gray: #e5e7eb;
+}
+
+.dark {
+  --background: #364153;
+  --foreground: #fdf2f8;
+  --text-muted: #9ca3af;
+  --border: #a2a6ad;
+  --border-focus: #4d8dee;
+  --border-gray: #666d76;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--text-muted);
+  --color-border: var(--border);
+  --color-border-focus: var(--border-focus);
+  --color-border-gray: var(--border-gray);
+}
+
 @keyframes coin-flight {
   0% {
     transform: translate(0, 0) scale(1.2);

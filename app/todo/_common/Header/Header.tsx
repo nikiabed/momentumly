@@ -5,6 +5,7 @@ import { Palette } from "./Palette";
 import { Board, TodoList } from "@/app/types";
 import { BOARD_KEYS } from "@/app/_utils";
 import { Coins } from "./Coins";
+import { ThemeToggle } from "./ThemeToggle";
 
 export const themeTextColor: Record<string, string> = {
   fire: "text-white",
@@ -53,6 +54,7 @@ export const Header = ({ item, todo }: { item: Board; todo: TodoList }) => {
 
       <div className="flex gap-3 items-center w-full md:w-auto justify-between">
         <Coins item={item} filterTodo={todo} />
+        <ThemeToggle />
         <Palette item={item} />
       </div>
     </header>
