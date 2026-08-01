@@ -146,16 +146,16 @@ export const TodoTimer = ({
             >
               {isRunning ? (
                 <div className="flex items-center gap-1">
-                  <button onClick={handleStop}>
+                  <button onClick={handleStop} className="cursor-pointer">
                     <Stop size={13} />
                   </button>
 
-                  <button onClick={handlePause}>
+                  <button onClick={handlePause} className="cursor-pointer">
                     <Pause size={13} />
                   </button>
                 </div>
               ) : (
-                <button onClick={handleStart}>
+                <button onClick={handleStart} className="cursor-pointer">
                   <Play size={13} />
                 </button>
               )}
