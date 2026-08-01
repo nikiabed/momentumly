@@ -11,7 +11,7 @@ export const Lists = ({ todo, list }: { todo: TodoListType; list: string }) => {
     <div className="flex flex-col gap-2">
       <div
         onClick={() => setOpen((prev) => !prev)}
-        className=" cursor-pointer bg-pink-200 px-1 items-center max-w-44 justify-between py-1 text-md rounded-md text-black flex gap-2 hover:bg-pink-50"
+        className=" cursor-pointer bg-background px-1 items-center max-w-44 justify-between py-1 text-md rounded-md text-foreground flex gap-2 hover:bg-background/50"
       >
         <div className="flex items-center gap-2.5">
           <ArrowDown2

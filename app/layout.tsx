@@ -16,13 +16,15 @@ export default function RootLayout({
 }>) {
   const locale = "fa";
   return (
-    <html lang={locale} dir="rtl">
+    <html lang={locale} dir="rtl" suppressHydrationWarning>
       <body className={dana.className}>
         <ThemeProvider>
           <SessionProvider>
             <FeedbackProvider>
               <TodoProvider>
-                <main className="min-h-screen overflow-y-auto">{children}</main>
+                <main className="min-h-screen overflow-y-auto ">
+                  {children}
+                </main>
               </TodoProvider>
             </FeedbackProvider>
           </SessionProvider>

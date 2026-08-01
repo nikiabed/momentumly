@@ -17,6 +17,7 @@ export const ThemeToggle = () => {
       bg-background
       backdrop-blur
       border border-border
+      text-foreground
       "
     >
       {theme === "dark" ? (

@@ -25,6 +25,7 @@ export const Coins = ({
           bg-background
           backdrop-blur-md
           border border-border
+          text-foreground
         "
       >
         <span>🪙</span>
@@ -39,6 +40,7 @@ export const Coins = ({
           rounded-2xl
           bg-background
           border border-border
+          text-foreground
         "
       >
         <span>✨</span>

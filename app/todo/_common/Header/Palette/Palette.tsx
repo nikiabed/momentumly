@@ -68,6 +68,40 @@ export const Palette = ({ item }: { item: Board }) => {
   const isImage = item.theme?.startsWith("img:");
   const iconFill = isImage ? "#374151" : themeIconFill[item.theme];
 
+  const isDark = document.documentElement.classList.contains("dark");
+
+  const visibleThemes = colors.filter(
+    (theme) => theme.mode === (isDark ? "dark" : "light"),
+  );
+  useEffect(() => {
+    const handleThemeChange = () => {
+      const dark = document.documentElement.classList.contains("dark");
+
+      const availableThemes = colors.filter(
+        (theme) => theme.mode === (dark ? "dark" : "light"),
+      );
+
+      const currentThemeExists = availableThemes.some(
+        (theme) => theme.key === item.theme,
+      );
+
+      if (!currentThemeExists && availableThemes.length > 0) {
+        handleColorChange(availableThemes[0].key);
+      }
+    };
+
+    handleThemeChange();
+
+    const observer = new MutationObserver(handleThemeChange);
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => observer.disconnect();
+  }, [item.theme]);
+
   useEffect(() => {
     setSelectedColor(item.theme ?? "sunset");
   }, [item.theme]);
@@ -87,7 +121,7 @@ export const Palette = ({ item }: { item: Board }) => {
         <div className="absolute left-0 w-70 z-500 bg-background text-foreground rounded shadow flex flex-col flex-wrap gap-4 p-4">
           <div className="pr-2">تم ها</div>
           <div className="flex gap-2 flex-wrap p-2">
-            {colors.map((theme: Theme, i: number) => (
+            {visibleThemes.map((theme: Theme, i: number) => (
               <div
                 key={i}
                 onClick={() => handleColorChange(theme.key)}

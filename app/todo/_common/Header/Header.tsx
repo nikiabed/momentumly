@@ -8,6 +8,8 @@ import { Coins } from "./Coins";
 import { ThemeToggle } from "./ThemeToggle";
 
 export const themeTextColor: Record<string, string> = {
+  dark: "text-white",
+  navy: "text-white",
   fire: "text-white",
   sunset: "text-white",
   lavender: "text-white",
