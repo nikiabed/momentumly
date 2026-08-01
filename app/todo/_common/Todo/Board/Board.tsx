@@ -15,6 +15,8 @@ import { HamburgerMenu } from "iconsax-reactjs";
 import { Board as BoardType } from "@/app/types";
 import { SidebarProps } from "../../Sidebar";
 import { TodoDateList } from "../TodoDateList";
+import { useEffect, useState } from "react";
+import { useTheme } from "next-themes";
 
 type boardProps = {
   item: BoardType;
@@ -22,7 +24,6 @@ type boardProps = {
 
 export const Board = ({ item, sidebarOpen, setSidebarOpen }: boardProps) => {
   const { todo, boardList, searchText, systemBoards } = useTodoContext();
-
   const normalize = (key?: string) => key?.toLowerCase().replace(/\s/g, "");
   const currentBoard =
     systemBoards?.[item.boardKey] ??
@@ -79,17 +80,19 @@ export const Board = ({ item, sidebarOpen, setSidebarOpen }: boardProps) => {
     return <div>Loading boards...</div>;
   }
 
+const { theme } = useTheme();
+const isDark = theme === "dark";
+
   return (
     <div
       className={` flex-4 min-h-screen justify-center overflow-y-auto relative w-full ${bgClass}`}
-      style={bgStyle}
+      style={isImage ? bgStyle : undefined}
     >
-      {isImage && (
+      {isImage && isDark && (
         <div
           className="
         absolute inset-0
-        bg-black/40
-        dark:bg-black/60
+        dark:bg-black/40
         pointer-events-none
         z-0
       "
@@ -106,7 +109,7 @@ export const Board = ({ item, sidebarOpen, setSidebarOpen }: boardProps) => {
       >
         <HamburgerMenu size={24} />
       </button>
-      <div className=" relative z-10 flex gap-4 flex-col min-h-screen py-5">
+      <div className=" relative z-10 flex gap-4 flex-col min-h-screen py-5 isolate">
         <div className="shrink-0 px-16 flex flex-col gap-4 ">
           <Header item={currentBoard} todo={filteredTodos} />
           {currentBoard?.boardKey !== BOARD_KEYS.PROGRESS &&

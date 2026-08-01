@@ -7,8 +7,8 @@ export type Theme = {
 
 export const colors: Theme[] = [
   {
-    key: "dark",
-    name: "Dark",
+    key: "board-dark",
+    name: "Dark Board",
     className: "bg-[#364153]",
     mode: "dark",
   },
