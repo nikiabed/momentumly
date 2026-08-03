@@ -1,7 +1,7 @@
 "use client";
 import { Board, BoardList, Todo } from "@/app/types";
-import { useMemo, useState } from "react";
-import { BOARD_KEYS, BOARD_LABELS } from "../constants";
+import { useMemo } from "react";
+import { BOARD_KEYS } from "../constants";
 
 export function useBoardView(
   boardList: BoardList,

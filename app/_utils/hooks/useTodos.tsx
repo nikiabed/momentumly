@@ -1,5 +1,5 @@
 "use client";
-import { Todo, TodoList, TodoUpdate } from "@/app/types/todo";
+import { CreateTodoInput, Todo, TodoList, TodoUpdate } from "@/app/types/todo";
 import { useEffect, useState } from "react";
 import { todoService, uploadService } from "../services";
 import { Board } from "@/app/types/board";
@@ -49,25 +49,22 @@ export const useTodos = (activeBoard: string) => {
       return false;
     }
   };
-  const createTodo = async (todo: {
-    title: string;
-    status: boolean;
-    isImportant: boolean;
-    item: string;
-    boardKey?: string;
-  }) => {
+  const createTodo = async (todo: CreateTodoInput) => {
     try {
       const isMyDay =
         activeBoard === BOARD_KEYS.MY_DAY ||
         activeBoard === BOARD_KEYS.IMPORTANT;
+
       await todoService.create({
         ...todo,
+
         boardKey:
           activeBoard === BOARD_KEYS.IMPORTANT
             ? BOARD_KEYS.MY_DAY
-            : activeBoard,
-        status: false,
-        isImportant: activeBoard === BOARD_KEYS.IMPORTANT ? true : false,
+            : (todo.boardKey ?? activeBoard),
+
+        status: todo.status ?? false,
+        isImportant: todo.isImportant ?? activeBoard === BOARD_KEYS.IMPORTANT,
         isEdit: false,
         myDayDate: isMyDay ? getDateKey(new Date()) : null,
       });
@@ -76,6 +73,22 @@ export const useTodos = (activeBoard: string) => {
     } catch (err) {
       console.error("Create todo failed:", err);
     }
+  };
+
+  const createAITodos = async (parent: Todo, steps: any[]) => {
+    for (const step of steps) {
+      await createTodo({
+        title: step.title,
+        item: step.description,
+        boardKey: parent.boardKey ?? undefined,
+        parentTodoId: parent._id,
+        isAIStep: true,
+        status: false,
+        isImportant: false,
+      });
+    }
+
+    await loadTodos();
   };
 
   const deleteTodo = async (id: string) => {
@@ -341,5 +354,6 @@ export const useTodos = (activeBoard: string) => {
     saveTodoTimeEntry,
     todoEntries,
     setTodoEntries,
+    createAITodos,
   };
 };

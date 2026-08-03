@@ -73,6 +73,9 @@ export type Context = {
   resetTimer: () => void;
   activeTimer: ActiveTimer;
   setActiveTimer: Dispatch<SetStateAction<ActiveTimer>>;
+  createAITodos: (parent: Todo, steps: any[]) => Promise<void>;
+  activeTool: string | null;
+  setActiveTool: Dispatch<SetStateAction<string | null>>;
 };
 
 export const header = {

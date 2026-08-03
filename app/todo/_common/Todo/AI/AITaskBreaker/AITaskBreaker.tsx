@@ -2,10 +2,12 @@
 
 import { useState } from "react";
 import { MagicStar } from "iconsax-reactjs";
+import { useTodoContext } from "@/app/_utils";
 
 export const AITaskBreaker = () => {
   const [task, setTask] = useState("");
   const [context, setContext] = useState("");
+  const { createAITodos } = useTodoContext();
 
   return (
     <div
@@ -120,6 +122,9 @@ export const AITaskBreaker = () => {
       >
         نتیجه AI اینجا نمایش داده می‌شود.
       </div>
+      <button onClick={() => createAITodos(parentTodo, steps)}>
+        اضافه کردن مراحل به کارها
+      </button>
     </div>
   );
 };

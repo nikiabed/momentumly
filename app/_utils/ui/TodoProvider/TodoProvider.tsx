@@ -15,7 +15,7 @@ export type SystemBoard = Board & {
 export const TodoProvider = ({ children }: { children: React.ReactNode }) => {
   const [activeBoard, setActiveBoard] = useState<string>("myDay");
   const [searchText, setSearchText] = useState("");
-
+  const [activeTool, setActiveTool] = useState<string | null>(null);
   const [activeTimer, setActiveTimer] = useState<ActiveTimer | null>(null);
   const [systemBoards, setSystemBoards] = useState<Record<string, SystemBoard>>(
     {
@@ -176,6 +176,8 @@ export const TodoProvider = ({ children }: { children: React.ReactNode }) => {
       activeTimer,
       setActiveTimer,
       resetTimer,
+      activeTool,
+      setActiveTool,
     }),
     [
       todos,
@@ -195,6 +197,8 @@ export const TodoProvider = ({ children }: { children: React.ReactNode }) => {
       activeTimer,
       setActiveTimer,
       resetTimer,
+      activeTool,
+      setActiveTool,
     ],
   );
 

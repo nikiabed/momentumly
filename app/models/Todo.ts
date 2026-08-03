@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 const TodoSchema = new mongoose.Schema(
   {
@@ -65,6 +65,16 @@ const TodoSchema = new mongoose.Schema(
     trackedTimeSeconds: {
       type: Number,
       default: 0,
+    },
+    parentTodoId: {
+      type: Schema.Types.ObjectId,
+      ref: "Todo",
+      default: null,
+    },
+
+    isAIStep: {
+      type: Boolean,
+      default: false,
     },
   },
   {
