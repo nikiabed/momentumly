@@ -1,8 +1,8 @@
-import OpenAI from "openai";
 import { NextResponse } from "next/server";
+import Groq from "groq-sdk";
 
-const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+const groq = new Groq({
+  apiKey: process.env.GROQ_API_KEY,
 });
 
 export async function POST(req: Request) {
@@ -10,18 +10,15 @@ export async function POST(req: Request) {
     const { task } = await req.json();
 
     if (!task) {
-      return NextResponse.json(
-        {
-          error: "Task is required",
-        },
-        {
-          status: 400,
-        },
-      );
+      return NextResponse.json({ error: "Task is required" }, { status: 400 });
     }
 
-    const response = await client.chat.completions.create({
-      model: "gpt-4o-mini",
+    const completion = await groq.chat.completions.create({
+      model: "llama-3.1-8b-instant",
+
+      response_format: {
+        type: "json_object",
+      },
 
       messages: [
         {
@@ -29,49 +26,56 @@ export async function POST(req: Request) {
           content: `
 You are an ADHD productivity assistant.
 
-Break the user's task into small actionable steps.
+Your job is to transform overwhelming tasks into small actionable next steps.
 
-Rules:
-- Make steps very small.
-- Each step should take 5-30 minutes.
-- Avoid vague steps.
-- Return JSON only.
+Important rules:
+- Do not create a high-level project plan.
+- Create small steps that the user can start immediately.
+- Avoid vague actions like "research", "write", "prepare".
+- The first step should be very easy and reduce resistance.
+- Prefer steps that take less than 30 minutes.
+- If the task is large, split it into phases.
+- Maximum 5 steps.
+- Consider motivation and cognitive load.
 
-Format:
+Return JSON with this exact structure:
 
 {
- "steps":[
-   {
-    "title":"",
-    "description":"",
-    "estimatedMinutes":0
-   }
- ]
+  "steps": [
+    {
+      "title": "short action name",
+      "description": "clear explanation of what to do",
+      "estimatedTime": "example: 10 minutes",
+      "difficulty": "easy"
+    }
+  ]
 }
-`,
-        },
 
+difficulty can only be:
+easy, medium, hard
+          `,
+        },
         {
           role: "user",
           content: task,
         },
       ],
 
-      response_format: {
-        type: "json_object",
-      },
+      temperature: 0.3,
     });
 
-    const result = JSON.parse(response.choices[0].message.content || "{}");
+    const content = completion.choices[0].message.content;
+
+    const result = JSON.parse(content ?? '{"steps":[]}');
 
     return NextResponse.json(result);
-  } catch (error) {
-    console.error("AI ERROR:", error);
+  } catch (error: any) {
+    console.error(error);
 
     return NextResponse.json(
       {
         error: "AI failed",
-        details: error instanceof Error ? error.message : error,
+        details: error.message,
       },
       {
         status: 500,
