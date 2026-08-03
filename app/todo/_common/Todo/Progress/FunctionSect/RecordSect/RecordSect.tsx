@@ -46,8 +46,8 @@ export const RecordSect = () => {
         <span>🔥</span>
       </div>
 
-      <div className="flex items-baseline gap-2 mt-3">
-        <span className="text-5xl font-black text-orange-500">{streak}</span>
+      <div className="flex items-baseline gap-2 mt-3 ">
+        <span className="text-5xl font-black text-orange-500 ">{streak}</span>
         <span className="text-sm font-bold text-muted">روز</span>
       </div>
 
@@ -59,8 +59,8 @@ export const RecordSect = () => {
             : `${streak} روزه که داری ادامه میدی!`}
       </p>
 
-      <div className="mt-5 px-4 py-2 rounded-full bg-background text-reward-soft text-xs font-bold">
-        🔥 رکوردت رو حفظ کن
+      <div className="mt-5 px-4 py-2 rounded-full  text-muted text-xs font-bold">
+         رکوردت رو حفظ کن
       </div>
     </div>
   );

@@ -97,17 +97,20 @@ export const useTodos = (activeBoard: string) => {
     for (const step of steps) {
       console.log("CREATING CHILD", step);
 
-      await createTodo({
-        title: step.title,
-        item: step.description || step.title,
-        status: false,
-        isImportant: false,
-        boardKey,
-        parentTodoId: parent._id,
-        isAIStep: true,
-        isEdit: false,
-        myDayDate: parent.myDayDate ?? null,
-      }, false);
+      await createTodo(
+        {
+          title: step.title,
+          item: step.description || step.title,
+          status: false,
+          isImportant: false,
+          boardKey,
+          parentTodoId: parent._id,
+          isAIStep: true,
+          isEdit: false,
+          myDayDate: parent.myDayDate ?? null,
+        },
+        false,
+      );
     }
 
     await loadTodos();
@@ -116,7 +119,6 @@ export const useTodos = (activeBoard: string) => {
   const deleteTodo = async (id: string) => {
     try {
       await todoService.remove(id);
-
       setTodo((prev) => prev.filter((todo) => todo._id !== id));
     } catch (err) {
       console.error("Delete todo failed:", err);

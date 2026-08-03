@@ -15,7 +15,7 @@ export const Summary = () => {
       </div>
       <div className="grid grid-cols-2 gap-4">
         {/* Card 1 */}
-        <div className="bg-border-gray rounded-2xl p-5 flex items-center gap-3">
+        <div className="bg-foreground/10 rounded-2xl p-5 flex items-center gap-3">
           <span className="text-[#f59e0b]">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
               <circle
@@ -61,7 +61,7 @@ export const Summary = () => {
         </div>
 
         {/* Card 2 */}
-        <div className="bg-border-gray rounded-2xl p-5 text-center">
+        <div className="bg-foreground/10 rounded-2xl p-5 text-center">
           <div className="text-center font-semibold">
             <h2 className="text-muted text-sm">روزهای فعال</h2>
             <h1 className="text-3xl">{toFa(monthStats.activeDays)}</h1>
@@ -70,7 +70,7 @@ export const Summary = () => {
         </div>
 
         {/* Card 3 */}
-        <div className="bg-border-gray rounded-2xl p-5 flex items-center gap-3">
+        <div className="bg-foreground/10 rounded-2xl p-5 flex items-center gap-3">
           <span className="text-[#34d399]">
             {/* check */}
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
@@ -90,7 +90,7 @@ export const Summary = () => {
         </div>
 
         {/* Card 4 */}
-        <div className="bg-border-gray rounded-2xl p-5 flex items-center gap-3">
+        <div className="bg-foreground/10 rounded-2xl p-5 flex items-center gap-3">
           <span className="text-coin-primary">
             {/* trending up */}
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none">

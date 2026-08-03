@@ -88,7 +88,7 @@ export const WeeklyTimeReport = ({ todos, entries }: Props) => {
             );
 
             return (
-              <div key={date} className="rounded-2xl bg-border-gray p-4">
+              <div key={date} className="rounded-2xl bg-foreground/10 p-4">
                 <div className="mb-3 flex items-center justify-between">
                   <span className="text-sm font-semibold text-foreground">
                     {formatDate(date)}

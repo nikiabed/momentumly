@@ -104,18 +104,31 @@ export async function PATCH(req: Request, context: RouteContext) {
 
 export async function DELETE(req: Request, context: RouteContext) {
   await connectDB();
+
   const session = await auth();
+
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
   const { id } = await context.params;
+
+  // حذف parent
   const result = await Todo.findOneAndDelete({
     _id: id,
     userId: session.user.id,
   });
+
   if (!result) {
     return NextResponse.json({ error: "Todo not found" }, { status: 404 });
   }
+
+  // حذف children
+  await Todo.deleteMany({
+    parentTodoId: id,
+    userId: session.user.id,
+  });
+
   return NextResponse.json({
     ok: true,
   });

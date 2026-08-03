@@ -1,6 +1,8 @@
 import Image from "next/image";
 import { useTodoContext } from "@/app/_utils";
 import { getCoinStats } from "@/app/_utils/progress";
+import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 
 export const CoinSect = () => {
   const { todo } = useTodoContext();
@@ -8,11 +10,18 @@ export const CoinSect = () => {
   const { globalCoins, weekCoins, todayCoins, weekRecovery, todayRecovery } =
     getCoinStats(todo);
 
+  const { theme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
     <div
       className="
         w-full max-w-980
-        bg-background
+        bg-coin-background
         rounded-4xl
         shadow-sm
         border border-border-gray
@@ -68,23 +77,19 @@ export const CoinSect = () => {
 
       <div className="flex-1 flex justify-center items-center">
         <div className="relative">
-          <div
-            className="
-              absolute
-              inset-4
-              rounded-full
-              bg-reward-soft
-              z-0
-            "
-          />
-
-          <Image
-            width={240}
-            height={180}
-            src="/images/piggy.png"
-            alt="piggy bank"
-            className="object-contain relative z-10"
-          />
+          {mounted && (
+            <Image
+              width={240}
+              height={180}
+              src={
+                theme === "dark"
+                  ? "/images/coinBoxDark.png"
+                  : "/images/coinBox.png"
+              }
+              alt="coin box"
+              className="object-contain relative z-10"
+            />
+          )}
         </div>
       </div>
 
