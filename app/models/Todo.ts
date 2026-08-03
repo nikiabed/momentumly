@@ -25,7 +25,7 @@ const TodoSchema = new mongoose.Schema(
 
     item: {
       type: String,
-      required: true,
+      default: "",
     },
 
     boardKey: {
@@ -67,7 +67,7 @@ const TodoSchema = new mongoose.Schema(
       default: 0,
     },
     parentTodoId: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "Todo",
       default: null,
     },

@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { Add, ProgrammingArrow, Star, StarSlash } from "iconsax-reactjs";
+import { Add, MagicStar, ProgrammingArrow, Star, StarSlash } from "iconsax-reactjs";
 import { Search } from "./Search";
 import { ListItem } from "./ListItem";
 import { sidebar } from "./Sidebar.const";
@@ -74,7 +74,7 @@ ${sidebarOpen ? "translate-x-0" : "translate-x-full"}
           className=" cursor-pointer flex items-center gap-4  hover:bg-foreground/10  hover:rounded py-2  "
           onClick={() => setActiveTool("ai-breaker")}
         >
-         <ProgrammingArrow size={20} className="text-rose-400" /> خرد کردن کار با AI
+         <MagicStar size={20} className="text-rose-400" /> خرد کردن کار با AI
         </button>
       </div>
       <button

@@ -1,5 +1,6 @@
 "use client";
 import { CreateTodoInput, Todo, TodoList, TodoUpdate } from "@/app/types/todo";
+import { AIStep } from "@/app/types/ai";
 import { useEffect, useState } from "react";
 import { todoService, uploadService } from "../services";
 import { Board } from "@/app/types/board";
@@ -55,7 +56,7 @@ export const useTodos = (activeBoard: string) => {
         activeBoard === BOARD_KEYS.MY_DAY ||
         activeBoard === BOARD_KEYS.IMPORTANT;
 
-      await todoService.create({
+      const result = await todoService.create({
         ...todo,
 
         boardKey:
@@ -70,21 +71,23 @@ export const useTodos = (activeBoard: string) => {
       });
 
       await loadTodos();
+      return result.todo;
     } catch (err) {
       console.error("Create todo failed:", err);
     }
   };
 
-  const createAITodos = async (parent: Todo, steps: any[]) => {
+  const createAITodos = async (parent: Todo, steps: AIStep[]) => {
     for (const step of steps) {
       await createTodo({
         title: step.title,
         item: step.description,
+        status: false,
+        isImportant: false,
+
         boardKey: parent.boardKey ?? undefined,
         parentTodoId: parent._id,
         isAIStep: true,
-        status: false,
-        isImportant: false,
       });
     }
 
@@ -355,5 +358,6 @@ export const useTodos = (activeBoard: string) => {
     todoEntries,
     setTodoEntries,
     createAITodos,
+    createTodo,
   };
 };

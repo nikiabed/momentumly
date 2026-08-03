@@ -17,6 +17,8 @@ export const TodoProvider = ({ children }: { children: React.ReactNode }) => {
   const [searchText, setSearchText] = useState("");
   const [activeTool, setActiveTool] = useState<string | null>(null);
   const [activeTimer, setActiveTimer] = useState<ActiveTimer | null>(null);
+  const [steps, setSteps] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
   const [systemBoards, setSystemBoards] = useState<Record<string, SystemBoard>>(
     {
       important: {
@@ -132,6 +134,8 @@ export const TodoProvider = ({ children }: { children: React.ReactNode }) => {
         state: board._id === id,
       })),
     );
+
+    setActiveTool(null);
   };
 
   useEffect(() => {
@@ -156,6 +160,8 @@ export const TodoProvider = ({ children }: { children: React.ReactNode }) => {
 
     loadPreferences();
   }, []);
+
+
 
   const value = useMemo(
     () => ({
