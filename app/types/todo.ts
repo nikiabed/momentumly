@@ -56,4 +56,6 @@ export type CreateTodoData = {
   boardKey?: string;
   isEdit: boolean;
   myDayDate?: string | null;
+  parentTodoId?: string | null;
+  isAIStep?: boolean;
 };

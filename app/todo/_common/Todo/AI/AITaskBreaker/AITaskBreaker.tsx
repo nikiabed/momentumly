@@ -54,22 +54,27 @@ export const AITaskBreaker = () => {
   };
 
   const handleCreateTodos = async () => {
-    if (!steps.length) return;
+    console.log("CLICK CREATE TODOS");
+
+    if (!steps.length) {
+      console.log("NO STEPS");
+      return;
+    }
 
     const parent = await createTodo({
       title: task,
-      item: context,
+      item: context || task,
       status: false,
       isImportant: false,
     });
+
+    console.log("PARENT CREATED", parent);
 
     if (!parent) return;
 
     await createAITodos(parent, steps);
 
-    setTask("");
-    setContext("");
-    setSteps([]);
+    console.log("AI CHILDREN DONE");
   };
 
   return (
