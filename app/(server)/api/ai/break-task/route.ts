@@ -7,7 +7,7 @@ const groq = new Groq({
 
 export async function POST(req: Request) {
   try {
-    const { task } = await req.json();
+    const { task, context } = await req.json();
 
     if (!task) {
       return NextResponse.json({ error: "Task is required" }, { status: 400 });
@@ -24,40 +24,82 @@ export async function POST(req: Request) {
         {
           role: "system",
           content: `
-You are an ADHD productivity assistant.
+You are an ADHD-focused task breakdown assistant.
 
-Your job is to transform overwhelming tasks into small actionable next steps.
+Your job is NOT to create a project plan.
+Your job is to convert a stressful task into tiny executable Todo items.
 
-Important rules:
-- Do not create a high-level project plan.
-- Create small steps that the user can start immediately.
-- Avoid vague actions like "research", "write", "prepare".
-- The first step should be very easy and reduce resistance.
-- Prefer steps that take less than 30 minutes.
-- If the task is large, split it into phases.
-- Maximum 5 steps.
-- Consider motivation and cognitive load.
+Think like a supportive productivity coach.
 
-Return JSON with this exact structure:
+Rules:
+
+1. Create actions that the user can physically start doing immediately.
+2. The first step must be extremely easy and reduce starting resistance.
+3. Each step must be a Todo, not a goal or milestone.
+4. Avoid vague verbs:
+   - research
+   - analyze
+   - prepare
+   - work on
+   - study
+   unless you specify the exact action.
+5. Each step should ideally take 5-30 minutes.
+6. Maximum 5 steps.
+7. Do not include explanations longer than necessary.
+8. Do not create nested project phases.
+9. If the task is large, start with the smallest first movement, not the whole solution.
+10. Keep the user motivated, but do not add motivational text.
+
+Example:
+
+Task:
+"Start my thesis after months of avoiding it"
+
+Bad output:
+[
+"Collect theoretical background sources",
+"Review literature",
+"Write theoretical framework"
+]
+
+Good output:
+[
+{
+"title":"Open thesis documents",
+"description":"Open your thesis folder and find the latest thesis file.",
+"estimatedTime":"5 minutes",
+"difficulty":"easy"
+},
+{
+"title":"Review previous notes",
+"description":"Read only the last page of your previous thesis notes.",
+"estimatedTime":"10 minutes",
+"difficulty":"easy"
+}
+]
+
+Return ONLY JSON:
 
 {
-  "steps": [
-    {
-      "title": "short action name",
-      "description": "clear explanation of what to do",
-      "estimatedTime": "example: 10 minutes",
-      "difficulty": "easy"
-    }
-  ]
+ "steps":[
+   {
+    "title":"",
+    "description":"",
+    "estimatedTime":"",
+    "difficulty":"easy|medium|hard"
+   }
+ ]
 }
-
-difficulty can only be:
-easy, medium, hard
-          `,
+`,
         },
         {
           role: "user",
-          content: task,
+          content: `
+Task:
+${task}
+Context:
+${context || "No extra context"}
+`,
         },
       ],
 

@@ -76,7 +76,7 @@ export type Context = {
   createAITodos: (parent: Todo, steps: any[]) => Promise<void>;
   activeTool: string | null;
   setActiveTool: Dispatch<SetStateAction<string | null>>;
-  createTodo: (todo: CreateTodoInput) => Promise<any>
+  createTodo: (todo: CreateTodoInput, shouldReload?: boolean) => Promise<any>;
 };
 
 export const header = {

@@ -17,6 +17,7 @@ export const AITaskBreaker = () => {
   const [steps, setSteps] = useState<AIStep[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [selectedSteps, setSelectedSteps] = useState<number[]>([]);
 
   const { createTodo, createAITodos } = useTodoContext();
 
@@ -45,7 +46,9 @@ export const AITaskBreaker = () => {
         throw new Error(data.error || "AI Error");
       }
 
-      setSteps(data.steps ?? []);
+      const aiSteps = data.steps ?? [];
+      setSteps(aiSteps);
+      setSelectedSteps(aiSteps.map((_: AIStep, index: number) => index));
     } catch (err: any) {
       setError(err.message || "خطا در ارتباط با هوش مصنوعی");
     } finally {
@@ -53,14 +56,21 @@ export const AITaskBreaker = () => {
     }
   };
 
-  const handleCreateTodos = async () => {
-    console.log("CLICK CREATE TODOS");
+  const toggleStep = (index: number) => {
+    setSelectedSteps((prev) =>
+      prev.includes(index)
+        ? prev.filter((item) => item !== index)
+        : [...prev, index],
+    );
+  };
 
-    if (!steps.length) {
-      console.log("NO STEPS");
+  const handleCreateTodos = async () => {
+    const selected = steps.filter((_, index) => selectedSteps.includes(index));
+
+    if (!selected.length) {
+      console.log("NO SELECTED STEPS");
       return;
     }
-
     const parent = await createTodo({
       title: task,
       item: context || task,
@@ -68,13 +78,10 @@ export const AITaskBreaker = () => {
       isImportant: false,
     });
 
-    console.log("PARENT CREATED", parent);
-
     if (!parent) return;
 
-    await createAITodos(parent, steps);
-
-    console.log("AI CHILDREN DONE");
+    await createAITodos(parent, selected);
+    setSelectedSteps([]);
   };
 
   return (
@@ -141,16 +148,40 @@ export const AITaskBreaker = () => {
             {steps.map((step, index) => (
               <div
                 key={index}
-                className="rounded-2xl border border-border-gray p-4 bg-background"
+                className="
+      rounded-2xl
+      border
+      border-border-gray
+      p-4
+      bg-background
+      flex
+      gap-3
+      items-start
+    "
               >
-                <h3 className="font-bold">{step.title}</h3>
+                <input
+                  type="checkbox"
+                  checked={selectedSteps.includes(index)}
+                  onChange={() => toggleStep(index)}
+                  className="
+        mt-1
+        w-5
+        h-5
+        cursor-pointer
+        accent-violet-600
+      "
+                />
 
-                <p className="text-sm text-text-muted mt-2">
-                  {step.description}
-                </p>
+                <div className="flex-1">
+                  <h3 className="font-bold text-foreground">{step.title}</h3>
 
-                <div className="mt-2 text-xs text-violet-500">
-                  {step.estimatedTime}
+                  <p className="text-sm text-text-muted mt-2">
+                    {step.description}
+                  </p>
+
+                  <div className="mt-2 text-xs text-violet-500">
+                    {step.estimatedTime}
+                  </div>
                 </div>
               </div>
             ))}

@@ -50,7 +50,7 @@ export const useTodos = (activeBoard: string) => {
       return false;
     }
   };
-  const createTodo = async (todo: CreateTodoInput) => {
+  const createTodo = async (todo: CreateTodoInput, shouldReload = true) => {
     const finalBoardKey =
       activeBoard === BOARD_KEYS.IMPORTANT
         ? BOARD_KEYS.MY_DAY
@@ -72,7 +72,9 @@ export const useTodos = (activeBoard: string) => {
         myDayDate: isMyDay ? getDateKey(new Date()) : null,
       });
 
-      await loadTodos();
+      if (shouldReload) {
+        await loadTodos();
+      }
       return result;
     } catch (err) {
       console.error("Create todo failed:", err);
@@ -95,7 +97,7 @@ export const useTodos = (activeBoard: string) => {
     for (const step of steps) {
       console.log("CREATING CHILD", step);
 
-      await todoService.create({
+      await createTodo({
         title: step.title,
         item: step.description || step.title,
         status: false,
@@ -105,7 +107,7 @@ export const useTodos = (activeBoard: string) => {
         isAIStep: true,
         isEdit: false,
         myDayDate: parent.myDayDate ?? null,
-      });
+      }, false);
     }
 
     await loadTodos();

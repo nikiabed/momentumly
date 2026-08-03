@@ -27,6 +27,8 @@ export type CreateTodoInput = {
   boardKey?: string;
   parentTodoId?: string | null;
   isAIStep?: boolean;
+  isEdit?: boolean;
+  myDayDate?: string | null;
 };
 
 export type TodoList = Todo[];
