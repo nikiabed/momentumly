@@ -5,12 +5,11 @@ import { Board } from "./Board";
 import { useMemo } from "react";
 import { SidebarProps } from "../Sidebar";
 import { AITaskBreaker } from "./AI";
+import { FocusBar } from "../FocusBar";
 
 export const Todo = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   const { uiBoard, searchText, activeBoard, systemBoards, activeTool } =
     useTodoContext();
-  console.log("activeTool", activeTool);
-
   const active = useMemo(() => {
     if (searchText) {
       return systemBoards?.search;
@@ -33,11 +32,14 @@ export const Todo = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
         <AITaskBreaker />
       ) : (
         active && (
-          <Board
-            item={active}
-            sidebarOpen={sidebarOpen}
-            setSidebarOpen={setSidebarOpen}
-          />
+          <div>
+            <Board
+              item={active}
+              sidebarOpen={sidebarOpen}
+              setSidebarOpen={setSidebarOpen}
+            />
+            <FocusBar />
+          </div>
         )
       )}
     </>

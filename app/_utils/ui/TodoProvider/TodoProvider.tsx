@@ -58,7 +58,6 @@ export const TodoProvider = ({ children }: { children: React.ReactNode }) => {
     searchText,
     systemBoards,
   );
-const timer= useTimer();
   
   const handleToggleImportant = async (id: string, value: boolean) => {
     const success = await todos.toggleImportant(id, value);
@@ -111,7 +110,6 @@ const timer= useTimer();
       ...todos,
       ...boards,
       ...view,
-      ...timer,
       handleToggleImportant,
       selectBoard,
       activeBoard,
@@ -127,7 +125,6 @@ const timer= useTimer();
       todos,
       boards,
       view,
-      timer,
       selectBoard,
       setActiveBoard,
       activeBoard,

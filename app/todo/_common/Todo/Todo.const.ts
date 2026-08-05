@@ -67,12 +67,7 @@ export type Context = {
   ) => Promise<any>;
   todoEntries: TodoEntry[];
   setTodoEntries: Dispatch<SetStateAction<TodoEntry[]>>;
-  startTimer: (todoId: string, currentSeconds: number) => void;
-  pauseTimer: () => void;
-  resumeTimer: () => void;
-  resetTimer: () => void;
-  activeTimer: ActiveTimer | null;
-  setActiveTimer: Dispatch<SetStateAction<ActiveTimer | null>>;
+ 
   createAITodos: (parent: Todo, steps: any[]) => Promise<void>;
   activeTool: string | null;
   setActiveTool: Dispatch<SetStateAction<string | null>>;

@@ -1,20 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { Pause, Play, Refresh2, Stop } from "iconsax-reactjs";
 import { PauseOverlay } from "./PauseOverlay";
-import { useTodoContext } from "@/app/_utils";
+import { useTimer, useTodoContext } from "@/app/_utils";
 
 type TodoTimerProps = {
   todoId: string;
   trackedTimeSeconds?: number;
-};
-
-const formatTime = (totalSeconds: number) => {
-  const minutes = Math.floor(totalSeconds / 60);
-  const seconds = totalSeconds % 60;
-
-  return `${minutes}:${seconds.toString().padStart(2, "0")}`;
 };
 
 export const TodoTimer = ({
@@ -23,42 +16,22 @@ export const TodoTimer = ({
 }: TodoTimerProps) => {
   const [isPaused, setIsPaused] = useState(false);
 
+  const { saveTrackedTime, saveTodoTimeEntry } = useTodoContext();
+
   const {
     activeTimer,
     startTimer,
     pauseTimer,
     resumeTimer,
     resetTimer,
-    saveTrackedTime,
-    saveTodoTimeEntry,
-  } = useTodoContext();
+    elapsedSeconds,
+  } = useTimer();
+
+  const seconds = elapsedSeconds(todoId, trackedTimeSeconds);
 
   const isThisTodo = activeTimer?.todoId === todoId;
-  const [now, setNow] = useState(Date.now());
-  const isRunning = isThisTodo && activeTimer.status === "running";
 
-  useEffect(() => {
-    if (!isRunning) return;
-
-    const id = setInterval(() => {
-      setNow(Date.now());
-    }, 1000);
-
-    return () => clearInterval(id);
-  }, [isRunning]);
-
-  const elapsedSeconds = !isThisTodo
-    ? trackedTimeSeconds
-    : activeTimer.status === "running"
-      ? activeTimer.accumulatedSeconds +
-        Math.floor((now - activeTimer.startedAt) / 1000)
-      : activeTimer.accumulatedSeconds;
-
-  const elapsedRef = useRef(elapsedSeconds);
-
-  useEffect(() => {
-    elapsedRef.current = elapsedSeconds;
-  }, [elapsedSeconds]);
+  const isRunning = isThisTodo && activeTimer?.status === "running";
 
   const saveDailyEntry = async (seconds: number) => {
     if (seconds <= 0) return;
@@ -68,40 +41,31 @@ export const TodoTimer = ({
     await saveTodoTimeEntry?.(todoId, today, seconds);
   };
 
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === "hidden" && isRunning) {
-        const seconds = elapsedRef.current;
-
-        saveTrackedTime?.(todoId, seconds);
-        saveDailyEntry(seconds);
-      }
-    };
-
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-
-    return () => {
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-    };
-  }, [isRunning, todoId]);
-
   const handleStart = () => {
     startTimer(todoId, trackedTimeSeconds);
   };
 
-  const handlePause = () => {
+  const handlePause = async () => {
     pauseTimer();
+
     setIsPaused(true);
-    saveTrackedTime?.(todoId, elapsedSeconds);
-    saveDailyEntry(elapsedSeconds);
+
+    await saveTrackedTime?.(todoId, seconds);
+
+    await saveDailyEntry(seconds);
   };
 
   const handleStop = async () => {
-    const seconds = elapsedSeconds;
+    const finalSeconds = seconds;
+
     pauseTimer();
-    await saveTrackedTime?.(todoId, seconds);
-    await saveDailyEntry(seconds);
+
+    await saveTrackedTime?.(todoId, finalSeconds);
+
+    await saveDailyEntry(finalSeconds);
+
     resetTimer();
+
     setIsPaused(false);
   };
 
@@ -113,6 +77,7 @@ export const TodoTimer = ({
   const handleReset = () => {
     resetTimer();
     setIsPaused(false);
+
     saveTrackedTime?.(todoId, 0);
   };
 
@@ -122,50 +87,103 @@ export const TodoTimer = ({
         className="flex items-center gap-1.5 transition-all duration-300"
         data-todo-id={todoId}
       >
-        {!isThisTodo && elapsedSeconds === 0 ? (
+        {!isThisTodo && seconds === 0 ? (
           <button
             type="button"
             onClick={handleStart}
-            className="group flex cursor-pointer items-center gap-1.5 rounded-full py-1 pl-1 pr-2 text-xs transition-all duration-200 hover:text-rose-500"
+            className="
+              group
+              flex
+              cursor-pointer
+              items-center
+              gap-1.5
+              rounded-full
+              py-1
+              pl-1
+              pr-2
+              text-xs
+              transition-all
+              duration-200
+              hover:text-rose-500
+            "
           >
             <Play
               size={16}
-              className="text-foreground transition-transform duration-200 group-hover:scale-125"
+              className="
+                text-foreground
+                transition-transform
+                duration-200
+                group-hover:scale-125
+              "
             />
           </button>
         ) : (
           <div
-            className="flex items-center gap-1 rounded-xl bg-background/70 px-4 py-1 shadow-sm"
+            className="
+              flex
+              items-center
+              gap-1
+              rounded-xl
+              bg-background/70
+              px-4
+              py-1
+              shadow-sm
+            "
             style={{
               border: "1px solid var(--border-gray)",
             }}
           >
-            <div className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-full text-rose-500 transition-all hover:bg-background">
+            <div
+              className="
+                flex
+                h-6
+                w-6
+                items-center
+                justify-center
+                rounded-full
+                text-rose-500
+              "
+            >
               {isRunning ? (
-                <div className="flex items-center gap-1">
-                  <button onClick={handleStop} className="cursor-pointer">
+                <div className="flex gap-1">
+                  <button onClick={handleStop}>
                     <Stop size={13} />
                   </button>
 
-                  <button onClick={handlePause} className="cursor-pointer">
+                  <button onClick={handlePause}>
                     <Pause size={13} />
                   </button>
                 </div>
               ) : (
-                <button onClick={handleStart} className="cursor-pointer">
+                <button onClick={handleStart}>
                   <Play size={13} />
                 </button>
               )}
             </div>
 
-            <span className="min-w-10.5 text-center text-xs font-medium tabular-nums text-rose-500">
-              {formatTime(elapsedSeconds)}
+            <span
+              className="
+    text-xs
+    font-medium
+    text-rose-500
+    whitespace-nowrap
+  "
+            >
+              در حال انجام
             </span>
 
             <button
-              type="button"
               onClick={handleReset}
-              className="flex h-5 w-5 cursor-pointer items-center justify-center rounded-full text-foreground transition-all hover:bg-foreground/5 hover:text-foreground/50"
+              className="
+                flex
+                h-5
+                w-5
+                items-center
+                justify-center
+                rounded-full
+                text-foreground
+                hover:bg-foreground/5
+              "
             >
               <Refresh2 size={12} />
             </button>

@@ -1,47 +1,11 @@
-import { ActiveTimer } from "@/app/todo/_common";
-import { useState } from "react";
+import { useContext } from "react";
+import { TimerContext } from "../ui/TimerProvider";
 
 export const useTimer = () => {
-  const [activeTimer, setActiveTimer] = useState<ActiveTimer | null>(null);
+  const context = useContext(TimerContext);
+  if (!context) {
+    throw new Error("useTimer must be used inside TimerProvider");
+  }
 
-  const startTimer = (todoId: string, currentSeconds: number) => {
-    setActiveTimer({
-      todoId,
-      startedAt: Date.now(),
-      accumulatedSeconds: currentSeconds,
-      status: "running",
-    });
-  };
-
-  const pauseTimer = () => {
-    setActiveTimer((prev: ActiveTimer | null) => {
-      if (!prev) return null;
-
-      const elapsed = Math.floor((Date.now() - prev.startedAt) / 1000);
-
-      return {
-        ...prev,
-        accumulatedSeconds: prev.accumulatedSeconds + elapsed,
-        status: "paused",
-      };
-    });
-  };
-
-  const resumeTimer = () => {
-    setActiveTimer((prev: ActiveTimer | null) =>
-      prev
-        ? {
-            ...prev,
-            startedAt: Date.now(),
-            status: "running",
-          }
-        : null,
-    );
-  };
-
-  const resetTimer = () => {
-    setActiveTimer(null);
-  };
-
-  return { activeTimer, setActiveTimer, startTimer, pauseTimer, resumeTimer, resetTimer };
+  return context;
 };
