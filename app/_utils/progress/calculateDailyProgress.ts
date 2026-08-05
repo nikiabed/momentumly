@@ -6,12 +6,9 @@ import { getCompletionType } from "./completion";
 import { isCompletedOn, isPlannedForDay } from "./todoAnalytics";
 
 export const calculateDailyProgress = (todos: TodoList, day: Date) => {
-  const plannedTodos = todos.filter((todo) => {
-    if (isPlannedForDay(todo, day)) return true;
-    return isCompletedOn(todo, day) && getCompletionType(todo) === "delayed";
-  });
-
   const completedTodos = todos.filter((todo) => isCompletedOn(todo, day));
+
+  const plannedTodos = todos.filter((todo) => isPlannedForDay(todo, day));
 
   const onTimeTodos = completedTodos.filter(
     (todo) => getCompletionType(todo) === "onTime",
@@ -29,7 +26,7 @@ export const calculateDailyProgress = (todos: TodoList, day: Date) => {
   const xp = completedTodos.reduce((sum, todo) => sum + calculateXP(todo), 0);
 
   const score = calculateDailyScore({
-    planned: plannedTodos.length,
+    planned: Math.max(plannedTodos.length, completedTodos.length),
     onTime: onTimeTodos.length,
     recovery: recoveryTodos.length,
   });
