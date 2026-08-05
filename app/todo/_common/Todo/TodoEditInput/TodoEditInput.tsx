@@ -62,7 +62,7 @@ export const TodoEditInput = ({ list }: { list: Todo }) => {
   return (
     <div className="w-full relative " ref={todoRef}>
       <div
-        className="flex items-center z-40 gap-2 pl-4  py-2  min-w-0 text-wrap"
+        className="flex items-center z-40 gap-2 py-2  min-w-0 text-wrap"
         ref={completeMenuRef}
       >
         {!list.status && (

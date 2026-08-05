@@ -1,5 +1,5 @@
 import { SystemBoard } from "@/app/_utils";
-import { Board, Todo, TodoEntry, TodoList } from "@/app/types";
+import { Board, CreateTodoInput, Todo, TodoEntry, TodoList } from "@/app/types";
 import { ChangeEvent, Dispatch, SetStateAction } from "react";
 import { v4 as uuidv4 } from "uuid";
 export type ActiveTimer = {
@@ -73,6 +73,10 @@ export type Context = {
   resetTimer: () => void;
   activeTimer: ActiveTimer;
   setActiveTimer: Dispatch<SetStateAction<ActiveTimer>>;
+  createAITodos: (parent: Todo, steps: any[]) => Promise<void>;
+  activeTool: string | null;
+  setActiveTool: Dispatch<SetStateAction<string | null>>;
+  createTodo: (todo: CreateTodoInput, shouldReload?: boolean) => Promise<any>;
 };
 
 export const header = {

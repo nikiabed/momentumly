@@ -1,14 +1,14 @@
 export const getWeekMood = (progress: number) => {
   if (progress < 20)
     return {
-      image: "/images/stormy1.png",
+      image: "/images/rainy1.png",
       title: "هفته آرومی بوده 🌧️",
       text: "هفته بعد هنوز فرصت داری، بهترین ها در انتظارت هستن!",
     };
 
   if (progress < 50)
     return {
-      image: "/images/rainy1.png",
+      image: "/images/stormy1.png",
       title: "کم کم داری جلو میری ☁️",
       text: "ادامه بده، بهترین ها در انتظارت هستن!",
     };

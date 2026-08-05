@@ -15,6 +15,20 @@ export type Todo = {
   completedAt: Date | null;
   completionSource: "realtime" | "manual" | null;
   trackedTimeSeconds: number;
+  parentTodoId?: string | null;
+  isAIStep?: boolean;
+};
+
+export type CreateTodoInput = {
+  title: string;
+  item: string;
+  status?: boolean;
+  isImportant?: boolean;
+  boardKey?: string;
+  parentTodoId?: string | null;
+  isAIStep?: boolean;
+  isEdit?: boolean;
+  myDayDate?: string | null;
 };
 
 export type TodoList = Todo[];
@@ -44,4 +58,6 @@ export type CreateTodoData = {
   boardKey?: string;
   isEdit: boolean;
   myDayDate?: string | null;
+  parentTodoId?: string | null;
+  isAIStep?: boolean;
 };

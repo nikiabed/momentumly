@@ -2,6 +2,7 @@
 
 :root {
   --background: #fdf2f8;
+  --coin-background: #c5bde0;
   --foreground: #364153;
   --text-muted: #6b7280;
   --border: #dfd6db;
@@ -30,6 +31,7 @@
 
 .dark {
   --background: #1f2937;
+  --coin-background: #1a0d3d;
   --foreground: #fdf2f8;
   --text-muted: #9ca3af;
   --border: #a2a6ad;
@@ -80,6 +82,7 @@
 
   --color-today-soft: var(--today-soft);
   --color-today-text: var(--today-text);
+  --color-coin-background: var(--coin-background);
 }
 
 @keyframes coin-flight {

@@ -1,5 +1,6 @@
 "use client";
-import { Todo, TodoList, TodoUpdate } from "@/app/types/todo";
+import { CreateTodoInput, Todo, TodoList, TodoUpdate } from "@/app/types/todo";
+import { AIStep } from "@/app/types/ai";
 import { useEffect, useState } from "react";
 import { todoService, uploadService } from "../services";
 import { Board } from "@/app/types/board";
@@ -49,39 +50,75 @@ export const useTodos = (activeBoard: string) => {
       return false;
     }
   };
-  const createTodo = async (todo: {
-    title: string;
-    status: boolean;
-    isImportant: boolean;
-    item: string;
-    boardKey?: string;
-  }) => {
+  const createTodo = async (todo: CreateTodoInput, shouldReload = true) => {
+    const finalBoardKey =
+      activeBoard === BOARD_KEYS.IMPORTANT
+        ? BOARD_KEYS.MY_DAY
+        : (todo.boardKey ?? activeBoard);
+    if (!finalBoardKey) {
+      throw new Error("Board key is required");
+    }
     try {
       const isMyDay =
         activeBoard === BOARD_KEYS.MY_DAY ||
         activeBoard === BOARD_KEYS.IMPORTANT;
-      await todoService.create({
+
+      const result = await todoService.create({
         ...todo,
-        boardKey:
-          activeBoard === BOARD_KEYS.IMPORTANT
-            ? BOARD_KEYS.MY_DAY
-            : activeBoard,
-        status: false,
-        isImportant: activeBoard === BOARD_KEYS.IMPORTANT ? true : false,
+        boardKey: finalBoardKey,
+        status: todo.status ?? false,
+        isImportant: todo.isImportant ?? activeBoard === BOARD_KEYS.IMPORTANT,
         isEdit: false,
         myDayDate: isMyDay ? getDateKey(new Date()) : null,
       });
 
-      await loadTodos();
+      if (shouldReload) {
+        await loadTodos();
+      }
+      return result;
     } catch (err) {
       console.error("Create todo failed:", err);
     }
   };
 
+  const createAITodos = async (parent: Todo, steps: AIStep[]) => {
+    console.log("CREATE AI CHILDREN", {
+      parent,
+      steps,
+    });
+
+    const boardKey = parent.boardKey ?? activeBoard;
+
+    if (!boardKey) {
+      console.error("No boardKey found for child todo");
+      return;
+    }
+
+    for (const step of steps) {
+      console.log("CREATING CHILD", step);
+
+      await createTodo(
+        {
+          title: step.title,
+          item: step.description || step.title,
+          status: false,
+          isImportant: false,
+          boardKey,
+          parentTodoId: parent._id,
+          isAIStep: true,
+          isEdit: false,
+          myDayDate: parent.myDayDate ?? null,
+        },
+        false,
+      );
+    }
+
+    await loadTodos();
+  };
+
   const deleteTodo = async (id: string) => {
     try {
       await todoService.remove(id);
-
       setTodo((prev) => prev.filter((todo) => todo._id !== id));
     } catch (err) {
       console.error("Delete todo failed:", err);
@@ -341,5 +378,7 @@ export const useTodos = (activeBoard: string) => {
     saveTodoTimeEntry,
     todoEntries,
     setTodoEntries,
+    createAITodos,
+    createTodo,
   };
 };
