@@ -4,10 +4,10 @@ import { ChangeEvent, Dispatch, SetStateAction } from "react";
 import { v4 as uuidv4 } from "uuid";
 export type ActiveTimer = {
   todoId: string;
-  elapsedSeconds: number;
   startedAt: number;
+  accumulatedSeconds: number;
   status: "running" | "paused";
-} | null;
+};
 
 export type Context = {
   todo: TodoList;
@@ -67,12 +67,12 @@ export type Context = {
   ) => Promise<any>;
   todoEntries: TodoEntry[];
   setTodoEntries: Dispatch<SetStateAction<TodoEntry[]>>;
-  startTimer: (todoId: string, initialSeconds?: number) => void;
+  startTimer: (todoId: string, currentSeconds: number) => void;
   pauseTimer: () => void;
   resumeTimer: () => void;
   resetTimer: () => void;
-  activeTimer: ActiveTimer;
-  setActiveTimer: Dispatch<SetStateAction<ActiveTimer>>;
+  activeTimer: ActiveTimer | null;
+  setActiveTimer: Dispatch<SetStateAction<ActiveTimer | null>>;
   createAITodos: (parent: Todo, steps: any[]) => Promise<void>;
   activeTool: string | null;
   setActiveTool: Dispatch<SetStateAction<string | null>>;

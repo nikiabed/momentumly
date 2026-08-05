@@ -7,7 +7,7 @@ import { useBoards } from "../../hooks/useBoards";
 import { useTodos } from "../../hooks/useTodos";
 import { useBoardView } from "../../hooks/useBoardView";
 import { userPreferenceService } from "../../services";
-import { ActiveTimer } from "@/app/todo/_common";
+import { useTimer } from "../../hooks/useTimer";
 
 export type SystemBoard = Board & {
   filter: (todo: Todo, searchText?: string) => boolean;
@@ -16,9 +16,6 @@ export const TodoProvider = ({ children }: { children: React.ReactNode }) => {
   const [activeBoard, setActiveBoard] = useState<string>("myDay");
   const [searchText, setSearchText] = useState("");
   const [activeTool, setActiveTool] = useState<string | null>(null);
-  const [activeTimer, setActiveTimer] = useState<ActiveTimer | null>(null);
-  const [steps, setSteps] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
   const [systemBoards, setSystemBoards] = useState<Record<string, SystemBoard>>(
     {
       important: {
@@ -51,24 +48,6 @@ export const TodoProvider = ({ children }: { children: React.ReactNode }) => {
       },
     },
   );
-  const isTimerRunning = activeTimer?.status === "running";
-
-  useEffect(() => {
-    if (!isTimerRunning) return;
-
-    const interval = setInterval(() => {
-      setActiveTimer((prev) => {
-        if (!prev || prev.status !== "running") return prev;
-
-        return {
-          ...prev,
-          elapsedSeconds: prev.elapsedSeconds + 1,
-        };
-      });
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [isTimerRunning]);
 
   const todos = useTodos(activeBoard);
   const boards = useBoards(activeBoard, setActiveBoard);
@@ -79,42 +58,8 @@ export const TodoProvider = ({ children }: { children: React.ReactNode }) => {
     searchText,
     systemBoards,
   );
-
-  const startTimer = (todoId: string, initialSeconds = 0) => {
-    setActiveTimer({
-      todoId,
-      elapsedSeconds: initialSeconds,
-      startedAt: Date.now(),
-      status: "running",
-    });
-  };
-
-  const pauseTimer = () => {
-    setActiveTimer((prev) =>
-      prev
-        ? {
-            ...prev,
-            status: "paused",
-          }
-        : null,
-    );
-  };
-
-  const resumeTimer = () => {
-    setActiveTimer((prev) =>
-      prev
-        ? {
-            ...prev,
-            status: "running",
-            startedAt: Date.now(),
-          }
-        : null,
-    );
-  };
-
-  const resetTimer = () => {
-    setActiveTimer(null);
-  };
+const timer= useTimer();
+  
   const handleToggleImportant = async (id: string, value: boolean) => {
     const success = await todos.toggleImportant(id, value);
     if (!success) return;
@@ -161,13 +106,12 @@ export const TodoProvider = ({ children }: { children: React.ReactNode }) => {
     loadPreferences();
   }, []);
 
-
-
   const value = useMemo(
     () => ({
       ...todos,
       ...boards,
       ...view,
+      ...timer,
       handleToggleImportant,
       selectBoard,
       activeBoard,
@@ -176,12 +120,6 @@ export const TodoProvider = ({ children }: { children: React.ReactNode }) => {
       setSystemBoards,
       searchText,
       setSearchText,
-      startTimer,
-      pauseTimer,
-      resumeTimer,
-      activeTimer,
-      setActiveTimer,
-      resetTimer,
       activeTool,
       setActiveTool,
     }),
@@ -189,6 +127,7 @@ export const TodoProvider = ({ children }: { children: React.ReactNode }) => {
       todos,
       boards,
       view,
+      timer,
       selectBoard,
       setActiveBoard,
       activeBoard,
@@ -197,12 +136,6 @@ export const TodoProvider = ({ children }: { children: React.ReactNode }) => {
       setSystemBoards,
       searchText,
       setSearchText,
-      startTimer,
-      pauseTimer,
-      resumeTimer,
-      activeTimer,
-      setActiveTimer,
-      resetTimer,
       activeTool,
       setActiveTool,
     ],

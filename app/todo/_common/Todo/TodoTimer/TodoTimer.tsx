@@ -34,12 +34,25 @@ export const TodoTimer = ({
   } = useTodoContext();
 
   const isThisTodo = activeTimer?.todoId === todoId;
-
+  const [now, setNow] = useState(Date.now());
   const isRunning = isThisTodo && activeTimer.status === "running";
 
-  const elapsedSeconds = isThisTodo
-    ? activeTimer.elapsedSeconds
-    : trackedTimeSeconds;
+  useEffect(() => {
+    if (!isRunning) return;
+
+    const id = setInterval(() => {
+      setNow(Date.now());
+    }, 1000);
+
+    return () => clearInterval(id);
+  }, [isRunning]);
+
+  const elapsedSeconds = !isThisTodo
+    ? trackedTimeSeconds
+    : activeTimer.status === "running"
+      ? activeTimer.accumulatedSeconds +
+        Math.floor((now - activeTimer.startedAt) / 1000)
+      : activeTimer.accumulatedSeconds;
 
   const elapsedRef = useRef(elapsedSeconds);
 
@@ -54,20 +67,6 @@ export const TodoTimer = ({
 
     await saveTodoTimeEntry?.(todoId, today, seconds);
   };
-
-  // Autosave
-  useEffect(() => {
-    if (!isRunning) return;
-
-    const interval = setInterval(() => {
-      const seconds = elapsedRef.current;
-
-      saveTrackedTime?.(todoId, seconds);
-      saveDailyEntry(seconds);
-    }, 30_000);
-
-    return () => clearInterval(interval);
-  }, [isRunning, todoId]);
 
   useEffect(() => {
     const handleVisibilityChange = () => {
@@ -141,9 +140,7 @@ export const TodoTimer = ({
               border: "1px solid var(--border-gray)",
             }}
           >
-            <div
-              className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-full text-rose-500 transition-all hover:bg-background"
-            >
+            <div className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-full text-rose-500 transition-all hover:bg-background">
               {isRunning ? (
                 <div className="flex items-center gap-1">
                   <button onClick={handleStop} className="cursor-pointer">
