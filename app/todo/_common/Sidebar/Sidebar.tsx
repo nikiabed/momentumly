@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { Add, MagicStar, ProgrammingArrow, Star, StarSlash } from "iconsax-reactjs";
+import { Add, MagicStar } from "iconsax-reactjs";
 import { Search } from "./Search";
 import { ListItem } from "./ListItem";
 import { sidebar } from "./Sidebar.const";
@@ -50,8 +50,13 @@ ${sidebarOpen ? "translate-x-0" : "translate-x-full"}
         {uiBoard?.map((list: Board) => {
           const isProgress = list.boardKey === "progress";
           return (
-            <div key={list._id} onClick={() => setSidebarOpen(!sidebarOpen)}>
-              <ListItem key={list._id} focused={list} />
+            <div key={list._id}>
+              <ListItem
+                key={list._id}
+                focused={list}
+                setSidebarOpen={setSidebarOpen}
+                sidebarOpen={sidebarOpen}
+              />
               {isProgress && (
                 <div className=" mt-2 border-t border-border-gray" />
               )}
@@ -74,7 +79,7 @@ ${sidebarOpen ? "translate-x-0" : "translate-x-full"}
           className=" cursor-pointer flex items-center gap-4  hover:bg-foreground/10  hover:rounded py-2  "
           onClick={() => setActiveTool("ai-breaker")}
         >
-         <MagicStar size={20} className="text-rose-400" /> خرد کردن کار با AI
+          <MagicStar size={20} className="text-rose-400" /> خرد کردن کار با AI
         </button>
       </div>
       <button
