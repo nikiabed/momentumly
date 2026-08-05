@@ -293,13 +293,22 @@ export const useTodos = (activeBoard: string) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          trackedTimeSeconds: seconds,
+          addTrackedTimeSeconds: seconds,
         }),
       });
 
       const data = await res.json();
-
       console.log("🔥 SAVE RESPONSE:", res.status, data);
+      setTodo((prev) =>
+        prev.map((todo) =>
+          todo._id === id
+            ? {
+                ...todo,
+                trackedTimeSeconds: seconds,
+              }
+            : todo,
+        ),
+      );
 
       if (!res.ok) {
         throw new Error("Failed to save tracked time");

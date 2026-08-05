@@ -74,9 +74,20 @@ export async function PATCH(req: Request, context: RouteContext) {
   if (body.isEdit !== undefined) {
     update.isEdit = body.isEdit;
   }
+  const inc: Record<string, number> = {};
 
-  if (body.trackedTimeSeconds !== undefined) {
-    update.trackedTimeSeconds = body.trackedTimeSeconds;
+  if (body.addTrackedTimeSeconds !== undefined) {
+    inc.trackedTimeSeconds = body.addTrackedTimeSeconds;
+  }
+
+  const mongoUpdate: any = {};
+
+  if (Object.keys(update).length) {
+    mongoUpdate.$set = update;
+  }
+
+  if (Object.keys(inc).length) {
+    mongoUpdate.$inc = inc;
   }
 
   const result = await Todo.findOneAndUpdate(
@@ -84,22 +95,24 @@ export async function PATCH(req: Request, context: RouteContext) {
       _id: id,
       userId: session.user.id,
     },
-    {
-      $set: update,
-    },
+    mongoUpdate,
     {
       returnDocument: "after",
     },
   );
 
+  console.log("DB AFTER UPDATE", result.trackedTimeSeconds);
+
   if (!result) {
     return NextResponse.json({ error: "Todo not found" }, { status: 404 });
   }
+  
 
   return NextResponse.json({
     ok: true,
     todo: result,
   });
+  
 }
 
 export async function DELETE(req: Request, context: RouteContext) {
@@ -113,7 +126,6 @@ export async function DELETE(req: Request, context: RouteContext) {
 
   const { id } = await context.params;
 
-  // حذف parent
   const result = await Todo.findOneAndDelete({
     _id: id,
     userId: session.user.id,
@@ -123,7 +135,6 @@ export async function DELETE(req: Request, context: RouteContext) {
     return NextResponse.json({ error: "Todo not found" }, { status: 404 });
   }
 
-  // حذف children
   await Todo.deleteMany({
     parentTodoId: id,
     userId: session.user.id,

@@ -25,6 +25,7 @@ export const TodoTimer = ({
     resumeTimer,
     resetTimer,
     elapsedSeconds,
+    getElapsedSeconds,
   } = useTimer();
 
   const seconds = elapsedSeconds(todoId, trackedTimeSeconds);
@@ -42,6 +43,7 @@ export const TodoTimer = ({
   };
 
   const handleStart = () => {
+    console.log("START PROP", trackedTimeSeconds);
     startTimer(todoId, trackedTimeSeconds);
   };
 
@@ -56,17 +58,16 @@ export const TodoTimer = ({
   };
 
   const handleStop = async () => {
-    const finalSeconds = seconds;
-
+    const finalSeconds = getElapsedSeconds(todoId, trackedTimeSeconds);
+    console.log("STOP TIME:", {
+      finalSeconds,
+      activeTimer,
+      now: Date.now(),
+    });
     pauseTimer();
-
     await saveTrackedTime?.(todoId, finalSeconds);
-
     await saveDailyEntry(finalSeconds);
-
     resetTimer();
-
-    setIsPaused(false);
   };
 
   const handlePauseFinish = () => {

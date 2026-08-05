@@ -11,6 +11,7 @@ type TimerContextType = {
   resumeTimer: () => void;
   resetTimer: () => void;
   elapsedSeconds: (todoId: string, tracked?: number) => number;
+  getElapsedSeconds: (todoId: string, tracked?: number) => number;
 };
 
 export type TimerStatus = "running" | "paused";
@@ -103,6 +104,20 @@ export const TimerProvider = ({ children }: { children: React.ReactNode }) => {
     );
   };
 
+  const getElapsedSeconds = (todoId: string, tracked = 0) => {
+    if (!activeTimer) return tracked;
+    if (activeTimer.todoId !== todoId) {
+      return tracked;
+    }
+    if (activeTimer.status === "paused") {
+      return activeTimer.accumulatedSeconds;
+    }
+    return (
+      activeTimer.accumulatedSeconds +
+      Math.floor((Date.now() - activeTimer.startedAt) / 1000)
+    );
+  };
+
   const value = useMemo(
     () => ({
       now,
@@ -112,6 +127,7 @@ export const TimerProvider = ({ children }: { children: React.ReactNode }) => {
       resumeTimer,
       resetTimer,
       elapsedSeconds,
+      getElapsedSeconds,
     }),
     [now, activeTimer],
   );
