@@ -281,11 +281,6 @@ export const useTodos = (activeBoard: string) => {
   };
 
   const saveTrackedTime = async (id: string, seconds: number) => {
-    console.log("🔥 SAVE TRACKED TIME:", {
-      id,
-      seconds,
-    });
-
     try {
       const res = await fetch(`/api/todos/${id}`, {
         method: "PATCH",
@@ -298,7 +293,6 @@ export const useTodos = (activeBoard: string) => {
       });
 
       const data = await res.json();
-      console.log("🔥 SAVE RESPONSE:", res.status, data);
       setTodo((prev) =>
         prev.map((todo) =>
           todo._id === id
