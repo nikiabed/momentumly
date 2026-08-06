@@ -35,6 +35,7 @@ export const buildWeeklyProgress = (
         : day.toLocaleDateString("fa-IR", {
             weekday: "short",
           }),
+      date: new Date(day),
       ...progress,
     });
   }

@@ -2,7 +2,6 @@ export * from "./buildWeeklyProgress";
 export * from "./todoAnalytics";
 export * from "./CalculateCoin";
 export * from "./completion";
-export * from "./calculateDailyScore";
 export * from "./getCoinStats";
 export * from "./calculateRecovery";
 export * from "./calculateXP";
@@ -11,3 +10,5 @@ export * from "./calculateDailyProgress";
 export * from "./getMonthStats";
 export * from "./getWeekMood";
 export * from "./getLevelInfo";
+export * from "./calculateWeeklyXPProgress.ts";
+export * from './calculateWeeklyMaxXP'

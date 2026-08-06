@@ -10,7 +10,8 @@ export const Summary = () => {
       <div className="flex items-center gap-2 mb-6">
         <span className="text-2xl">📊</span>
         <h1 className="text-2xl font-bold text-foreground">
-          خلاصه <span className="text-coin-primary">{monthStats.monthName}</span>
+          خلاصه{" "}
+          <span className="text-coin-primary">{monthStats.monthName}</span>
         </h1>
       </div>
       <div className="grid grid-cols-2 gap-4">

@@ -5,3 +5,5 @@ export * from "./FunctionSect";
 export * from "./MonthSect";
 export * from "./ChartHeader";
 export * from "./LineChart";
+export * from './TimeLineChart'
+export * from './WeeklyTimeReport'

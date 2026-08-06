@@ -3,11 +3,11 @@ import { FaceIcon } from "./FaceIcon";
 import { RecordSect } from "./RecordSect";
 import { buildWeeklyProgress } from "@/app/_utils/progress";
 
-const getScoreMessage = (score: number) => {
-  if (score >= 80) return "درخشیدی ✨";
-  if (score >= 60) return "خوبه، ادامه بده 🌱";
-  if (score >= 40) return "کم‌کم جلو برو 🌤️";
-  if (score > 0) return "فقط شروع کن 💜";
+const getScoreMessage = (percentage: number) => {
+  if (percentage >= 80) return "درخشیدی ✨";
+  if (percentage >= 60) return "خوبه، ادامه بده 🌱";
+  if (percentage >= 40) return "کم‌کم جلو برو 🌤️";
+  if (percentage > 0) return "فقط شروع کن 💜";
   return "شروع نشده";
 };
 
@@ -21,7 +21,9 @@ export const FunctionSect = () => {
       <div className="bg-background rounded-4xl p-6 shadow-sm border border-border-gray lg:flex-4">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h2 className="text-xl font-bold text-foreground">عملکرد این هفته</h2>
+            <h2 className="text-xl font-bold text-foreground">
+              عملکرد این هفته
+            </h2>
 
             <p className="text-sm text-muted mt-1">
               هر روز فقط یک قدم کوچیک 🌱
@@ -62,7 +64,7 @@ export const FunctionSect = () => {
                   group-hover:scale-110
                 "
               >
-                <FaceIcon score={day.score} />
+                <FaceIcon score={day.percentage} />
               </div>
 
               {/* Score */}
@@ -70,24 +72,24 @@ export const FunctionSect = () => {
                 className={`
                   text-sm font-black
                   ${
-                    day.score >= 80
+                    day.percentage >= 80
                       ? "text-emerald-500"
-                      : day.score >= 60
+                      : day.percentage >= 60
                         ? "text-green-500"
-                        : day.score >= 40
+                        : day.percentage >= 40
                           ? "text-yellow-500"
-                          : day.score > 0
+                          : day.percentage > 0
                             ? "text-orange-500"
                             : "text-gray-300"
                   }
                 `}
               >
-                {day.score}%
+                {day.percentage}%
               </span>
 
               {/* Tiny message */}
               <span className="hidden sm:block text-[10px] text-muted text-center leading-4">
-                {getScoreMessage(day.score)}
+                {getScoreMessage(day.percentage)}
               </span>
             </div>
           ))}

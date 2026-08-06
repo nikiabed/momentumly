@@ -16,7 +16,7 @@ import { TimeLineChart } from "./TimeLineChart";
 import { WeeklyTimeReport } from "./WeeklyTimeReport";
 
 export const Progress = () => {
-  const { todo, todoEntries, saveTodoTimeEntry } = useTodoContext();
+  const { todo, todoEntries } = useTodoContext();
   const [weekOffset, setWeekOffset] = useState(0);
   const [chartWidth, setChartWidth] = useState(0);
   const isMobile = chartWidth < 500;
