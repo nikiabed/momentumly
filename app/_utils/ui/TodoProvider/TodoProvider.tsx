@@ -7,7 +7,6 @@ import { useBoards } from "../../hooks/useBoards";
 import { useTodos } from "../../hooks/useTodos";
 import { useBoardView } from "../../hooks/useBoardView";
 import { userPreferenceService } from "../../services";
-import { useTimer } from "../../hooks/useTimer";
 
 export type SystemBoard = Board & {
   filter: (todo: Todo, searchText?: string) => boolean;

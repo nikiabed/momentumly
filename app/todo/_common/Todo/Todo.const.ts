@@ -67,11 +67,13 @@ export type Context = {
   ) => Promise<any>;
   todoEntries: TodoEntry[];
   setTodoEntries: Dispatch<SetStateAction<TodoEntry[]>>;
- 
+
   createAITodos: (parent: Todo, steps: any[]) => Promise<void>;
   activeTool: string | null;
   setActiveTool: Dispatch<SetStateAction<string | null>>;
   createTodo: (todo: CreateTodoInput, shouldReload?: boolean) => Promise<any>;
+  isCreating: boolean;
+  setIsCreating: Dispatch<SetStateAction<boolean>>;
 };
 
 export const header = {

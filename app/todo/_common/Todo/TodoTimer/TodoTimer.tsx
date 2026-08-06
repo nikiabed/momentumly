@@ -1,9 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import { Pause, Play, Refresh2, Stop } from "iconsax-reactjs";
 import { PauseOverlay } from "./PauseOverlay";
-import { useTimer, useTodoContext } from "@/app/_utils";
+import { useFocusTimer, useTimer } from "@/app/_utils";
 
 type TodoTimerProps = {
   todoId: string;
@@ -14,73 +13,19 @@ export const TodoTimer = ({
   todoId,
   trackedTimeSeconds = 0,
 }: TodoTimerProps) => {
-  const [isPaused, setIsPaused] = useState(false);
-
-  const { saveTrackedTime, saveTodoTimeEntry } = useTodoContext();
-
-  const {
-    activeTimer,
-    startTimer,
-    pauseTimer,
-    resumeTimer,
-    resetTimer,
-    elapsedSeconds,
-    getElapsedSeconds,
-  } = useTimer();
+  const { activeTimer, elapsedSeconds } = useTimer();
 
   const seconds = elapsedSeconds(todoId, trackedTimeSeconds);
-
   const isThisTodo = activeTimer?.todoId === todoId;
-
   const isRunning = isThisTodo && activeTimer?.status === "running";
-
-  const saveDailyEntry = async (seconds: number) => {
-    if (seconds <= 0) return;
-
-    const today = new Date().toISOString().slice(0, 10);
-
-    await saveTodoTimeEntry?.(todoId, today, seconds);
-  };
-
-  const handleStart = () => {
-    console.log("START PROP", trackedTimeSeconds);
-    startTimer(todoId, trackedTimeSeconds);
-  };
-
-  const handlePause = async () => {
-    pauseTimer();
-
-    setIsPaused(true);
-
-    await saveTrackedTime?.(todoId, seconds);
-
-    await saveDailyEntry(seconds);
-  };
-
-  const handleStop = async () => {
-    const finalSeconds = getElapsedSeconds(todoId, trackedTimeSeconds);
-    console.log("STOP TIME:", {
-      finalSeconds,
-      activeTimer,
-      now: Date.now(),
-    });
-    pauseTimer();
-    await saveTrackedTime?.(todoId, finalSeconds);
-    await saveDailyEntry(finalSeconds);
-    resetTimer();
-  };
-
-  const handlePauseFinish = () => {
-    setIsPaused(false);
-    resumeTimer();
-  };
-
-  const handleReset = () => {
-    resetTimer();
-    setIsPaused(false);
-
-    saveTrackedTime?.(todoId, 0);
-  };
+  const {
+    handleStart,
+    handlePause,
+    handleStop,
+    handlePauseFinish,
+    handleReset,
+    isPaused,
+  } = useFocusTimer({ todoId, trackedTimeSeconds });
 
   return (
     <>

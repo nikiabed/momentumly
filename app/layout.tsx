@@ -4,6 +4,7 @@ import { dana, ThemeProvider, TodoProvider } from "./_utils";
 import { SessionProvider } from "next-auth/react";
 import { FeedbackProvider } from "./feedback";
 import { TimerProvider } from "./_utils/ui/TimerProvider";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: "Niki Portfolio",
@@ -24,6 +25,7 @@ export default function RootLayout({
             <TimerProvider>
               <FeedbackProvider>
                 <TodoProvider>
+                  <Toaster position="bottom-left" richColors closeButton />
                   <main className="min-h-screen overflow-y-auto ">
                     {children}
                   </main>

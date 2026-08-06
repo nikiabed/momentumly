@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { boardService } from "../services";
 import { BOARD_LABELS } from "../constants";
+import { toast } from "sonner";
 
 export function useBoards(
   activeBoard: string,
@@ -46,6 +47,7 @@ export function useBoards(
       });
       await loadBoards();
     } catch (err) {
+      toast.error("ایجاد لیست انجام نشد");
       console.error("Create board failed", err);
     }
   };
@@ -55,7 +57,9 @@ export function useBoards(
       const newTitle = editedBoard;
       await boardService.updateTitle(id, newTitle);
       await loadBoards();
+      toast.success("لیست با موفقیت ذخیره شد");
     } catch (err) {
+      toast.error("ذخیره لیست انجام نشد");
       console.error("Save board failed:", err);
     }
   };
@@ -108,7 +112,9 @@ export function useBoards(
       if (activeBoard === boardList[index]?.boardKey) {
         setActiveBoard?.(nextBoard?.boardKey || "myDay");
       }
+      toast.success("لیست با موفقیت حذف شد");
     } catch (err) {
+      toast.error("حذف لیست انجام نشد");
       console.error("Remove board failed:", err);
     }
   };

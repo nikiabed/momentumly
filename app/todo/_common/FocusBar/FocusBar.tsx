@@ -1,13 +1,12 @@
 "use client";
 
 import { useTimer } from "@/app/_utils";
-import { FocusControls } from "./FocusControls";
 import { CurrentTask } from "./CurrentTask";
 import { FocusTimer } from "./FocusTimer.tsx";
+import { FocusControls } from "./FocusControls";
 
 export const FocusBar = () => {
   const { activeTimer } = useTimer();
-    console.log("activeTimer", activeTimer);
   if (!activeTimer) return null;
 
   return (
