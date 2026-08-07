@@ -1,8 +1,7 @@
 import { DateObject } from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian";
-import { calculateCoin } from "./CalculateCoin";
-import { calculateXP } from "./calculateXP";
 import { TodoList } from "@/app/types";
+import { calculateDailyProgress } from "./calculateDailyProgress";
 
 export const getMonthStats = (todos: TodoList, monthOffset = 0) => {
   const now = new DateObject({
@@ -11,110 +10,77 @@ export const getMonthStats = (todos: TodoList, monthOffset = 0) => {
 
   const year = now.year;
   const month = now.month.number;
-  const isLeap = persian.isLeap(year);
 
+  const isLeap = persian.isLeap(year);
   const monthLengths = persian.getMonthLengths(isLeap);
+
   const daysInMonth = monthLengths[month - 1];
+
   const monthName = new Intl.DateTimeFormat("fa-IR-u-ca-persian", {
     month: "long",
   }).format(now.toDate());
 
-  const start = new DateObject({
-    calendar: persian,
-    year,
-    month,
-    day: 1,
-  }).toDate();
+  let coins = 0;
+  let xp = 0;
+  let possibleXP = 0;
 
-  const nextMonth = new DateObject({
-    calendar: persian,
-    year,
-    month,
-    day: 1,
-  })
-    .add(1, "month")
-    .toDate();
+  let completedTasks = 0;
+  let activeDays = 0;
 
-  const completedTodos = todos.filter((t) => t.status && t.completedAt);
+  let maxDailyCoins = 0;
 
-  const monthTodos = completedTodos.filter((todo) => {
-    const date = new Date(todo.completedAt || "");
+  let plannedTotal = 0;
+  let completedTotal = 0;
 
-    return date >= start && date < nextMonth;
-  });
+  for (let day = 1; day <= daysInMonth; day++) {
+    const date = new DateObject({
+      calendar: persian,
+      year,
+      month,
+      day,
+    }).toDate();
 
-  const coins = monthTodos.reduce((sum, todo) => sum + calculateCoin(todo), 0);
+    const progress = calculateDailyProgress(todos, date);
 
-  const xp = monthTodos.reduce((sum, todo) => sum + calculateXP(todo), 0);
+    coins += progress.coins;
+    xp += progress.xp;
+    possibleXP += progress.planned * 15;
+    completedTasks += progress.completed;
 
-  const completedTasks = monthTodos.length;
+    plannedTotal += progress.planned;
+    completedTotal += progress.completed;
 
-  const activeDays = new Set(
-    monthTodos.map((todo) => {
-      const d = new Date(todo.completedAt || "");
-
-      return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
-    }),
-  ).size;
-
-  const dailyCoins: Record<string, number> = {};
-  monthTodos.forEach((todo) => {
-    const d = new Date(todo.completedAt || "");
-    const key = `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
-    dailyCoins[key] = (dailyCoins[key] || 0) + calculateCoin(todo);
-  });
-
-  const maxDailyCoins = Object.values(dailyCoins).length
-    ? Math.max(...Object.values(dailyCoins))
-    : 0;
-
-  const dailyProgress: Record<string, { planned: number; completed: number }> =
-    {};
-
-  todos.forEach((todo) => {
-    const plannedDate = todo.myDayDate ?? todo.deadline;
-    if (!plannedDate) return;
-    const date = new Date(plannedDate);
-    if (date < start || date >= nextMonth) return;
-    const key = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
-    if (!dailyProgress[key]) {
-      dailyProgress[key] = {
-        planned: 0,
-        completed: 0,
-      };
+    if (progress.coins > maxDailyCoins) {
+      maxDailyCoins = progress.coins;
     }
 
-    dailyProgress[key].planned++;
-
-    if (todo.status && todo.completedAt) {
-      dailyProgress[key].completed++;
+    if (progress.planned > 0 || progress.completed > 0) {
+      activeDays++;
     }
-  });
+  }
 
-  let totalScore = 0;
-  let count = 0;
+  const completionPercent =
+    plannedTotal === 0
+      ? completedTotal > 0
+        ? completedTotal * 100
+        : 0
+      : Math.round((completedTotal / plannedTotal) * 100);
 
-  Object.values(dailyProgress).forEach((day) => {
-    if (day.planned === 0) return;
-
-    totalScore += Math.min(
-      100,
-      Math.round((day.completed / day.planned) * 100),
-    );
-
-    count++;
-  });
+  const xpPercent = possibleXP === 0 ? 0 : Math.round((xp / possibleXP) * 100);
 
   return {
     year,
     month,
-    monthName: monthName,
-    daysInMonth: daysInMonth,
+    monthName,
+    daysInMonth,
     coins,
     xp,
-    activeDays,
+    possibleXP,
+    xpPercent,
     completedTasks,
+    activeDays,
     maxDailyCoins,
-    averageProgress: count === 0 ? 0 : Math.round(totalScore / count),
+    plannedTasks: plannedTotal,
+    completionPercent,
   };
 };
