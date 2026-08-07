@@ -17,7 +17,15 @@ export const titleToKey: Record<string, string> = {
   Search: "search",
 };
 
-export const ListItem = ({ focused }: { focused: Board }) => {
+export const ListItem = ({
+  focused,
+  setSidebarOpen,
+  sidebarOpen,
+}: {
+  focused: Board;
+  setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  sidebarOpen: boolean;
+}) => {
   const {
     handleBoardInput,
     removeList,
@@ -90,14 +98,16 @@ export const ListItem = ({ focused }: { focused: Board }) => {
   const notCompletedTodos = filteredTodos.filter((t) => !t.status).length;
 
   return (
-    <li className=" relative flex items-center justify-between">
+    <li className=" relative flex items-center justify-between w-full">
       <div
-        onClick={() => selectBoard?.(focused, focused._id)}
-        onDoubleClick={() => handleBoardEditable?.(focused._id)}
-        className={` justify-between rounded cursor-pointer md:w-full flex gap-1 items-center group hover:bg-foreground/10 hover:rounded ${activeBoard === focused.boardKey ? "bg-foreground/10" : "bg-none"} `}
+        onClick={() => {
+          selectBoard?.(focused, focused._id);
+          setSidebarOpen((prev) => !prev);
+        }}
+        className={` justify-between rounded cursor-pointer w-full flex gap-1 items-center group hover:bg-foreground/10 hover:rounded ${activeBoard === focused.boardKey ? "bg-foreground/10" : "bg-none"} `}
       >
         <div
-          className={`flex py-2 items-center gap-2 before:border-r-4 before:border-transparent before:rounded before:h-5 ${activeBoard === focused.boardKey ? " before:border-rose-700!" : ""}`}
+          className={`flex flex-1 py-2 items-center gap-2 before:border-r-4 before:border-transparent before:rounded before:h-5 ${activeBoard === focused.boardKey ? " before:border-rose-700!" : ""}`}
         >
           <div className="flex gap-2">
             <ItemIcon item={focused} size={20} className="text-rose-400" />
@@ -135,12 +145,24 @@ export const ListItem = ({ focused }: { focused: Board }) => {
               fill: "var(--foreground)",
             }}
             className=" max-h-4 rotate-90 cursor-pointer"
-            onClick={() => setIsOpen(!isOpen)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsOpen(!isOpen);
+            }}
           />
           {isOpen && (
             <ul className="absolute left-5 top-5 w-40 z-20">
               <li
-                onClick={() => removeList?.(focused._id)}
+                onClick={() => handleBoardEditable?.(focused._id)}
+                className="bg-border-gray text-foreground rounded px-2 py-1 text-sm cursor-pointer shadow"
+              >
+                تغییر عنوان
+              </li>
+              <li
+                onClick={(e) => {
+                  e.stopPropagation();
+                  removeList?.(focused._id);
+                }}
                 className="bg-border-gray text-foreground rounded px-2 py-1 text-sm cursor-pointer shadow"
               >
                 حذف لیست

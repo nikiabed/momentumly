@@ -1,18 +1,44 @@
-import { Todo } from "@/app/types";
-
-export const calculateXP = (todo: Todo) => {
-  if (!todo.status || !todo.completedAt) return 0;
-
-  const planned = todo.myDayDate ?? todo.deadline;
-  if (!planned) return 0;
-  const completed = new Date(todo.completedAt);
-  const plannedDate = new Date(planned);
-  const delay = Math.floor(
-    (completed.getTime() - plannedDate.getTime()) / (1000 * 60 * 60 * 24),
-  );
-
-  if (delay <= 0) return 15;
-  if (delay <= 3) return 10;
-  if (delay <= 10) return 8;
-  return 5;
+type XPInput = {
+  completed: number;
+  planned: number;
+  onTime: number;
+  recovered: number;
+  focusMinutes: number;
 };
+
+export function calculateXP({
+  completed,
+  planned,
+  onTime,
+  recovered,
+  focusMinutes,
+}: XPInput) {
+
+  let xp = 0;
+
+
+  // انجام کار
+  xp += completed * 10;
+
+
+  // انجام بیشتر از برنامه
+  if (planned > 0 && completed > planned) {
+    const extra = completed - planned;
+    xp += extra * 5;
+  }
+
+
+  // نظم زمانی
+  xp += onTime * 5;
+
+
+  // برگشت بعد از عقب افتادن
+  xp += recovered * 8;
+
+
+  // تمرکز واقعی
+  xp += Math.floor(focusMinutes / 25) * 5;
+
+
+  return xp;
+}

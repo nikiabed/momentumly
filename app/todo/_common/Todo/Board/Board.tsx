@@ -15,7 +15,6 @@ import { HamburgerMenu } from "iconsax-reactjs";
 import { Board as BoardType } from "@/app/types";
 import { SidebarProps } from "../../Sidebar";
 import { TodoDateList } from "../TodoDateList";
-import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 
 type boardProps = {

@@ -1,74 +1,95 @@
 "use client";
+
 import { FC, useEffect, useRef, useState } from "react";
 
+type ChartData = {
+  label: string;
+  percentage: number;
+  xp: number;
+  onTime: number;
+  planned: number;
+  recovery: number;
+  coins: number;
+};
+
 type Props = {
-  data: {
-    label: string;
-    score: number;
-    onTime: number;
-    planned: number;
-    recovery: number;
-    coins: number;
-  }[];
+  data: ChartData[];
   width: number;
   height: number;
 };
 
 export const LineChart: FC<Props> = ({ data, width, height }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
   const [tooltip, setTooltip] = useState<{
     x: number;
     y: number;
     index: number;
-    data: Props["data"][0];
+    data: ChartData;
   } | null>(null);
+
+  const padding = 45;
+  const leftAxis = 55;
+  const rightPadding = 35;
+
+  const chartWidth = width - leftAxis - rightPadding;
+  const chartHeight = height - padding * 2;
+
+  const stepX = data.length > 1 ? chartWidth / (data.length - 1) : chartWidth;
+
+  const mapX = (index: number) => width - rightPadding - index * stepX;
+
+  // اینجا دیگه محدود به 100 نیست
+  // چون مثلا 300 درصد معنی دارد
+  const values = data.map((d) => d.percentage);
+  const chartMax = Math.min(
+    Math.max(...data.map((d) => d.percentage), 100),
+    150,
+  );
+  const maxValue = Math.max(...values, 100);
+  const maxY = Math.ceil(maxValue / 50) * 50;
+  const mapY = (value: number) => {
+    const displayValue = Math.min(value, chartMax);
+
+    return padding + chartHeight - (displayValue / chartMax) * chartHeight;
+  };
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!canvas || !data.length) return;
+
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
     const styles = getComputedStyle(document.documentElement);
 
     const chartBg = styles.getPropertyValue("--chart-bg").trim();
+
     const chartGrid = styles.getPropertyValue("--chart-grid").trim();
+
     const chartText = styles.getPropertyValue("--chart-text").trim();
-    const chartMuted = styles.getPropertyValue("--chart-muted").trim();
+
     const chartPrimary = styles.getPropertyValue("--chart-primary").trim();
-    const chartSecondary = styles.getPropertyValue("--chart-secondary").trim();
 
     const dpr = window.devicePixelRatio || 1;
+
     canvas.width = width * dpr;
     canvas.height = height * dpr;
+
     canvas.style.width = `${width}px`;
     canvas.style.height = `${height}px`;
-    ctx.scale(dpr, dpr);
+
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
     ctx.clearRect(0, 0, width, height);
-    if (data.length === 0) return;
 
-    const values = data.map((d) => d.score);
+    // background
 
-    const padding = 50;
-    const leftAxis = 70;
-    const rightPadding = 50;
-
-    const chartWidth = width - leftAxis - rightPadding;
-    const chartHeight = height - padding * 2;
-    const stepX = chartWidth / (data.length - 1);
-
-    const mapX = (i: number) => width - rightPadding - i * stepX;
-    const mapY = (v: number) => padding + chartHeight - (v / 100) * chartHeight;
-
-    const points = values.map((v, i) => ({
-      x: mapX(i),
-      y: mapY(v),
-    }));
-    // BG
     ctx.fillStyle = chartBg;
     ctx.fillRect(0, 0, width, height);
 
-    // GRID
+    // grid
+
     ctx.strokeStyle = chartGrid;
     ctx.lineWidth = 1;
 
@@ -77,125 +98,116 @@ export const LineChart: FC<Props> = ({ data, width, height }) => {
 
       ctx.beginPath();
       ctx.moveTo(leftAxis, y);
-      ctx.lineTo(width - padding, y);
+      ctx.lineTo(width - rightPadding, y);
       ctx.stroke();
 
       ctx.fillStyle = chartText;
-      ctx.font = "16px dana";
+      ctx.font = "12px dana";
       ctx.textAlign = "left";
 
-      ctx.fillText(`${100 - i * 25}%`, 8, y + 4);
+      const value = Math.round(maxY - (maxY / 4) * i);
+
+      const step = chartMax / 4;
+
+      ctx.fillText(`${Math.round(chartMax - i * step)}%`, 10, y + 5);
     }
 
-    // LINE
-    const curveStrength = 0.25;
+    const points = values.map((value, index) => ({
+      x: mapX(index),
+      y: mapY(value),
+    }));
+
+    // line
 
     ctx.beginPath();
+    ctx.moveTo(points[0].x, points[0].y);
 
-    ctx.moveTo(mapX(0), mapY(values[0]));
+    for (let i = 1; i < points.length; i++) {
+      const prev = points[i - 1];
+      const current = points[i];
 
-    for (let i = 1; i < values.length; i++) {
-      const x = mapX(i);
-      const y = mapY(values[i]);
-      const prevX = mapX(i - 1);
-      const prevY = mapY(values[i - 1]);
-      const nextX = mapX(i + 1) ?? x;
-      const cp1X = prevX + (x - prevX) * curveStrength;
-      const cp2X = x - (nextX - x) * curveStrength;
-      ctx.bezierCurveTo(cp1X, prevY, cp2X, y, x, y);
+      const middleX = (prev.x + current.x) / 2;
+
+      ctx.bezierCurveTo(
+        middleX,
+        prev.y,
+        middleX,
+        current.y,
+        current.x,
+        current.y,
+      );
     }
 
     ctx.strokeStyle = chartPrimary;
     ctx.lineWidth = 3;
-    ctx.lineJoin = "round";
     ctx.lineCap = "round";
+    ctx.lineJoin = "round";
 
     ctx.stroke();
-    // FILL
+
+    // fill
+
     ctx.beginPath();
 
-    // move to first point
-    ctx.moveTo(mapX(0), mapY(values[0]));
+    ctx.moveTo(points[0].x, points[0].y);
 
-    // CURVE (همون الگوریتم line)
-    for (let i = 1; i < values.length; i++) {
-      const x = mapX(i);
-      const y = mapY(values[i]);
+    for (let i = 1; i < points.length; i++) {
+      const prev = points[i - 1];
+      const current = points[i];
 
-      const prevX = mapX(i - 1);
-      const prevY = mapY(values[i - 1]);
+      const middleX = (prev.x + current.x) / 2;
 
-      const nextX = mapX(i + 1) ?? x;
-      const curveStrength = 0.3;
-
-      const cp1X = prevX + (x - prevX) * curveStrength;
-      const cp2X = x - (nextX - x) * curveStrength;
-
-      ctx.bezierCurveTo(cp1X, prevY, cp2X, y, x, y);
+      ctx.bezierCurveTo(
+        middleX,
+        prev.y,
+        middleX,
+        current.y,
+        current.x,
+        current.y,
+      );
     }
 
-    ctx.lineTo(mapX(values.length - 1), height - padding);
-    ctx.lineTo(mapX(0), height - padding);
+    ctx.lineTo(points.at(-1)!.x, height - padding);
+
+    ctx.lineTo(points[0].x, height - padding);
 
     ctx.closePath();
 
-    // gradient
     const gradient = ctx.createLinearGradient(0, padding, 0, height);
 
-    gradient.addColorStop(0, "transparent");
-    gradient.addColorStop(1, "rgba(139,92,246,0.25)");
+    gradient.addColorStop(0, "rgba(139,92,246,0.18)");
+
+    gradient.addColorStop(1, "rgba(139,92,246,0)");
 
     ctx.fillStyle = gradient;
     ctx.fill();
 
-    // POINTS + LABELS
-    values.forEach((v, i) => {
-      const x = mapX(i);
-      const y = mapY(v);
+    // points
+
+    values.forEach((value, index) => {
+      const point = points[index];
 
       ctx.beginPath();
 
-      ctx.arc(x, y, 5, 0, Math.PI * 2);
+      ctx.arc(point.x, point.y, 5, 0, Math.PI * 2);
 
       ctx.fillStyle = chartPrimary;
       ctx.fill();
-      const purple = chartPrimary;
-      ctx.strokeStyle = purple;
-      ctx.lineWidth = 1;
 
-      ctx.stroke();
-
-      // value above point
-      ctx.fillStyle = purple;
-      ctx.strokeStyle = chartBg;
-      ctx.lineWidth = 2;
-      const font = getComputedStyle(document.body).getPropertyValue(
-        "--font-sansx",
-      );
-
-      if (width > 420) {
-        ctx.font = `700 13px ${font}`;
-      } else {
-        ctx.font = `700 5px ${font}`;
-      }
+      ctx.fillStyle = chartPrimary;
+      ctx.font = "700 11px dana";
       ctx.textAlign = "center";
 
-      const d = data[i];
-      const percent = Math.round(v);
+      ctx.fillText(`${Math.round(value)}%`, point.x, point.y - 12);
 
-      ctx.textAlign = "center";
-
-      ctx.fillText(`%${d.score} `, x, y - 10);
-      // bottom label
-      if (width > 420) {
-        ctx.font = "16px dana";
-      } else {
-        ctx.font = "13px dana";
-      }
       ctx.fillStyle = chartText;
-      ctx.fillText(data[i].label, x, height - 15);
+      ctx.font = width > 420 ? "14px dana" : "11px dana";
+
+      ctx.fillText(data[index].label, point.x, height - 14);
     });
   }, [data, width, height]);
+
+  // hover
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -205,14 +217,14 @@ export const LineChart: FC<Props> = ({ data, width, height }) => {
       const rect = canvas.getBoundingClientRect();
 
       const mouseX = e.clientX - rect.left;
+
       const mouseY = e.clientY - rect.top;
 
-      const index = data.findIndex((_, i) => {
-        const x = width - 50 - i * ((width - 70 - 50) / (data.length - 1));
+      const index = data.findIndex((item, i) => {
+        const x = mapX(i);
+        const y = mapY(item.percentage);
 
-        const y = 50 + (height - 100) - (data[i].score / 100) * (height - 100);
-
-        return Math.abs(mouseX - x) < 10 && Math.abs(mouseY - y) < 10;
+        return Math.abs(mouseX - x) < 15 && Math.abs(mouseY - y) < 15;
       });
 
       if (index !== -1) {
@@ -229,42 +241,8 @@ export const LineChart: FC<Props> = ({ data, width, height }) => {
 
     canvas.addEventListener("mousemove", handleMove);
 
-    return () => {
-      canvas.removeEventListener("mousemove", handleMove);
-    };
+    return () => canvas.removeEventListener("mousemove", handleMove);
   }, [data, width, height]);
-
-  const getTooltipTop = () => {
-    if (!tooltip) return 0;
-    const tooltipHeight = 170;
-    if (tooltip.y - tooltipHeight < 0) {
-      return tooltip.y - 100;
-    }
-    return tooltip.y - tooltipHeight;
-  };
-
-  const getTooltipPosition = (index: number) => {
-    const tooltipWidth = 180;
-    if (!tooltip) return;
-    if (index === 0) {
-      return {
-        transform: "translateX(0)",
-        left: tooltip.x - 220,
-      };
-    }
-
-    if (index === data.length - 1) {
-      return {
-        transform: "translateX(-100%)",
-        left: tooltip.x + 220,
-      };
-    }
-
-    return {
-      transform: "translateX(-50%)",
-      left: tooltip.x,
-    };
-  };
 
   return (
     <div className="relative">
@@ -273,62 +251,54 @@ export const LineChart: FC<Props> = ({ data, width, height }) => {
       {tooltip && (
         <div
           className="
-      absolute
-      bg-background
-      shadow-xl
-      border
-      border-border-gray
-      rounded-2xl
-      px-5
-      py-4
-      text-sm
-      text-foreground
-      pointer-events-none
-      min-w-55
-      z-100
-    "
+          absolute
+          bg-background
+          border
+          border-border-gray
+          shadow-xl
+          rounded-2xl
+          p-4
+          min-w-52
+          text-sm
+          z-50
+          "
           style={{
-            ...getTooltipPosition(tooltip.index),
-            top: getTooltipTop(),
+            left: tooltip.x < 100 ? tooltip.x : tooltip.x - 50,
+            top: tooltip.y < 170 ? tooltip.y + 40 : tooltip.y - 190,
+            transform: "translateX(-50%)",
           }}
-          dir="rtl"
         >
-          {/* Header */}
-          <div className="text-center ">
-            <div className="font-bold text-foreground text-base">
-              {tooltip.data.label}
-            </div>
-            <div className="text-xs text-muted mt-1">عملکرد روزانه</div>
-          </div>
+          <div className="font-bold text-center mb-3">{tooltip.data.label}</div>
 
-          {/* Stats */}
           <div className="grid grid-cols-2 gap-3">
-            <div className="bg-border-gray rounded-xl p-3 text-center">
-              <div className="text-xs text-muted">✅ به موقع</div>
-              <div className="font-bold text-foreground mt-1">
-                {tooltip.data.onTime}/{tooltip.data.planned}
-              </div>
+            <div>
+              برنامه:
+              <b>{tooltip.data.planned}</b>
             </div>
 
-            <div className="bg-border-gray rounded-xl p-3 text-center">
-              <div className="text-xs text-muted">↻ بازیابی</div>
-              <div className="font-bold text-foreground mt-1">
-                {tooltip.data.recovery}
-              </div>
+            <div>
+              انجام:
+              <b>{tooltip.data.percentage}%</b>
             </div>
 
-            <div className="bg-border-gray rounded-xl p-3 text-center">
-              <div className="text-xs text-muted">🪙 سکه</div>
-              <div className="font-bold text-yellow-600 mt-1">
-                {tooltip.data.coins}
-              </div>
+            <div>
+              به موقع:
+              <b>{tooltip.data.onTime}</b>
             </div>
 
-            <div className="bg-coin-primary rounded-xl p-3 text-center">
-              <div className="text-xs text-coin-soft">⭐ امتیاز</div>
-              <div className="font-bold text-foreground mt-1">
-                %{tooltip.data.score}
-              </div>
+            <div>
+              بازیابی:
+              <b>{tooltip.data.recovery}</b>
+            </div>
+
+            <div>
+              🪙
+              {tooltip.data.coins}
+            </div>
+
+            <div>
+              ⭐{tooltip.data.xp}
+              XP
             </div>
           </div>
         </div>

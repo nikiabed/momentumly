@@ -3,6 +3,7 @@ import { useTodoContext } from "@/app/_utils";
 import { getCoinStats } from "@/app/_utils/progress";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 
 export const CoinSect = () => {
   const { todo } = useTodoContext();
@@ -20,31 +21,55 @@ export const CoinSect = () => {
   return (
     <div
       className="
+      relative
         w-full max-w-980
-        bg-coin-background
+        bg-linear-90
+        from-background
+        to-coin-background
         rounded-4xl
-        shadow-sm
-        border border-border-gray
-        p-6 md:p-8
+        shadow
+        p-15
+        ring-1 ring-yellow-300/20
         flex flex-col lg:flex-row
         items-center
         gap-8
         overflow-hidden
+hover:bg-coin-background hover:bg-blend-hue
+        
       "
     >
+      <div
+        className="
+absolute bottom-0 left-10 right-10
+h-0.5
+bg-linear-to-r
+from-transparent
+via-yellow-400/50
+to-transparent
+"
+      />
       <div className="w-full lg:w-1/3 flex flex-col gap-2">
         <div className="flex items-center gap-2 text-muted justify-center">
-          <span className="text-xl">🪙</span>
           <span className="text-md font-semibold">موجودی سکه‌ها</span>
         </div>
 
-        <div className="flex items-baseline gap-2 mt-1 justify-center">
+        <motion.div
+          className="flex items-baseline gap-2 mt-1 justify-center"
+          animate={{
+            y: [0, -5, 0],
+          }}
+          transition={{
+            duration: 1.5,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        >
           <span className="text-5xl font-black text-coin-primary">
             {globalCoins}
           </span>
 
-          <span className="text-xl font-bold text-muted">سکه</span>
-        </div>
+          <span className="text-xl font-bold text-muted ">🪙</span>
+        </motion.div>
 
         <div className="grid grid-cols-2 gap-3 mt-6">
           <div className="bg-coin-soft rounded-2xl p-4">
@@ -75,21 +100,27 @@ export const CoinSect = () => {
         </div>
       </div>
 
-      <div className="flex-1 flex justify-center items-center">
+      <div className="flex-1 flex justify-center items-center ">
         <div className="relative">
-          {mounted && (
+          <motion.div
+            animate={{
+              scale: [1, 1.04, 1],
+              y: [0, -3, 0],
+            }}
+            transition={{
+              duration: 3,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          >
             <Image
               width={240}
               height={180}
-              src={
-                theme === "dark"
-                  ? "/images/coinBoxDark.png"
-                  : "/images/coinBox.png"
-              }
+              src={"/images/coinBox.png"}
               alt="coin box"
               className="object-contain relative z-10"
             />
-          )}
+          </motion.div>
         </div>
       </div>
 

@@ -3,6 +3,7 @@ import { input } from "../Todo.const";
 import { Add } from "iconsax-reactjs";
 import { useTodoContext } from "@/app/_utils/hooks";
 import { Board } from "@/app/types";
+import { Loader2 } from "lucide-react";
 
 type InputProps = DetailedHTMLProps<
   HTMLAttributes<HTMLDivElement>,
@@ -12,7 +13,8 @@ type InputProps = DetailedHTMLProps<
 };
 
 export const TodoInput: FC<InputProps> = ({ item }) => {
-  const { handleSubmit, handleChange, inputValue } = useTodoContext();
+  const { handleSubmit, handleChange, inputValue, isCreating } =
+    useTodoContext();
   return (
     <form
       name="todo"
@@ -21,8 +23,15 @@ export const TodoInput: FC<InputProps> = ({ item }) => {
       }}
       className="py-2 pl-2 items-center flex w-full bg-background rounded-lg group hover:bg-background/50"
     >
-      <button type="submit" className={`pl-4 pr-5 h-10 text-foreground/80`}>
-        <Add size={20} />
+      <button
+        type="submit"
+        className={`pl-4 pr-5 h-10 text-foreground/80 `}
+      >
+        {isCreating ? (
+          <Loader2 className="animate-spin text-rose-400" size={18} />
+        ) : (
+          <Add size={20} />
+        )}
       </button>
       <input
         onChange={handleChange ?? undefined}
@@ -31,6 +40,7 @@ export const TodoInput: FC<InputProps> = ({ item }) => {
         placeholder={input.placeholder}
         value={inputValue ?? ""}
         name="task"
+        disabled={isCreating}
       />
     </form>
   );

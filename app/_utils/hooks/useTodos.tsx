@@ -9,6 +9,8 @@ import { getDateKey } from "../date";
 import { useSession } from "next-auth/react";
 import { TodoEntry } from "@/app/types";
 import { useFeedback } from "@/app/feedback";
+import { toast } from "sonner";
+import { set } from "mongoose";
 
 export const useTodos = (activeBoard: string) => {
   const [todo, setTodo] = useState<TodoList>([]);
@@ -145,6 +147,7 @@ export const useTodos = (activeBoard: string) => {
 
     if (success && value) {
       todoCompleted();
+      toast.success("کار با موفقیت انجام شد!");
 
       setTimeout(() => {
         coinEarned(10);
@@ -164,18 +167,26 @@ export const useTodos = (activeBoard: string) => {
     }
   };
 
-  type AddTodoBoard = Pick<Board, "_id" | "title">;
+  type AddTodoBoard = Pick<Board, "boardKey" | "title">;
+  const [isCreating, setIsCreating] = useState(false);
 
   const addTodo = async (title: string, item: AddTodoBoard) => {
-    await createTodo({
+    if (isCreating) return;
+    setIsCreating(true);
+   try { await createTodo({
       title,
       status: false,
       isImportant: item.title === BOARD_KEYS.IMPORTANT,
       item: item.title,
-      boardKey: item._id,
+      boardKey: item.boardKey,
     });
 
-    setInputValue("");
+    setInputValue("");} catch (err) {
+      toast.error("خطا در ایجاد تسک. لطفا دوباره تلاش کنید.");
+      console.error("Add todo failed:", err);
+    } finally {
+      setIsCreating(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -281,11 +292,6 @@ export const useTodos = (activeBoard: string) => {
   };
 
   const saveTrackedTime = async (id: string, seconds: number) => {
-    console.log("🔥 SAVE TRACKED TIME:", {
-      id,
-      seconds,
-    });
-
     try {
       const res = await fetch(`/api/todos/${id}`, {
         method: "PATCH",
@@ -293,13 +299,21 @@ export const useTodos = (activeBoard: string) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          trackedTimeSeconds: seconds,
+          addTrackedTimeSeconds: seconds,
         }),
       });
 
       const data = await res.json();
-
-      console.log("🔥 SAVE RESPONSE:", res.status, data);
+      setTodo((prev) =>
+        prev.map((todo) =>
+          todo._id === id
+            ? {
+                ...todo,
+                trackedTimeSeconds: seconds,
+              }
+            : todo,
+        ),
+      );
 
       if (!res.ok) {
         throw new Error("Failed to save tracked time");
@@ -380,5 +394,7 @@ export const useTodos = (activeBoard: string) => {
     setTodoEntries,
     createAITodos,
     createTodo,
+    isCreating,
+    setIsCreating,
   };
 };
