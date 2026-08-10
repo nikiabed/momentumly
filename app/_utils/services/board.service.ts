@@ -6,7 +6,11 @@ const headers = {
 
 export const boardService = {
   async getBoards(): Promise<Board[]> {
+    console.time("FETCH BOARDS");
+
     const res = await fetch("/api/boards");
+
+    console.timeEnd("FETCH BOARDS");
     if (!res.ok) {
       throw new Error("Failed to load boards");
     }

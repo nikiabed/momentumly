@@ -5,31 +5,21 @@ import Board from "@/app/models/Board";
 
 export async function PATCH(req: Request) {
   try {
-    await connectDB();
-
     const session = await auth();
 
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { message: "Unauthorized" },
-        { status: 401 }
-      );
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
+    await connectDB();
 
     const { boardId, theme } = await req.json();
 
     if (!boardId || !theme) {
-      return NextResponse.json(
-        { message: "Missing data" },
-        { status: 400 }
-      );
+      return NextResponse.json({ message: "Missing data" }, { status: 400 });
     }
 
     if (typeof theme !== "string") {
-      return NextResponse.json(
-        { message: "Invalid theme" },
-        { status: 400 }
-      );
+      return NextResponse.json({ message: "Invalid theme" }, { status: 400 });
     }
 
     const board = await Board.findOneAndUpdate(
@@ -40,14 +30,11 @@ export async function PATCH(req: Request) {
       {
         theme,
       },
-      { new: true }
+      { new: true },
     );
 
     if (!board) {
-      return NextResponse.json(
-        { message: "Board not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ message: "Board not found" }, { status: 404 });
     }
 
     return NextResponse.json({
@@ -57,9 +44,6 @@ export async function PATCH(req: Request) {
   } catch (err) {
     console.error("PATCH board theme error:", err);
 
-    return NextResponse.json(
-      { message: "Server error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ message: "Server error" }, { status: 500 });
   }
 }

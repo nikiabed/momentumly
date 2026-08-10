@@ -39,7 +39,7 @@ export const Progress = () => {
   }, []);
 
   return (
-    <div className="flex flex-col gap-4 w-full px-4 md:px-10 lg:px-16">
+    <div className="flex flex-col gap-4 w-full px-4 md:px-10 lg:px-16 ">
       <CoinSect />
       <FunctionSect />
       <div

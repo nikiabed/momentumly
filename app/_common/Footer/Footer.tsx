@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
 type Particle = {
@@ -37,52 +38,37 @@ export const Footer = () => {
     );
   }, []);
 
-  const colors = ["bg-white/80", "bg-sky-300/70", "bg-violet-300/70"];
   return (
     <footer
       className="
-      h-15
-         relative
+    relative
     overflow-hidden
-      p-2
-bg-[#312e81]
-      flex
-      items-center
-      justify-center
-      w-full
-       z-10 text-center text-white   gap-2
-      "
+    border-t
+    border-foreground/10
+    px-6
+    py-8
+          bg-[#272567]
+          text-rose-50
+
+  "
     >
+      {/* background glow */}
       <div
         className="
-absolute
--left-10
-bottom-0
-w-32
-h-32
-rounded-full
-bg-yellow-300/10
-blur-3xl
-"
+      absolute
+      right-0
+      top-0
+      w-28
+      rounded-full
+      blur-3xl
+    "
       />
 
-      <div
-        className="
-absolute
-right-0
-top-0
-w-28
-h-28
-rounded-full
-bg-violet-300/10
-blur-3xl
-"
-      />
       {/* floating particles */}
       {particles.map((p) => (
         <motion.div
           key={p.id}
-          className="absolute pointer-events-none select-none"
+          className="pointer-events-none absolute select-none"
           style={{
             left: `${p.x}%`,
             top: `${p.y}%`,
@@ -113,38 +99,48 @@ blur-3xl
                 width: p.size,
                 height: p.size,
               }}
-              className="
-rounded-full
-bg-white/40
-blur-[0.5px]
-"
+              className="rounded-full bg-white/40 blur-[0.5px]"
             />
           )}
         </motion.div>
       ))}
-      <div className="relative z-20 flex items-center gap-2">
-        <p
-          className="
-        text-sm
-        "
-        >
-          .Crafted with care
-        </p>
-        <p
-          className="
-        "
-        >
-          | Small steps, Big growth |
-        </p>
 
-        <p
-          className="
-          text-lg
-          font-black
-          "
-        >
-          Niki Studio
-        </p>
+      <div
+        className="
+      relative
+      mx-auto
+      flex
+      max-w-300
+      flex-col
+      items-center
+      justify-between
+      gap-4
+      text-center
+      md:flex-row
+      md:text-right
+      
+    "
+      >
+        <div>
+          <Image
+            src={"/images/Logo-w.png"}
+            alt="logo momentumly"
+            width={130}
+            height={60}
+          />
+        </div>
+
+        <div className="flex flex-wrap justify-center gap-5 text-xs ">
+          <a href="#" className="transition hover:text-white">
+            حریم خصوصی
+          </a>
+          <a href="#" className="transition hover:text-white">
+            شرایط استفاده
+          </a>
+          <span dir="ltr">© 2026 momentumly</span>{" "}
+        </div>
+
+        <p className="text-xs ">ساخته‌شده توسط : Nikiabed </p>
       </div>
     </footer>
   );

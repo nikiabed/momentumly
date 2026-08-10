@@ -3,5 +3,6 @@ export const ROUTES = {
   DASHBOARD: "/dashboard",
   SIGN_UP : "/sign-up",
   TODO: "/todo",
-  PRODUCTS: "/products"
+  PRODUCTS: "/products",
+  LOGIN: "/login"
 }

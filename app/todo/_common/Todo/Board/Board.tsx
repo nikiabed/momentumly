@@ -1,5 +1,4 @@
 "use client";
-import { TodoList } from "../TodoList";
 import { Progress } from "../Progress";
 import { TodoInput } from "../TodoInput";
 import {
@@ -23,6 +22,15 @@ type boardProps = {
 
 export const Board = ({ item, sidebarOpen, setSidebarOpen }: boardProps) => {
   const { todo, boardList, searchText, systemBoards } = useTodoContext();
+
+  console.time("BOARD RENDER");
+
+  console.log("BOARD RENDERED", {
+    todo: todo.length,
+    boardList: boardList.length,
+  });
+
+  console.timeEnd("BOARD RENDER");
   const normalize = (key?: string) => key?.toLowerCase().replace(/\s/g, "");
   const currentBoard =
     systemBoards?.[item.boardKey] ??
@@ -79,8 +87,8 @@ export const Board = ({ item, sidebarOpen, setSidebarOpen }: boardProps) => {
     return <div>Loading boards...</div>;
   }
 
-const { theme } = useTheme();
-const isDark = theme === "dark";
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
 
   return (
     <div
@@ -108,7 +116,7 @@ const isDark = theme === "dark";
       >
         <HamburgerMenu size={24} />
       </button>
-      <div className=" relative z-10 flex gap-4 flex-col min-h-screen py-5 isolate">
+      <div className=" relative z-10 flex gap-4 flex-col min-h-screen py-5 isolate ">
         <div className="shrink-0 px-16 flex flex-col gap-4 ">
           <Header item={currentBoard} todo={filteredTodos} />
           {currentBoard?.boardKey !== BOARD_KEYS.PROGRESS &&
