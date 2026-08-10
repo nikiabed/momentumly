@@ -10,21 +10,16 @@ import { TodoList } from "../TodoList";
 export const TodoDateList = ({ todo }: { todo: TodoListType }) => {
   const { setTodo } = useTodoContext();
 
-  // فقط Parentها برای تعیین گروه تاریخ استفاده می‌شوند
   const parents = todo.filter((item) => item.parentTodoId == null);
 
   const groupedByDate = parents.reduce(
     (acc: Record<string, Todo[]>, parent: Todo) => {
       const date = getTodoDisplayDate(parent);
-
       if (!date) return acc;
-
       if (!acc[date]) {
         acc[date] = [];
       }
-
       acc[date].push(parent);
-
       return acc;
     },
     {},
@@ -34,7 +29,6 @@ export const TodoDateList = ({ todo }: { todo: TodoListType }) => {
     <div>
       {Object.entries(groupedByDate).map(([date, parentsForDate]) => {
         const formatted = formatGroupDate(date);
-
         const icon =
           formatted.label === "امروز" ? (
             <Sun1 size={18} />

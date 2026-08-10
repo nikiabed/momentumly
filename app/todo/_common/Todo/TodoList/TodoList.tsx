@@ -18,15 +18,12 @@ export const TodoList = ({
     return String(id);
   };
 
-  // todo = فقط Parentهای همین گروه تاریخ
   const parents = todo.filter(
     (item) => item.parentTodoId == null
   );
 
   const todoTree = parents.map((parent) => {
     const parentId = normalizeId(parent._id);
-
-    // allTodos = کل Todoهای Board
     const children = allTodos.filter(
       (child) =>
         normalizeId(child.parentTodoId) === parentId
@@ -37,18 +34,6 @@ export const TodoList = ({
       children,
     };
   });
-
-  console.log("TODO:", todo.length);
-  console.log("ALL TODOS:", allTodos.length);
-
-  console.log(
-    "TREE:",
-    todoTree.map((item) => ({
-      id: item._id,
-      title: item.title,
-      children: item.children.length,
-    }))
-  );
 
   return (
     <div className="flex flex-col gap-1">
