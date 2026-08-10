@@ -10,32 +10,40 @@ import { TodoList } from "../TodoList";
 export const TodoDateList = ({ todo }: { todo: TodoListType }) => {
   const { setTodo } = useTodoContext();
 
-  const groupedByDate = todo.reduce(
-    (acc: Record<string, Todo[]>, item: Todo) => {
-      const date = getTodoDisplayDate(item);
+  // فقط Parentها برای تعیین گروه تاریخ استفاده می‌شوند
+  const parents = todo.filter((item) => item.parentTodoId == null);
+
+  const groupedByDate = parents.reduce(
+    (acc: Record<string, Todo[]>, parent: Todo) => {
+      const date = getTodoDisplayDate(parent);
+
       if (!date) return acc;
+
       if (!acc[date]) {
         acc[date] = [];
       }
 
-      acc[date].push(item);
+      acc[date].push(parent);
+
       return acc;
     },
     {},
   );
+
   return (
-    <div className="flex flex-col gap-2">
-      {Object.entries(groupedByDate).map(([date, todos]) => {
+    <div>
+      {Object.entries(groupedByDate).map(([date, parentsForDate]) => {
         const formatted = formatGroupDate(date);
+
         const icon =
           formatted.label === "امروز" ? (
-            <Sun1 size={16} />
+            <Sun1 size={18} />
           ) : formatted.label === "دیروز" ? (
-            <Moon size={16} />
+            <Clock size={18} />
           ) : formatted.label === "فردا" ? (
-            <Clock size={16} />
+            <Moon size={18} />
           ) : (
-            <Calendar size={16} />
+            <Calendar size={18} />
           );
 
         return (
@@ -60,7 +68,7 @@ export const TodoDateList = ({ todo }: { todo: TodoListType }) => {
               <span className="text-sm text-text-muted">{formatted.date}</span>
             </div>
 
-            <TodoList todo={todos} setTodo={setTodo} />
+            <TodoList todo={parentsForDate} allTodos={todo} setTodo={setTodo} />
           </div>
         );
       })}

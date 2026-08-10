@@ -31,6 +31,7 @@ export const useTodos = (activeBoard: string) => {
 
   const loadTodos = async () => {
     try {
+      
       const data = await todoService.getTodos();
       setTodo(data);
     } catch (err) {
@@ -105,7 +106,7 @@ export const useTodos = (activeBoard: string) => {
           item: step.description || step.title,
           status: false,
           isImportant: false,
-          boardKey,
+          boardKey: boardKey,
           parentTodoId: parent._id,
           isAIStep: true,
           isEdit: false,
@@ -173,15 +174,17 @@ export const useTodos = (activeBoard: string) => {
   const addTodo = async (title: string, item: AddTodoBoard) => {
     if (isCreating) return;
     setIsCreating(true);
-   try { await createTodo({
-      title,
-      status: false,
-      isImportant: item.title === BOARD_KEYS.IMPORTANT,
-      item: item.title,
-      boardKey: item.boardKey,
-    });
+    try {
+      await createTodo({
+        title,
+        status: false,
+        isImportant: item.title === BOARD_KEYS.IMPORTANT,
+        item: item.title,
+        boardKey: item.boardKey,
+      });
 
-    setInputValue("");} catch (err) {
+      setInputValue("");
+    } catch (err) {
       toast.error("خطا در ایجاد تسک. لطفا دوباره تلاش کنید.");
       console.error("Add todo failed:", err);
     } finally {
