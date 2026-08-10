@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { ROUTES } from "../_utils/constants";
 import { Footer } from "../_common";
+import { motion, type Variants } from "framer-motion";
 import Image from "next/image";
 import { ThemeToggle } from "../todo/_common";
 import { HeroMotionBackground } from "./HeroMotionBackground";
@@ -51,7 +51,7 @@ const features = [
   },
 ];
 
-const reveal = {
+const reveal: Variants = {
   hidden: {
     opacity: 0,
     y: 50,
@@ -61,7 +61,7 @@ const reveal = {
     y: 0,
     transition: {
       duration: 0.7,
-      ease: "easeOut",
+      ease: [0.22, 1, 0.36, 1],
     },
   },
 };
@@ -347,7 +347,19 @@ export default function Home() {
             block
             h-auto
             w-full
-            object-contain
+            object-contain dark:hidden
+          "
+              />
+              <Image
+                src="/images/preview-dark.png"
+                alt="Momentumly dashboard"
+                width={2000}
+                height={1500}
+                className="
+            block
+            h-auto
+            w-full
+            object-contain hidden dark:block
           "
               />
             </motion.div>
@@ -359,6 +371,7 @@ export default function Home() {
         <div className="mx-auto w-full max-w-300">
           {features.map((feature, index) => {
             const isLeft = feature.align === "left";
+            const isLarge = index % 2 === 0;
 
             return (
               <motion.section
@@ -367,17 +380,17 @@ export default function Home() {
                 whileInView="visible"
                 viewport={{ once: true, amount: 0.2 }}
                 variants={reveal}
-                className="
-  grid
-  w-full
-  items-center
-  gap-12
-  border-t
-  border-foreground/20
-  py-28
-  md:grid-cols-[2fr_3fr]
-  md:gap-16
-"
+                className={`
+        grid
+        w-full
+        items-center
+        gap-12
+        border-t
+        border-foreground/20
+        py-28
+        md:gap-16
+        ${isLarge ? "md:grid-cols-[2fr_3fr]" : "md:grid-cols-[3fr_2fr]"}
+      `}
               >
                 {/* TEXT */}
                 <motion.div
@@ -398,10 +411,10 @@ export default function Home() {
                     ease: "easeOut",
                   }}
                   className={`
-              w-full
-              ${isLeft ? "md:order-1" : "md:order-2"}
-              ${isLeft ? "md:pr-8" : "md:pl-8"}
-            `}
+          w-full
+          ${isLeft ? "md:order-1" : "md:order-2"}
+          ${isLeft ? "md:pr-8" : "md:pl-8"}
+        `}
                 >
                   <span className="text-xs font-black tracking-widest text-coin-primary">
                     {feature.eyebrow}
@@ -416,7 +429,6 @@ export default function Home() {
                   </p>
                 </motion.div>
 
-                {/* PRODUCT IMAGE */}
                 {/* PRODUCT IMAGE */}
                 <motion.div
                   initial={{
@@ -441,19 +453,19 @@ export default function Home() {
                     scale: 1.035,
                   }}
                   className={`
-    group
-    relative
-    w-full
-    min-w-0
-    aspect-[4/3]
-    overflow-hidden
-    rounded-[2rem]
-    border
-    border-foreground/10
-    bg-background
-    shadow-xl
-    ${isLeft ? "md:order-2" : "md:order-1"}
-  `}
+          group
+          relative
+          w-full
+          min-w-0
+          aspect-4/3
+          overflow-hidden
+          rounded-[2rem]
+          border-2
+          border-foreground/30
+          bg-background
+          shadow-xl
+          ${isLeft ? "md:order-2" : "md:order-1"}
+        `}
                 >
                   {/* LIGHT MODE */}
                   <Image
@@ -461,10 +473,7 @@ export default function Home() {
                     alt={feature.label}
                     fill
                     sizes="(max-width: 768px) 100vw, 60vw"
-                    className="
-      object-contain
-      dark:hidden
-    "
+                    className="object-contain dark:hidden"
                   />
 
                   {/* DARK MODE */}
@@ -473,28 +482,24 @@ export default function Home() {
                     alt={`${feature.label} dark mode`}
                     fill
                     sizes="(max-width: 768px) 100vw, 60vw"
-                    className="
-      hidden
-      object-contain
-      dark:block
-    "
+                    className="hidden object-contain dark:block"
                   />
 
-                  {/* subtle hover highlight */}
+                  {/* hover highlight */}
                   <div
                     className="
-      pointer-events-none
-      absolute
-      inset-0
-      bg-gradient-to-br
-      from-white/[0.05]
-      via-transparent
-      to-transparent
-      opacity-0
-      transition-opacity
-      duration-500
-      group-hover:opacity-100
-    "
+            pointer-events-none
+            absolute
+            inset-0
+            bg-gradient-to-br
+            from-white/[0.05]
+            via-transparent
+            to-transparent
+            opacity-0
+            transition-opacity
+            duration-500
+            group-hover:opacity-100
+          "
                   />
                 </motion.div>
               </motion.section>
@@ -503,7 +508,7 @@ export default function Home() {
         </div>
       </section>
       {/* FINAL CTA */}
-      <section className=" py-20 w-full ">
+      <section className="  w-full ">
         <motion.div
           initial="hidden"
           whileInView="visible"
@@ -520,7 +525,7 @@ export default function Home() {
         >
           <span className="text-sm font-bold text-coin-primary">?READY</span>
 
-          <h2 className="mt-5 text-2xl font-black md:text-3xl">
+          <h2 className="mt-5 text-2xl font-semibold md:text-3xl">
             آماده‌ای واقعا
             <br />
             کارهات رو انجام بدی؟
@@ -550,6 +555,90 @@ export default function Home() {
             شروع کن
           </Link>
         </motion.div>
+      </section>
+      {/* BOTTOM NAV / PRODUCT LINKS */}
+      <section className="w-full border-t border-foreground/10 px-6 py-20">
+        <div className="mx-auto grid max-w-300 gap-12 md:grid-cols-4">
+          {/* BRAND */}
+          <div className="md:col-span-1">
+            <Image
+              src={"/images/Logo-p.png"}
+              alt="logo momentumly"
+              width={150}
+              height={80}
+            />
+
+            <p className="mt-4 max-w-65 text-sm leading-7 text-muted">
+              ابزاری برای تبدیل کارهای بزرگ به قدم‌های کوچک، قابل انجام و واقعی.
+            </p>
+          </div>
+
+          {/* PRODUCT */}
+          <div>
+            <h4 className="font-bold">محصول</h4>
+
+            <div className="mt-5 flex flex-col gap-3 text-sm text-muted">
+              <a href="#features" className="transition hover:text-foreground">
+                امکانات
+              </a>
+
+              <a
+                href="#how-it-works"
+                className="transition hover:text-foreground"
+              >
+                چطور کار می‌کند؟
+              </a>
+
+              <Link
+                href={ROUTES.LOGIN}
+                className="transition hover:text-foreground"
+              >
+                شروع کار
+              </Link>
+            </div>
+          </div>
+
+          {/* RESOURCES */}
+          <div>
+            <h4 className="font-bold">راهنما</h4>
+
+            <div className="mt-5 flex flex-col gap-3 text-sm text-muted">
+              <a href="#" className="transition hover:text-foreground">
+                راهنمای استفاده
+              </a>
+
+              <a href="#" className="transition hover:text-foreground">
+                سوالات متداول
+              </a>
+
+              <a href="#" className="transition hover:text-foreground">
+                درباره momentumly
+              </a>
+            </div>
+          </div>
+
+          {/* CONTACT */}
+          <div>
+            <h4 className="font-bold">ارتباط</h4>
+
+            <div className="mt-5 flex flex-col gap-3 text-sm text-muted">
+              <a
+                href="mailto:hello@momentumly.app"
+                className="transition hover:text-foreground"
+              >
+                تماس با ما
+              </a>
+
+              <a href="#" className="transition hover:text-foreground">
+                اینستاگرام
+              </a>
+
+              <a href="#" className="transition hover:text-foreground">
+                لینکدین
+              </a>
+            </div>
+          </div>
+        </div>
       </section>
       {/* FOOTER */}
       <Footer />
