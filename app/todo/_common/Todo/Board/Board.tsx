@@ -1,5 +1,4 @@
 "use client";
-import { TodoList } from "../TodoList";
 import { Progress } from "../Progress";
 import { TodoInput } from "../TodoInput";
 import {

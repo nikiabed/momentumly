@@ -160,7 +160,7 @@ export default function Home() {
         بعداً src را عوض کن
     --------------------------------- */}
           <Image
-            src="/images/landing1.jpg"
+            src="/images/landing1.webp"
             alt="Momentumly app preview"
             fill
             priority

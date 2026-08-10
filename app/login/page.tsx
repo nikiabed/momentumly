@@ -25,7 +25,7 @@ export default function LoginPage() {
       
     "
       style={{
-        backgroundImage: "url('/images/login-mountains.jpg')",
+        backgroundImage: "url('/images/login-mountains.webp')",
       }}
     >
       {/* LOGIN */}
@@ -65,7 +65,6 @@ export default function LoginPage() {
             <form
               onSubmit={(e) => {
                 e.preventDefault();
-                // بعداً اینجا login credentials را اضافه می‌کنیم
               }}
               className="space-y-5"
             >
@@ -100,7 +99,7 @@ export default function LoginPage() {
                     placeholder:text-black/25
                     transition
                     focus:border-purple-400/60
-                    focus:bg-white/[0.06]
+                    focus:bg-white/6
                     focus:ring-2
                     focus:ring-purple-400/10
                   "

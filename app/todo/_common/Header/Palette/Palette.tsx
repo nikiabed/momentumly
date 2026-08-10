@@ -138,14 +138,14 @@ export const Palette = ({ item }: { item: Board }) => {
 
             <div
               className=" cursor-pointer h-10 w-10 "
-              onClick={() => handleColorChange("img:/images/background2.jpg")}
+              onClick={() => handleColorChange("img:/images/background2.webp")}
             >
               <img
-                src="/images/background2.jpg"
+                src="/images/background2.webp"
                 alt="Image"
                 className={`h-10 w-10 cursor-pointer rounded
     ${
-      item.theme === "img:/images/background2.jpg"
+      item.theme === "img:/images/background2.webp"
         ? "ring-2 ring-offset-2 ring-blue-500"
         : ""
     }
@@ -154,14 +154,14 @@ export const Palette = ({ item }: { item: Board }) => {
             </div>
             <div
               className=" cursor-pointer  h-10 w-10 "
-              onClick={() => handleColorChange("img:/images/background3.jpg")}
+              onClick={() => handleColorChange("img:/images/background3.webp")}
             >
               <img
-                src="/images/background3.jpg"
+                src="/images/background3.webp"
                 alt="Image"
                 className={`h-10 w-10 cursor-pointer rounded
     ${
-      item.theme === "img:/images/background3.jpg"
+      item.theme === "img:/images/background3.webp"
         ? "ring-2 ring-offset-2 ring-blue-500"
         : ""
     }
@@ -170,14 +170,14 @@ export const Palette = ({ item }: { item: Board }) => {
             </div>
             <div
               className=" cursor-pointer  h-10 w-10 "
-              onClick={() => handleColorChange("img:/images/background4.jpg")}
+              onClick={() => handleColorChange("img:/images/background4.webp")}
             >
               <img
-                src="/images/background4.jpg"
+                src="/images/background4.webp"
                 alt="Image"
                 className={`h-10 w-10 cursor-pointer rounded
     ${
-      item.theme === "img:/images/background4.jpg"
+      item.theme === "img:/images/background4.webp"
         ? "ring-2 ring-offset-2 ring-blue-500"
         : ""
     }
@@ -186,14 +186,14 @@ export const Palette = ({ item }: { item: Board }) => {
             </div>
             <div
               className=" cursor-pointer  h-10 w-10 "
-              onClick={() => handleColorChange("img:/images/background5.jpg")}
+              onClick={() => handleColorChange("img:/images/background5.webp")}
             >
               <img
-                src="/images/background5.jpg"
+                src="/images/background5.webp"
                 alt="Image"
                 className={`h-10 w-10 cursor-pointer rounded
     ${
-      item.theme === "img:/images/background5.jpg"
+      item.theme === "img:/images/background5.webp"
         ? "ring-2 ring-offset-2 ring-blue-500"
         : ""
     }
@@ -202,14 +202,14 @@ export const Palette = ({ item }: { item: Board }) => {
             </div>
             <div
               className=" cursor-pointer  h-10 w-10 "
-              onClick={() => handleColorChange("img:/images/background6.jpg")}
+              onClick={() => handleColorChange("img:/images/background6.webp")}
             >
               <img
-                src="/images/background6.jpg"
+                src="/images/background6.webp"
                 alt="Image"
                 className={`h-10 w-10 cursor-pointer rounded
     ${
-      item.theme === "img:/images/background6.jpg"
+      item.theme === "img:/images/background6.webp"
         ? "ring-2 ring-offset-2 ring-blue-500"
         : ""
     }
@@ -218,14 +218,14 @@ export const Palette = ({ item }: { item: Board }) => {
             </div>
             <div
               className=" cursor-pointer  h-10 w-10 "
-              onClick={() => handleColorChange("img:/images/background7.jpg")}
+              onClick={() => handleColorChange("img:/images/background7.webp")}
             >
               <img
-                src="/images/background7.jpg"
+                src="/images/background7.webp"
                 alt="Image"
                 className={`h-10 w-10 cursor-pointer rounded
     ${
-      item.theme === "img:/images/background7.jpg"
+      item.theme === "img:/images/background7.webp"
         ? "ring-2 ring-offset-2 ring-blue-500"
         : ""
     }

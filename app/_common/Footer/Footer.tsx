@@ -46,7 +46,7 @@ export const Footer = () => {
     border-t
     border-foreground/10
     px-6
-    py-4
+    py-8
           bg-[#272567]
           text-rose-50
 
