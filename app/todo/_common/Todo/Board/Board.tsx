@@ -22,6 +22,15 @@ type boardProps = {
 
 export const Board = ({ item, sidebarOpen, setSidebarOpen }: boardProps) => {
   const { todo, boardList, searchText, systemBoards } = useTodoContext();
+
+  console.time("BOARD RENDER");
+
+  console.log("BOARD RENDERED", {
+    todo: todo.length,
+    boardList: boardList.length,
+  });
+
+  console.timeEnd("BOARD RENDER");
   const normalize = (key?: string) => key?.toLowerCase().replace(/\s/g, "");
   const currentBoard =
     systemBoards?.[item.boardKey] ??
@@ -78,8 +87,8 @@ export const Board = ({ item, sidebarOpen, setSidebarOpen }: boardProps) => {
     return <div>Loading boards...</div>;
   }
 
-const { theme } = useTheme();
-const isDark = theme === "dark";
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
 
   return (
     <div

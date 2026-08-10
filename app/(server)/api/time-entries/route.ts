@@ -12,13 +12,12 @@ type CreateTodoEntryBody = {
 
 export async function GET() {
   try {
-    await connectDB();
-
     const session = await auth();
 
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+    await connectDB();
 
     const entries = await TodoEntry.find({
       userId: session.user.id,
@@ -40,13 +39,12 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
-    await connectDB();
-
     const session = await auth();
 
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+    await connectDB();
 
     const body: CreateTodoEntryBody = await req.json();
 

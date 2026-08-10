@@ -106,23 +106,21 @@ export async function PATCH(req: Request, context: RouteContext) {
   if (!result) {
     return NextResponse.json({ error: "Todo not found" }, { status: 404 });
   }
-  
 
   return NextResponse.json({
     ok: true,
     todo: result,
   });
-  
 }
 
 export async function DELETE(req: Request, context: RouteContext) {
-  await connectDB();
-
   const session = await auth();
 
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  await connectDB();
 
   const { id } = await context.params;
 

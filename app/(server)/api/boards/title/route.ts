@@ -6,24 +6,17 @@ import Board from "@/app/models/Board";
 
 export async function PUT(req: Request) {
   try {
-    await connectDB();
-
     const session = await auth();
 
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { message: "Unauthorized" },
-        { status: 401 }
-      );
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
+    await connectDB();
 
     const { id, title } = await req.json();
 
     if (!id || !title) {
-      return NextResponse.json(
-        { message: "Invalid data" },
-        { status: 400 }
-      );
+      return NextResponse.json({ message: "Invalid data" }, { status: 400 });
     }
 
     const updated = await Board.findOneAndUpdate(
@@ -34,27 +27,20 @@ export async function PUT(req: Request) {
       {
         title,
       },
-      { new: true }
+      { new: true },
     );
 
     if (!updated) {
-      return NextResponse.json(
-        { message: "Board not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ message: "Board not found" }, { status: 404 });
     }
 
     return NextResponse.json({
       ok: true,
       board: updated,
     });
-
   } catch (err) {
     console.error("Update board error:", err);
 
-    return NextResponse.json(
-      { message: "Server error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ message: "Server error" }, { status: 500 });
   }
 }

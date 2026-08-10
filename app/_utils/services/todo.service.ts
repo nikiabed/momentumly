@@ -5,7 +5,11 @@ const headers = {
 };
 export const todoService = {
   async getTodos() {
+    console.time("FETCH TODOS");
+
     const res = await fetch("/api/todos");
+
+    console.timeEnd("FETCH TODOS");
     if (!res.ok) {
       throw new Error("Failed to load todos");
     }
@@ -44,5 +48,4 @@ export const todoService = {
     }
     return res.json();
   },
-  
 };
