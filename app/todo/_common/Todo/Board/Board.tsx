@@ -108,7 +108,7 @@ const isDark = theme === "dark";
       >
         <HamburgerMenu size={24} />
       </button>
-      <div className=" relative z-10 flex gap-4 flex-col min-h-screen py-5 isolate">
+      <div className=" relative z-10 flex gap-4 flex-col min-h-screen py-5 isolate ">
         <div className="shrink-0 px-16 flex flex-col gap-4 ">
           <Header item={currentBoard} todo={filteredTodos} />
           {currentBoard?.boardKey !== BOARD_KEYS.PROGRESS &&

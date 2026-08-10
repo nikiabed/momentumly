@@ -83,6 +83,7 @@
   --color-today-soft: var(--today-soft);
   --color-today-text: var(--today-text);
   --color-coin-background: var(--coin-background);
+  --font-sansx: var(--font-sansx);
 }
 
 @keyframes coin-flight {
